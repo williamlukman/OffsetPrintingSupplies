@@ -80,11 +80,14 @@ namespace Service.Service
         {
             IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
             decimal total = 0;
+            decimal totalPPH23 = 0;
             foreach (ReceiptVoucherDetail detail in receiptVoucherDetails)
             {
                 total += detail.AmountPaid;
+                totalPPH23 += detail.PPH23;
             }
-            receiptVoucher.TotalAmount = total + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan);
+            receiptVoucher.TotalPPH23 = totalPPH23;
+            receiptVoucher.TotalAmount = total; // + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan);
             receiptVoucher = _repository.UpdateObject(receiptVoucher);
             return receiptVoucher;
         }

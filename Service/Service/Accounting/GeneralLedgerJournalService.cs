@@ -1257,7 +1257,7 @@ namespace Service.Service
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             //debit cashbank credit AR
-            #region Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost (with addition: Credit ExchangeGainRounding or Debit ExchangeLossRounding?)
+            #region Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
 
             decimal TotalAR = 0;
             decimal TotalGainLoss = 0;
@@ -1265,6 +1265,7 @@ namespace Service.Service
             IList<ReceiptVoucherDetail> rvd = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == receiptVoucher.Id && !x.IsDeleted).ToList();
             foreach (var detail in rvd)
             {
+                TotalPPH23 += detail.PPH23;
                 Receivable receivable = _receivableService.GetObjectById(detail.ReceivableId);
                 Currency receivableCurrency = _currencyService.GetObjectById(receivable.CurrencyId);
                 GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
@@ -1277,7 +1278,6 @@ namespace Service.Service
                     Amount = Math.Round(detail.Amount * receivable.Rate, 2)
                 };
                 TotalAR += creditaccountreceivable.Amount;
-                TotalPPH23 += detail.PPH23 * receivable.Rate;
                 creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
                 journals.Add(creditaccountreceivable);
 
@@ -1323,10 +1323,79 @@ namespace Service.Service
                     journals.Add(debitExchangeLoss);
                 }
 
+                // Credit GBCH/CashBank, Debit BiayaPPh23
+                if (detail.PPH23 > 0)
+                {
+                    decimal PPH23 = (detail.PPH23 * receiptVoucher.RateToIDR);
+                    // Debit BiayaPPh23
+                    GeneralLedgerJournal debitbiayaPPH23 = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPH23).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                        SourceDocumentId = receiptVoucher.Id,
+                        TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = Math.Round(PPH23, 2)
+                    };
+                    debitbiayaPPH23 = CreateObject(debitbiayaPPH23, _accountService);
+                    journals.Add(debitbiayaPPH23);
+
+                    if (receiptVoucher.IsGBCH)
+                    {
+                        //Credit/Deduce GBCH for BiayaPPh23
+                        GeneralLedgerJournal creditGBCHReceivablePPH = new GeneralLedgerJournal()
+                        {
+                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
+                            SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                            SourceDocumentId = receiptVoucher.Id,
+                            TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                            Status = Constant.GeneralLedgerStatus.Credit,
+                            Amount = Math.Round(PPH23, 2)
+                        };
+                        creditGBCHReceivablePPH = CreateObject(creditGBCHReceivablePPH, _accountService);
+                        journals.Add(creditGBCHReceivablePPH);
+                        if (cashBankCurrency.IsBase == false)
+                        {
+                            GLNonBaseCurrency creditGBCHReceivablePPH2 = new GLNonBaseCurrency()
+                            {
+                                GeneralLedgerJournalId = creditGBCHReceivablePPH.Id,
+                                CurrencyId = cashBank.CurrencyId,
+                                Amount = detail.PPH23,
+                            };
+                            creditGBCHReceivablePPH2 = _gLNonBaseCurrencyService.CreateObject(creditGBCHReceivablePPH2, _accountService);
+                        }
+                    }
+                    else
+                    {
+                        //Credit/Deduce CashBank for BiayaPPh23
+                        GeneralLedgerJournal creditcashbankPPH = new GeneralLedgerJournal()
+                        {
+                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + receiptVoucher.CashBankId).Id,
+                            SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                            SourceDocumentId = receiptVoucher.Id,
+                            TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                            Status = Constant.GeneralLedgerStatus.Credit,
+                            Amount = Math.Round(PPH23, 2)
+                        };
+                        creditcashbankPPH = CreateObject(creditcashbankPPH, _accountService);
+                        journals.Add(creditcashbankPPH);
+                        if (cashBankCurrency.IsBase == false)
+                        {
+                            GLNonBaseCurrency creditcashbankPPH2 = new GLNonBaseCurrency()
+                            {
+                                GeneralLedgerJournalId = creditcashbankPPH.Id,
+                                CurrencyId = cashBank.CurrencyId,
+                                Amount = detail.PPH23,
+                            };
+                            creditcashbankPPH2 = _gLNonBaseCurrencyService.CreateObject(creditcashbankPPH2, _accountService);
+                        }
+                    }
+                }
+
             }
             #endregion
 
-            #region GBCH: Debit GBCHReceivable, CashBank: Debit CashBank (with addition: Debit PPH23, Debit Biaya Admin Bank)
+            #region GBCH: Debit GBCHReceivable, CashBank: Debit CashBank
             if (receiptVoucher.IsGBCH)
             {
                 GeneralLedgerJournal debitGBCHReceivable = new GeneralLedgerJournal()
@@ -1377,7 +1446,7 @@ namespace Service.Service
                         creditGBCHReceivableFee2 = _gLNonBaseCurrencyService.CreateObject(creditGBCHReceivableFee2, _accountService);
                     }
                 }
-                //Credit/Deduce GBCH for Pembulatan
+                //Credit/Debit GBCH for Pembulatan
                 if (receiptVoucher.Pembulatan != 0)
                 {
                     GeneralLedgerJournal creditGBCHReceivableRnd = new GeneralLedgerJournal()
@@ -1386,7 +1455,7 @@ namespace Service.Service
                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
-                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Status = receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
                         Amount = Math.Round(receiptVoucher.Pembulatan * receiptVoucher.RateToIDR, 2)
                     };
                     creditGBCHReceivableRnd = CreateObject(creditGBCHReceivableRnd, _accountService);
@@ -1452,7 +1521,7 @@ namespace Service.Service
                         creditcashbankFee2 = _gLNonBaseCurrencyService.CreateObject(creditcashbankFee2, _accountService);
                     }
                 }
-                //Credit/Deduce CashBank for Pembulatan
+                //Credit/Debit CashBank for Pembulatan
                 if (receiptVoucher.Pembulatan != 0)
                 {
                     GeneralLedgerJournal creditcashbankRnd = new GeneralLedgerJournal()
@@ -1461,7 +1530,7 @@ namespace Service.Service
                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
-                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Status = receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
                         Amount = Math.Round(receiptVoucher.Pembulatan * receiptVoucher.RateToIDR, 2)
                     };
                     creditcashbankRnd = CreateObject(creditcashbankRnd, _accountService);
@@ -1589,6 +1658,75 @@ namespace Service.Service
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
                 }
+
+                // Debit GBCH/CashBank, Credit BiayaPPh23
+                if (detail.PPH23 > 0)
+                {
+                    decimal PPH23 = (detail.PPH23 * receiptVoucher.RateToIDR);
+                    // Credit BiayaPPh23
+                    GeneralLedgerJournal creditbiayaPPH23 = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPH23).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                        SourceDocumentId = receiptVoucher.Id,
+                        TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = Math.Round(PPH23, 2)
+                    };
+                    creditbiayaPPH23 = CreateObject(creditbiayaPPH23, _accountService);
+                    journals.Add(creditbiayaPPH23);
+
+                    if (receiptVoucher.IsGBCH)
+                    {
+                        //Debit GBCH for BiayaPPh23
+                        GeneralLedgerJournal debitGBCHReceivablePPH = new GeneralLedgerJournal()
+                        {
+                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
+                            SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                            SourceDocumentId = receiptVoucher.Id,
+                            TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                            Status = Constant.GeneralLedgerStatus.Debit,
+                            Amount = Math.Round(PPH23, 2)
+                        };
+                        debitGBCHReceivablePPH = CreateObject(debitGBCHReceivablePPH, _accountService);
+                        journals.Add(debitGBCHReceivablePPH);
+                        if (cashBankCurrency.IsBase == false)
+                        {
+                            GLNonBaseCurrency debitGBCHReceivablePPH2 = new GLNonBaseCurrency()
+                            {
+                                GeneralLedgerJournalId = debitGBCHReceivablePPH.Id,
+                                CurrencyId = cashBank.CurrencyId,
+                                Amount = detail.PPH23,
+                            };
+                            debitGBCHReceivablePPH2 = _gLNonBaseCurrencyService.CreateObject(debitGBCHReceivablePPH2, _accountService);
+                        }
+                    }
+                    else
+                    {
+                        //Debit CashBank for BiayaPPh23
+                        GeneralLedgerJournal debitcashbankPPH = new GeneralLedgerJournal()
+                        {
+                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + receiptVoucher.CashBankId).Id,
+                            SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                            SourceDocumentId = receiptVoucher.Id,
+                            TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
+                            Status = Constant.GeneralLedgerStatus.Debit,
+                            Amount = Math.Round(PPH23, 2)
+                        };
+                        debitcashbankPPH = CreateObject(debitcashbankPPH, _accountService);
+                        journals.Add(debitcashbankPPH);
+                        if (cashBankCurrency.IsBase == false)
+                        {
+                            GLNonBaseCurrency debitcashbankPPH2 = new GLNonBaseCurrency()
+                            {
+                                GeneralLedgerJournalId = debitcashbankPPH.Id,
+                                CurrencyId = cashBank.CurrencyId,
+                                Amount = detail.PPH23,
+                            };
+                            debitcashbankPPH2 = _gLNonBaseCurrencyService.CreateObject(debitcashbankPPH2, _accountService);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -1642,7 +1780,7 @@ namespace Service.Service
                         debitGBCHReceivableFee2 = _gLNonBaseCurrencyService.CreateObject(debitGBCHReceivableFee2, _accountService);
                     }
                 }
-                //Debit GBCH for Pembulatan
+                //Debit/Credit GBCH for Pembulatan
                 if (receiptVoucher.Pembulatan != 0)
                 {
                     GeneralLedgerJournal debitGBCHReceivableRnd = new GeneralLedgerJournal()
@@ -1651,7 +1789,7 @@ namespace Service.Service
                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
-                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Status = receiptVoucher.StatusPembulatan,
                         Amount = Math.Round(receiptVoucher.Pembulatan * receiptVoucher.RateToIDR, 2)
                     };
                     debitGBCHReceivableRnd = CreateObject(debitGBCHReceivableRnd, _accountService);
@@ -1717,7 +1855,7 @@ namespace Service.Service
                         debitcashbankFee2 = _gLNonBaseCurrencyService.CreateObject(debitcashbankFee2, _accountService);
                     }
                 }
-                //Debit CashBank for Pembulatan
+                //Debit/Credit CashBank for Pembulatan
                 if (receiptVoucher.Pembulatan != 0)
                 {
                     GeneralLedgerJournal debitcashbankRnd = new GeneralLedgerJournal()
@@ -1726,7 +1864,7 @@ namespace Service.Service
                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
-                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Status = receiptVoucher.StatusPembulatan,
                         Amount = Math.Round(receiptVoucher.Pembulatan * receiptVoucher.RateToIDR, 2)
                     };
                     debitcashbankRnd = CreateObject(debitcashbankRnd, _accountService);
@@ -1785,6 +1923,7 @@ namespace Service.Service
             // Credit GBCH, Debit CashBank
             #region Credit GBCH, Debit CashBank
 
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan));
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
@@ -1794,7 +1933,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
+                Amount = Math.Round(Total * receiptVoucher.RateToIDR, 2)
             };
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
@@ -1805,7 +1944,7 @@ namespace Service.Service
                 {
                     GeneralLedgerJournalId = creditGBCH.Id,
                     CurrencyId = cashBank.CurrencyId,
-                    Amount = receiptVoucher.TotalAmount,
+                    Amount = Total,
                 };
                 creditGBCH2 = _gLNonBaseCurrencyService.CreateObject(creditGBCH2, _accountService);
             }
@@ -1817,7 +1956,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
+                Amount = Math.Round(Total * receiptVoucher.RateToIDR, 2)
             };
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
@@ -1828,7 +1967,7 @@ namespace Service.Service
                 {
                     GeneralLedgerJournalId = debitcashBank.Id,
                     CurrencyId = cashBank.CurrencyId,
-                    Amount = receiptVoucher.TotalAmount,
+                    Amount = Total,
                 };
                 debitcashBank2 = _gLNonBaseCurrencyService.CreateObject(debitcashBank2, _accountService);
             }
@@ -1842,6 +1981,7 @@ namespace Service.Service
             // Debit GBCH, Credit CashBank
             #region Debit GBCH, Credit CashBank
 
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan));
             DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
@@ -1852,7 +1992,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
+                Amount = Math.Round(Total * receiptVoucher.RateToIDR, 2)
             };
             debitGBCH = CreateObject(debitGBCH, _accountService);
             journals.Add(debitGBCH);
@@ -1863,7 +2003,7 @@ namespace Service.Service
                 {
                     GeneralLedgerJournalId = debitGBCH.Id,
                     CurrencyId = cashBank.CurrencyId,
-                    Amount = receiptVoucher.TotalAmount,
+                    Amount = Total,
                 };
                 debitGBCH2 = _gLNonBaseCurrencyService.CreateObject(debitGBCH2, _accountService);
             }
@@ -1874,7 +2014,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
+                Amount = Math.Round(Total * receiptVoucher.RateToIDR, 2)
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
 
@@ -1884,7 +2024,7 @@ namespace Service.Service
                 {
                     GeneralLedgerJournalId = creditcashBank.Id,
                     CurrencyId = cashBank.CurrencyId,
-                    Amount = receiptVoucher.TotalAmount,
+                    Amount = Total,
                 };
                 creditcashBank2 = _gLNonBaseCurrencyService.CreateObject(creditcashBank2, _accountService);
             }

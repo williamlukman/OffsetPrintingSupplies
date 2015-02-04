@@ -21,6 +21,7 @@ namespace Core.DomainModel
 
 
         public decimal TotalAmount { get; set; }
+        public decimal TotalPPH23 { get; set; }
         public decimal BiayaBank { get; set; }
         public decimal Pembulatan { get; set; }
         public int StatusPembulatan { get; set; }

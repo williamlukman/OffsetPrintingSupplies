@@ -57,7 +57,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
                    'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled', 'ReconciliationDate',
-                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Biaya Bank', 'Pembulatan', 'Created At', 'Updated At'],
+                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Total PPh23', 'Biaya Bank', 'Pembulatan', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -76,6 +76,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'nobukti', index: 'nobukti', width: 100 },
+                  { name: 'totalpph23', index: 'totalpph23', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'biayabank', index: 'biayabank', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pembulatan', index: 'pembulatan', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -142,6 +143,7 @@
         ClearData();
         clearForm('#frm');
         $('#TotalAmount').numberbox('clear');
+        $('#TotalPPH23').numberbox('clear');
         $('#ReceiptDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
@@ -194,7 +196,8 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#TotalPPH23').numberbox('setValue', result.TotalPPH23);
                             $('#BiayaBank').numberbox('setValue', result.BiayaBank);
                             $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");
@@ -274,7 +277,8 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#TotalPPH23').numberbox('setValue', result.TotalPPH23);
                             $('#BiayaBank').numberbox('setValue', result.BiayaBank);
                             $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");

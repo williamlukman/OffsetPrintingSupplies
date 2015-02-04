@@ -119,9 +119,10 @@ namespace Service.Service
         #region Receipt Voucher
         public CashMutation CreateCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank)
         {
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan));
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(receiptVoucher.TotalAmount);
+            cashMutation.Amount = Math.Abs(Total);
             cashMutation.MutationDate = receiptVoucher.IsGBCH ? (DateTime) receiptVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) receiptVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.ReceiptVoucher;
             cashMutation.SourceDocumentId = receiptVoucher.Id;

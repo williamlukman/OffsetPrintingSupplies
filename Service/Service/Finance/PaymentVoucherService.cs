@@ -104,11 +104,14 @@ namespace Service.Service
         {
             IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
             decimal total = 0;
+            decimal totalPPH23 = 0;
             foreach (PaymentVoucherDetail detail in paymentVoucherDetails)
             {
                 total += detail.AmountPaid;
+                totalPPH23 += detail.PPH23;
             }
-            paymentVoucher.TotalAmount = total + paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan);
+            paymentVoucher.TotalPPH23 = totalPPH23;
+            paymentVoucher.TotalAmount = total; // + paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan);
             paymentVoucher = _repository.UpdateObject(paymentVoucher);
             return paymentVoucher;
         }

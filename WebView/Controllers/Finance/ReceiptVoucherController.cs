@@ -102,6 +102,7 @@ namespace WebView.Controllers
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.NoBukti,
+                             model.TotalPPH23,
                              model.BiayaBank,
                              Pembulatan = model.Pembulatan * (model.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1),
                              model.CreatedAt,
@@ -154,6 +155,7 @@ namespace WebView.Controllers
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.NoBukti,
+                            model.TotalPPH23,
                             model.BiayaBank,
                             model.Pembulatan,
                             model.CreatedAt,
@@ -419,6 +421,7 @@ namespace WebView.Controllers
                 model.DueDate,
                 model.TotalAmount,
                 model.NoBukti,
+                model.TotalPPH23,
                 model.BiayaBank,
                 model.Pembulatan,
                 model.StatusPembulatan,
@@ -513,7 +516,7 @@ namespace WebView.Controllers
                 if (data.DueDate != model.DueDate) PembulatanOnly = false;
                 if (data.NoBukti != model.NoBukti) PembulatanOnly = false;
                 if (data.RateToIDR != model.RateToIDR) PembulatanOnly = false;
-                if (data.BiayaBank != model.BiayaBank) PembulatanOnly = false;
+                //if (data.BiayaBank != model.BiayaBank) PembulatanOnly = false;
 
                 data.ContactId = model.ContactId;
                 data.CashBankId = model.CashBankId;
@@ -526,7 +529,7 @@ namespace WebView.Controllers
                 data.BiayaBank = model.BiayaBank;
                 data.Pembulatan = model.Pembulatan;
                 data.StatusPembulatan = model.StatusPembulatan;
-                if (PembulatanOnly)
+                if (PembulatanOnly && !data.IsConfirmed)
                 {
                     model = _receiptVoucherService.CalculateTotalAmount(data, _receiptVoucherDetailService);
                 }
