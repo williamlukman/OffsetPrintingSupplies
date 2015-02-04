@@ -2242,6 +2242,62 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region SerahTerima
+        public ActionResult SerahTerima()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSerahTerima(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                //DateTime firstMonday = new DateTime(startDate.Year, startDate.Month, 1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoices.Include(x => x.SalesInvoiceDetails)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.InvoiceDate >= startDate && x.InvoiceDate < endDay)
+                                                         ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.Select(g => new
+                {
+                    NoInvoice = g.NomorSurat,
+                    TglInvoice = g.InvoiceDate,
+                    Customer = g.DeliveryOrder.SalesOrder.Contact.Name,
+                    Remark = g.Description,
+                }).OrderBy(x => x.TglInvoice).ThenBy(x => x.NoInvoice).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SerahTerima.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
         #region PenawaranHarga
         public ActionResult PenawaranHarga()
         {

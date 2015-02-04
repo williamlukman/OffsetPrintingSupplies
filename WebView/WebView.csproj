@@ -368,6 +368,7 @@
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\ReportSerahTerima.js" />
     <Content Include="Content\apps_js\ValidCombIncomeStatement.js" />
     <Content Include="Content\apps_js\MasterItemAvgPrice.js" />
     <Content Include="Content\apps_js\MasterSubType.js" />
@@ -1444,6 +1445,7 @@
     <Content Include="Views\Report\SalesPersonnelComparisonYearlyByQty.cshtml" />
     <Content Include="Views\MstItemAvgPrice\Index.cshtml" />
     <Content Include="Views\ValidCombIncomeStatement\Index.cshtml" />
+    <Content Include="Views\Report\SerahTerima.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

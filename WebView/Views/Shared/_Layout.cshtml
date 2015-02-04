@@ -498,6 +498,8 @@
                                                     {<li><a href="@Url.Action("VulcanBlanketSales", "Report")">Vulcan Blanket Sales</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("DailyByQuantity", "Report")">Daily Report by Quantity</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SerahTerima", "Report")">Form Serah Terima</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Manufacturing Report</a>
