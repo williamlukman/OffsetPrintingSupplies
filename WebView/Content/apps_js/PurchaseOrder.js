@@ -107,6 +107,10 @@
     });
 
     $('#btn_print').click(function () {
+        $('#remark').show();
+        $('#note').hide();
+        $('#currency').show();
+        $('#rate').show();
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             $.ajax({
@@ -120,10 +124,45 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
+                        $("#print_form_div").data('url', base_url + "Report/PrintoutPurchaseOrderLokal");
                         //window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
                         $('#print_id').val(result.Id);
                         $('#print_Code').val(result.Code);
                         $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_Description').val(result.Description);
+                        $('#print_CurrencyId').val(result.CurrencyId);
+                        $("#print_form_div").dialog('open');
+                    }
+                }
+            });
+        }
+    });
+
+    $('#btn_printimport').click(function () {
+        $('#print_Note').val("Consignee Name in Shipping Docs : B/L, Invoice, Packing List\nPT. Zentrum Graphics Asia\nJl. Raya Serpong Km. 7 Komp. Multiguna A.1/1\nPakualam, Serpong Utara, Tangerang Selatan, Banten 15325\nIndonesia");
+        $('#remark').show();
+        $('#note').show();
+        $('#currency').hide();
+        $('#rate').hide();
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        $("#print_form_div").data('url', base_url + "Report/PrintoutPurchaseOrderImport");
+                        //window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_Description').val(result.Description);
                         $('#print_CurrencyId').val(result.CurrencyId);
                         $("#print_form_div").dialog('open');
                     }
@@ -331,7 +370,8 @@
     });
 
     $('#print_btn_submit').click(function () {
-        window.open(base_url + 'Report/PrintoutPurchaseOrderConfirm?Id=' + $('#print_id').val() + '&Rate1=' + $('#print_Rate1').val() + '&Rate2=' + $('#print_Rate2').val() + '&Rate=' + $('#print_Rate').val());
+        var url = $('#print_form_div').data('url');
+        window.open(url + '?Id=' + $('#print_id').val() + '&Rate=' + $('#print_Rate').val() + '&Remark=' + Base64.encode($('#print_Description').val()) + '&Note=' + Base64.encode($('#print_Note').val()));
         $('#print_form_div').dialog('close');
     });
 

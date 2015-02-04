@@ -2510,13 +2510,13 @@ namespace WebView.Controllers
         }
         #endregion
 
-        #region PurchaseOrderConfirm
-        public ActionResult PurchaseOrderConfirm()
+        #region PurchaseOrderLokal
+        public ActionResult PurchaseOrderLokal()
         {
             return View();
         }
 
-        public ActionResult PrintoutPurchaseOrderConfirm(int Id = 0, decimal Rate1 = 1, decimal Rate2 = 1, decimal Rate = 1)
+        public ActionResult PrintoutPurchaseOrderLokal(int Id = 0, decimal Rate = 1, string Remark = "", string Note = "")
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -2545,7 +2545,7 @@ namespace WebView.Controllers
                 var rd = new ReportDocument();
 
                 //Loading Report
-                rd.Load(Server.MapPath("~/") + "Reports/Printout/OrderConfirmation.rpt");
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/PurchaseOrderLokal.rpt");
 
                 // Setting report data source
                 rd.SetDataSource(query);
@@ -2559,11 +2559,77 @@ namespace WebView.Controllers
                 rd.SetParameterValue("OrderNo", obj.PurchaseOrder.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
                 rd.SetParameterValue("Personnel", user ?? ""); //obj.RecoveryOrder.Employee.Name
                 rd.SetParameterValue("Customer", obj.PurchaseOrder.Contact.Name ?? "");
-                rd.SetParameterValue("ContactPerson", ""); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
-                rd.SetParameterValue("Addr", obj.PurchaseOrder.Contact.DeliveryAddress ?? "");
-                rd.SetParameterValue("Currency", obj.PurchaseOrder.Currency.Name ?? "");
-                rd.SetParameterValue("Rate1", Rate1);
-                rd.SetParameterValue("Rate2", Rate2);
+                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("ContactAddr", obj.PurchaseOrder.Contact.Address ?? "");
+                rd.SetParameterValue("ContactNo", obj.PurchaseOrder.Contact.ContactNo ?? "");
+                rd.SetParameterValue("Remark", Encoding.UTF8.GetString(Convert.FromBase64String(Remark)) ?? ""); //obj.PurchaseOrder.Description
+                rd.SetParameterValue("Note", Encoding.UTF8.GetString(Convert.FromBase64String(Note)) ?? "");
+                rd.SetParameterValue("Disc", 0m);
+                rd.SetParameterValue("Tax", 10m);
+                rd.SetParameterValue("Currency", "IDR");
+                rd.SetParameterValue("Rate", Rate);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region PurchaseOrderImport
+        public ActionResult PurchaseOrderImport()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutPurchaseOrderImport(int Id = 0, decimal Rate = 1, string Remark = "", string Note = "")
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.PurchaseOrderDetails.Include(x => x.PurchaseOrder).Include(x => x.Item)
+                                                              .Where(x => !x.IsDeleted && !x.PurchaseOrder.IsDeleted && x.PurchaseOrderId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    Code = g.Item.Sku, //g.OrderCode,
+                    Name = g.Item.Name,
+                    Qty = g.Quantity,
+                    UoM = g.Item.UoM.Name,
+                    Amount = g.Price * Rate, // * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate
+                }).OrderBy(x => x.Code).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/PurchaseOrderImport.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("Tgl", obj.PurchaseOrder.PurchaseDate);
+                rd.SetParameterValue("OrderNo", obj.PurchaseOrder.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
+                rd.SetParameterValue("Personnel", user ?? ""); //obj.RecoveryOrder.Employee.Name
+                rd.SetParameterValue("Customer", obj.PurchaseOrder.Contact.Name ?? "");
+                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("ContactAddr", obj.PurchaseOrder.Contact.Address ?? "");
+                rd.SetParameterValue("ContactNo", obj.PurchaseOrder.Contact.ContactNo ?? "");
+                rd.SetParameterValue("Remark", Encoding.UTF8.GetString(Convert.FromBase64String(Remark)) ?? ""); //obj.PurchaseOrder.Description
+                rd.SetParameterValue("Note", Encoding.UTF8.GetString(Convert.FromBase64String(Note)) ?? "");
+                rd.SetParameterValue("Cc", "");
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");

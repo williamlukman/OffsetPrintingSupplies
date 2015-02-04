@@ -22,7 +22,8 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        <a id="btn_printimport" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Import</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Lokal</a>
     </div>
 
     <div id="table_div">
@@ -94,7 +95,8 @@
                                 <label>Description</label>
                             </td>
                             <td>
-                                <input id="Description" name="Description" type="text" size="25" maxlength="40"/>
+                                @*<input id="Description" name="Description" type="text" size="25" maxlength="40"/>*@
+                                <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
                             </td>
                         </tr>
                     </table>
@@ -144,7 +146,7 @@
                                 <input id="print_NomorSurat" name="NomorSurat" type="text" size="25" disabled/>
                             </td>
                         </tr>
-                        <tr>
+                        <tr id="currency">
                             <td>
                                 <label>Currency </label></td>
                             <td>
@@ -156,26 +158,28 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr>
+                        <tr id="rate">
                             <td>
-                                <label>Rate From :</label>
-                            </td>
-                            <td>
-                                <input id="print_Rate1" name="Rate1" type="number" size="25" value="1.00"/>
-                            </td>
-                            <td>
-                                <label>Rate To :</label>
-                            </td>
-                            <td>
-                                <input id="print_Rate2" name="Rate2" type="number" size="25" value="1.00"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Current Rate :</label>
+                                <label>Rate :</label>
                             </td>
                             <td>
                                 <input id="print_Rate" name="Rate" type="number" size="25" value="1.00"/>
+                            </td>
+                        </tr>
+                        <tr id="remark">
+                            <td>
+                                <label>Remarks</label>
+                            </td>
+                            <td>
+                                <textarea name="Description" id="print_Description" cols="60" rows="3"></textarea>
+                            </td>
+                        </tr>
+                        <tr id="note">
+                            <td>
+                                <label>Note</label>
+                            </td>
+                            <td>
+                                <textarea name="Note" id="print_Note" cols="60" rows="3"></textarea>
                             </td>
                         </tr>
                     </table>
