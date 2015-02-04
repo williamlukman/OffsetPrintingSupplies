@@ -139,7 +139,7 @@
     });
 
     $('#btn_printimport').click(function () {
-        $('#print_Note').val("Consignee Name in Shipping Docs : B/L, Invoice, Packing List\nPT. Zentrum Graphics Asia\nJl. Raya Serpong Km. 7 Komp. Multiguna A.1/1\nPakualam, Serpong Utara, Tangerang Selatan, Banten 15325\nIndonesia");
+        $('#print_Note').val("Consignee Name in Shipping Docs : B/L, Invoice, Packing List\nPT. Zentrum Graphics Asia\nJl. Raya Serpong Km. 7 Komp. Multiguna A.1 no.1\nPakualam, Serpong Utara, Tangerang Selatan, Banten 15325\nIndonesia");
         $('#remark').show();
         $('#note').show();
         $('#currency').hide();
