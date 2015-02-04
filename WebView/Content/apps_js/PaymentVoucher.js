@@ -599,7 +599,7 @@
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
                   { name: 'payable', index: 'payable', width: 90, sortable: false },
                   { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'rate', index: 'rate', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'rate', index: 'rate', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 11, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
@@ -629,6 +629,7 @@
         $('#Rate').numberbox('clear');
         $('#Remaining').numberbox('clear');
         $('#Currency').text("");
+        $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
         $('#item_div').dialog('open');
     });
 
@@ -661,6 +662,7 @@
                             $('#Rate').numberbox('setValue', result.Rate);
                             $('#AmountPaid').numberbox('setValue', result.AmountPaid);
                             $('#Currency').text(result.Currency);
+                            $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
                             $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
@@ -915,8 +917,8 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total', 'Remaining',
-                    'PendClearance', 'Currency', 'Payable Source', 'Id'
+        colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id', 'Due Date', 'Total', 'Remaining',
+                    'PendClearance', 'Currency', 
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },

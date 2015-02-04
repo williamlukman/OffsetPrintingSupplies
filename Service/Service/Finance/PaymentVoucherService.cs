@@ -108,7 +108,7 @@ namespace Service.Service
             {
                 total += detail.AmountPaid;
             }
-            paymentVoucher.TotalAmount = total;
+            paymentVoucher.TotalAmount = total + paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan);
             paymentVoucher = _repository.UpdateObject(paymentVoucher);
             return paymentVoucher;
         }

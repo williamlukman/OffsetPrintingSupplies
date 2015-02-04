@@ -57,7 +57,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
                    'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled', 'ReconciliationDate',
-                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Created At', 'Updated At'],
+                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Biaya Bank', 'Pembulatan', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -76,6 +76,8 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'nobukti', index: 'nobukti', width: 100 },
+                  { name: 'biayabank', index: 'biayabank', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pembulatan', index: 'pembulatan', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -145,6 +147,9 @@
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
         $('#NoBukti').removeAttr('disabled');
+        $('#BiayaBank').removeAttr('disabled');
+        $('#Pembulatan').removeAttr('disabled');
+        $('#StatusPembulatan').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#RateToIDR').removeAttr('disabled');
         $('#ExchangeRateAmount').removeAttr('disabled');
@@ -190,11 +195,20 @@
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
                             $('#TotalAmount').val(result.TotalAmount);
+                            $('#BiayaBank').numberbox('setValue', result.BiayaBank);
+                            $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
                             }
                             else {
+                                e.selectedIndex = 1;
+                            }
+                            var e = document.getElementById("Status");
+                            if (result.StatusPembulatan == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.StatusPembulatan == 2) {
                                 e.selectedIndex = 1;
                             }
                             $('#CurrencyCashBank').val(result.Currency);
@@ -214,6 +228,9 @@
                             $('#TotalAmount').attr('disabled', true);
                             $('#NoBukti').attr('disabled', true);
                             $('#IsGBCH').attr('disabled', true);
+                            $('#BiayaBank').attr('disabled', true);
+                            $('#Pembulatan').attr('disabled', true);
+                            $('#StatusPembulatan').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -258,11 +275,20 @@
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
                             $('#TotalAmount').val(result.TotalAmount);
+                            $('#BiayaBank').numberbox('setValue', result.BiayaBank);
+                            $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
                             }
                             else {
+                                e.selectedIndex = 1;
+                            }
+                            var e = document.getElementById("Status");
+                            if (result.StatusPembulatan == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.StatusPembulatan == 2) {
                                 e.selectedIndex = 1;
                             }
                             $('#CurrencyCashBank').val(result.Currency);    
@@ -282,6 +308,9 @@
                             $('#btnCashBank').removeAttr('disabled');
                             $('#NoBukti').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
+                            $('#BiayaBank').removeAttr('disabled');
+                            $('#Pembulatan').removeAttr('disabled');
+                            $('#StatusPembulatan').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -542,6 +571,8 @@
 
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
+        var e = document.getElementById("Status");
+        var status = e.selectedIndex + 1;
 
         ClickableButton($("#form_btn_save"), false);
         $.ajax({
@@ -552,7 +583,8 @@
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
                 IsGBCH: gbch, RateToIDR: $("#RateToIDR").numberbox('getValue'),
                 ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                NoBukti: $('#NoBukti').val(),
+                NoBukti: $('#NoBukti').val(), BiayaBank: $("#BiayaBank").numberbox('getValue'), Pembulatan: $("#Pembulatan").numberbox('getValue'),
+                StatusPembulatan: status,
             }),
             //async: false,
             //cache: false,
@@ -585,7 +617,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'PPH 23', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -594,8 +626,9 @@
                   { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
                   { name: 'receivable', index: 'receivable', width: 110, sortable: false },
                   { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 11, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'pph23', index: 'pph23', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         page: '1',
@@ -625,6 +658,7 @@
         $('#Rate').numberbox('clear');
         $('#Remaining').numberbox('clear');
         $('#Currency').text("");
+        $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
         $('#item_div').dialog('open');
     });
 
@@ -655,7 +689,9 @@
                             $('#Amount').val(result.Amount);
                             $('#Rate').numberbox('setValue', result.Rate);
                             $('#AmountPaid').numberbox('setValue', result.AmountPaid);
+                            $('#PPH23').numberbox('setValue', result.PPH23);
                             $('#Currency').text(result.Currency);
+                            $('#ToCurrency').text(' To '+$('#CurrencyCashBank').val());
                             $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#ReceiptVoucherDetailId').val(result.ReceiptVoucherDetailId);
@@ -741,7 +777,7 @@
             data: JSON.stringify({
                 Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
                 AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue'),
-                Amount: $("#Amount").numberbox('getValue')
+                Amount: $("#Amount").numberbox('getValue'), PPH23: $("#PPH23").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -911,7 +947,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total',
-                    'Remaining', 'PendClearance', 'Currency', 'Receivable Source', 'Id'
+                    'Remaining', 'PendClearance', 'Currency', 'Rate', 'Receivable Source', 'Id'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -922,6 +958,7 @@
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'receivablesource', index: 'receivablesource', width: 180, sortable: false },
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
         ],

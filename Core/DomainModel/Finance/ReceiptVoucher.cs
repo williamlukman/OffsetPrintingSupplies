@@ -20,6 +20,9 @@ namespace Core.DomainModel
         public Nullable<DateTime> ReconciliationDate { get; set; }
 
         public decimal TotalAmount { get; set; }
+        public decimal BiayaBank { get; set; }
+        public decimal Pembulatan { get; set; }
+        public int StatusPembulatan { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

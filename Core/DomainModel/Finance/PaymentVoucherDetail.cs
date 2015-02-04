@@ -14,6 +14,8 @@ namespace Core.DomainModel
         public decimal Rate { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountPaid { get; set; }
+        public decimal PPH21 { get; set; } 
+        public decimal PPH23 { get; set; } 
         public string Description { get; set; }
 
         public bool IsConfirmed { get; set; }

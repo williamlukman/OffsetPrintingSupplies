@@ -84,7 +84,7 @@ namespace Service.Service
             {
                 total += detail.AmountPaid;
             }
-            receiptVoucher.TotalAmount = total;
+            receiptVoucher.TotalAmount = total + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan);
             receiptVoucher = _repository.UpdateObject(receiptVoucher);
             return receiptVoucher;
         }
@@ -230,7 +230,7 @@ namespace Service.Service
             if (_validator.ValidUnreconcileObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
-                _generalLedgerJournalService.CreateReconcileJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService,
+                _generalLedgerJournalService.CreateUnReconcileJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService,
                                              _gLNonBaseCurrencyService, _currencyService);
                 _repository.UnreconcileObject(receiptVoucher);
 

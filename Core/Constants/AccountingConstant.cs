@@ -73,6 +73,7 @@ namespace Core.Constants
             public static string PrepaidExpense = "1105";
             public static string PiutangLainLain = "1106";
             public static string PPNMASUKAN = "1107";
+            public static string PPH23 = "11070002";
 
             public static string Expense = "2";
             public static string COGS = "21";
@@ -95,6 +96,8 @@ namespace Core.Constants
             public static string TaxExpense = "2404";
             public static string DividentExpense = "2405";
             public static string ExchangeLoss = "25";
+            public static string BiayaPembulatan = "62020014";
+            public static string BiayaAdminBank = "62090002";
 
             public static string Liability = "3";
             public static string CurrentLiability = "31";
@@ -106,6 +109,8 @@ namespace Core.Constants
             public static string AccountPayableNonTrading = "3106";
             public static string HutangLainLain = "3107";
             public static string PPNKELUARAN = "3108";
+            public static string HutangPPH21 = "21050001"; //salah code depan?
+            public static string HutangPPH23 = "21050002"; //salah code depan?
             public static string NonCurrentLiability = "32";
 
             public static string Equity = "4";
@@ -129,6 +134,7 @@ namespace Core.Constants
             public static string FinishedGoods = "A1104002";
             public static string PiutangLainLain = "A1106";
             public static string PPNMASUKAN = "A1107";
+            public static string PPH23 = "A11070002";
 
             public static string Expense = "X2";
             public static string COGSExpense = "X21E";
@@ -151,6 +157,8 @@ namespace Core.Constants
             public static string TaxExpense = "X2404"; 
             public static string DividentExpense = "X2405";
             public static string ExchangeLoss = "X25";
+            public static string BiayaPembulatan = "X62020014";
+            public static string BiayaAdminBank = "X62090002";
 
             public static string Liability = "L3";
             public static string CurrentLiability = "L31";
@@ -160,6 +168,8 @@ namespace Core.Constants
             public static string PurchaseAllowance = "L3105";
             public static string HutangLainLain = "L3107";
             public static string PPNKELUARAN = "L3108";
+            public static string HutangPPH21 = "L21050001";
+            public static string HutangPPH23 = "L21050002";
 
             public static string NonCurrentLiability = "L32";
              

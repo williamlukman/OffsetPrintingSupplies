@@ -111,11 +111,32 @@
                             </td>
                        </tr>
                         <tr>
+                            <td>
+                                Pembulatan
+                            </td>
+                            <td>
+                               <input id="Pembulatan" name="Pembulatan" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
+                            </td>
+                            <td>Status Pembulatan</td>
+                            <td>
+                                <select id="Status">
+                                    <option value="1">Debit</option>
+                                    <option value="2">Credit</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
                              <td >
                                 <label>Rate to IDR</label></td>
-                             <td colspan="5">
+                             <td>
                                <input id="RateToIDR" name="RateToIDR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','"  value="0" />
                              </td>
+                            <td>
+                                Biaya Bank
+                            </td>
+                            <td>
+                               <input id="BiayaBank" name="BiayaBank" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
+                            </td>
                        </tr>
                        <tr>
                              <td >
@@ -163,10 +184,10 @@
                   </tr>
                     <tr>
                         <td>
-                            Rate
+                            Rate <span id="ToCurrency"></span>
                         </td>
                         <td>
-                               <input id="Rate" name="Rate" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',min:0.01,precision:2" value="1" />
+                               <input id="Rate" name="Rate" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:11" value="1" />
                         </td>
                         <td>
                              <label>Remaining Amount</label>
@@ -190,6 +211,14 @@
                                <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" disabled="disabled" value="0" />
                         </td>
                     </tr>
+                  <tr>
+                      <td>
+                            PPH 23
+                        </td>
+                        <td>
+                               <input id="PPH23" name="PPH23" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled/>
+                        </td>
+                  </tr>
                    <tr>
                         <td>
                             <label>Description</label></td>

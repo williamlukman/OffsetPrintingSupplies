@@ -180,6 +180,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new VCNonBaseCurrencyMapping());
             modelBuilder.Configurations.Add(new GLNonBaseCurrencyMapping());
 
+            modelBuilder.Entity<ReceiptVoucherDetail>().Property(x => x.Rate).HasPrecision(18, 11);
+            modelBuilder.Entity<PaymentVoucherDetail>().Property(x => x.Rate).HasPrecision(18, 11);
+
             base.OnModelCreating(modelBuilder);
         }
 

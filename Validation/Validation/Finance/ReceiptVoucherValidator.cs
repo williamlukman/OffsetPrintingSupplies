@@ -220,6 +220,33 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
+        public ReceiptVoucher VHasValidBiayaBank(ReceiptVoucher receiptVoucher)
+        {
+            if (receiptVoucher.BiayaBank < 0)
+            {
+                receiptVoucher.Errors.Add("BiayaBank", "Tidak boleh negatif");
+            }
+            return receiptVoucher;
+        }
+
+        public ReceiptVoucher VHasValidPembulatan(ReceiptVoucher receiptVoucher)
+        {
+            if (receiptVoucher.BiayaBank < 0)
+            {
+                receiptVoucher.Errors.Add("Pembulatan", "Tidak boleh negatif");
+            }
+            return receiptVoucher;
+        }
+
+        public ReceiptVoucher VHasValidStatusPembulatan(ReceiptVoucher receiptVoucher)
+        {
+            if (receiptVoucher.StatusPembulatan != Constant.GeneralLedgerStatus.Debit && receiptVoucher.StatusPembulatan != Constant.GeneralLedgerStatus.Credit)
+            {
+                receiptVoucher.Errors.Add("Status", "Harus Debit atau Credit");
+            }
+            return receiptVoucher;
+        }
+
         public ReceiptVoucher VGeneralLedgerPostingHasNotBeenClosed(ReceiptVoucher receiptVoucher, IClosingService _closingService, int CaseConfirmUnconfirmReconcileUnreconcile)
         {
             switch (CaseConfirmUnconfirmReconcileUnreconcile)
@@ -258,6 +285,12 @@ namespace Validation.Validation
             VIfGBCHThenIsBank(receiptVoucher, _cashBankService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VIfGBCHThenHasDueDate(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VHasValidBiayaBank(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VHasValidPembulatan(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VHasValidStatusPembulatan(receiptVoucher);
             return receiptVoucher;
         }
 

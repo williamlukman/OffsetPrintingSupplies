@@ -95,13 +95,15 @@ namespace WebView.Controllers
                              model.IsGBCH,
                              model.DueDate,
                              model.TotalAmount,
-                             currency = model.CashBank.Currency.Name,
+                             Currency = model.CashBank.Currency.Name,
                              model.RateToIDR,
                              model.IsReconciled,
                              model.ReconciliationDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.NoBukti,
+                             model.BiayaBank,
+                             Pembulatan = model.Pembulatan * (model.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1),
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -145,13 +147,15 @@ namespace WebView.Controllers
                             model.IsGBCH,
                             model.DueDate,
                             model.TotalAmount,
-                            model.currency,
+                            model.Currency,
                             model.RateToIDR,
                             model.IsReconciled,
                             model.ReconciliationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.NoBukti,
+                            model.BiayaBank,
+                            model.Pembulatan,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -338,6 +342,7 @@ namespace WebView.Controllers
                              model.AmountPaid,
                              model.Rate,
                              model.Amount,
+                             model.PPH23,
                              model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -378,6 +383,7 @@ namespace WebView.Controllers
                             model.AmountPaid,
                             model.Rate,
                             model.Amount,
+                            model.PPH23,
                             model.Description,
                       }
                     }).ToArray()
@@ -413,6 +419,9 @@ namespace WebView.Controllers
                 model.DueDate,
                 model.TotalAmount,
                 model.NoBukti,
+                model.BiayaBank,
+                model.Pembulatan,
+                model.StatusPembulatan,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -440,8 +449,9 @@ namespace WebView.Controllers
                 model.Rate,
                 model.Amount,
                 Remaining = model.Receivable.RemainingAmount,
-                currency = model.Receivable.Currency.Name,
+                Currency = model.Receivable.Currency.Name,
                 model.Description,
+                model.PPH23,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -495,6 +505,16 @@ namespace WebView.Controllers
             try
             {
                 var data = _receiptVoucherService.GetObjectById(model.Id);
+                bool PembulatanOnly = true;
+                if (data.ContactId != model.ContactId) PembulatanOnly = false;
+                if (data.CashBankId != model.CashBankId) PembulatanOnly = false;
+                if (data.ReceiptDate != model.ReceiptDate) PembulatanOnly = false;
+                if (data.IsGBCH != model.IsGBCH) PembulatanOnly = false;
+                if (data.DueDate != model.DueDate) PembulatanOnly = false;
+                if (data.NoBukti != model.NoBukti) PembulatanOnly = false;
+                if (data.RateToIDR != model.RateToIDR) PembulatanOnly = false;
+                if (data.BiayaBank != model.BiayaBank) PembulatanOnly = false;
+
                 data.ContactId = model.ContactId;
                 data.CashBankId = model.CashBankId;
                 data.ReceiptDate = model.ReceiptDate;
@@ -503,8 +523,18 @@ namespace WebView.Controllers
                 //data.TotalAmount = model.TotalAmount;
                 data.NoBukti = model.NoBukti;
                 data.RateToIDR = model.RateToIDR;
-                model = _receiptVoucherService.UpdateObject(data,_receiptVoucherDetailService,_receivableService,
-                    _contactService,_cashBankService);
+                data.BiayaBank = model.BiayaBank;
+                data.Pembulatan = model.Pembulatan;
+                data.StatusPembulatan = model.StatusPembulatan;
+                if (PembulatanOnly)
+                {
+                    model = _receiptVoucherService.CalculateTotalAmount(data, _receiptVoucherDetailService);
+                }
+                else
+                {
+                    model = _receiptVoucherService.UpdateObject(data, _receiptVoucherDetailService, _receivableService,
+                        _contactService, _cashBankService);
+                }
             }
             catch (Exception ex)
             {
@@ -573,6 +603,7 @@ namespace WebView.Controllers
                 data.AmountPaid = model.AmountPaid;
                 data.Rate = model.Rate;
                 data.Description = model.Description;
+                data.PPH23 = model.PPH23;
                 model = _receiptVoucherDetailService.UpdateObject(data,_receiptVoucherService,_cashBankService,_receivableService,_currencyService);
                 totalamount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
             }
