@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -48,59 +49,64 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.Code,
-                             model.ContactId,
-                             Contact = model.Contact.Name,
-                             model.ReceivableSource,
-                             model.ReceivableSourceId,
-                             model.Amount,
-                             model.RemainingAmount,
-                             model.PendingClearanceAmount,
-                             Currency = model.Currency.Name,
-                             model.Rate,
-                             model.DueDate,
-                             model.CompletionDate,
-                             model.CreatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.Receivables.Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.Code,
+                                 NomorSurat = (model.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == model.ReceivableSourceId).FirstOrDefault().NomorSurat :
+                                                    (model.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == model.ReceivableSourceId).FirstOrDefault().NomorSurat : "",
+                                 model.ContactId,
+                                 Contact = model.Contact.Name,
+                                 model.ReceivableSource,
+                                 model.ReceivableSourceId,
+                                 model.Amount,
+                                 model.RemainingAmount,
+                                 model.PendingClearanceAmount,
+                                 Currency = model.Currency.Name,
+                                 model.Rate,
+                                 model.DueDate,
+                                 model.CompletionDate,
+                                 model.CreatedAt,
+                             }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from receivable in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = receivable.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from receivable in list
+                        select new
+                        {
+                            id = receivable.Id,
+                            cell = new object[] {
                             receivable.Id,
                             receivable.Code,
+                            receivable.NomorSurat,
                             receivable.ContactId,
                             receivable.Contact,
                             receivable.ReceivableSource,
@@ -114,72 +120,79 @@ namespace WebView.Controllers
                             receivable.CompletionDate,
                             receivable.CreatedAt,
                       }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
+            DateTime endDay = enddate.AddDays(1);
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact")
-                                      .Where(x => x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1) && !x.IsDeleted);
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.Code,
-                             model.ContactId,
-                             Contact = model.Contact.Name,
-                             model.ReceivableSource,
-                             model.ReceivableSourceId,
-                             model.Amount,
-                             model.RemainingAmount,
-                             model.PendingClearanceAmount,
-                             Currency = model.Currency.Name,
-                             model.Rate,
-                             model.DueDate,
-                             model.CompletionDate,
-                             model.CreatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.Receivables.Include("Contact")
+                                          .Where(x => x.CreatedAt >= startdate && x.CreatedAt < endDay && !x.IsDeleted);
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.Code,
+                                 NomorSurat = (model.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == model.ReceivableSourceId).FirstOrDefault().NomorSurat :
+                                                        (model.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == model.ReceivableSourceId).FirstOrDefault().NomorSurat : "",
+                                 model.ContactId,
+                                 Contact = model.Contact.Name,
+                                 model.ReceivableSource,
+                                 model.ReceivableSourceId,
+                                 model.Amount,
+                                 model.RemainingAmount,
+                                 model.PendingClearanceAmount,
+                                 Currency = model.Currency.Name,
+                                 model.Rate,
+                                 model.DueDate,
+                                 model.CompletionDate,
+                                 model.CreatedAt,
+                             }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from receivable in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = receivable.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from receivable in list
+                        select new
+                        {
+                            id = receivable.Id,
+                            cell = new object[] {
                             receivable.Id,
                             receivable.Code,
+                            receivable.NomorSurat,
                             receivable.ContactId,
                             receivable.Contact,
                             receivable.ReceivableSource,
@@ -193,8 +206,9 @@ namespace WebView.Controllers
                             receivable.CompletionDate,
                             receivable.CreatedAt,
                       }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetListPurchaseDownPayment(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")

@@ -498,7 +498,9 @@
     $("#AmountPaid, #Rate").blur(function () {
         var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
         //total = Math.round(total * 100) / 100;
+        var pph23 = parseFloat($('#AmountPaid').numberbox('getValue')) * 2.0 / 100.0;
         $('#Amount').numberbox('setValue', total);
+        //$('#PPH23').numberbox('setValue', pph23);
     });
 
     $('#btn_del').click(function () {
@@ -621,7 +623,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'PPH 23', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'PPH 23', 'No Surat', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -633,6 +635,7 @@
                   { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 11, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'pph23', index: 'pph23', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         page: '1',
@@ -663,6 +666,7 @@
         $('#Remaining').numberbox('clear');
         $('#Currency').text("");
         $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
+        $('#PaidCurrency').text($('#CurrencyCashBank').val());
         $('#item_div').dialog('open');
     });
 
@@ -695,7 +699,8 @@
                             $('#AmountPaid').numberbox('setValue', result.AmountPaid);
                             $('#PPH23').numberbox('setValue', result.PPH23);
                             $('#Currency').text(result.Currency);
-                            $('#ToCurrency').text(' To '+$('#CurrencyCashBank').val());
+                            $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
+                            $('#PaidCurrency').text($('#CurrencyCashBank').val());
                             $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#ReceiptVoucherDetailId').val(result.ReceiptVoucherDetailId);
@@ -951,7 +956,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total',
-                    'Remaining', 'PendClearance', 'Currency', 'Rate', 'Receivable Source', 'Id'
+                    'Remaining', 'PendClearance', 'Currency', 'Rate', 'Receivable Source', 'Id', 'No Surat'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -965,6 +970,7 @@
                   { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'receivablesource', index: 'receivablesource', width: 180, sortable: false },
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_receivable'),

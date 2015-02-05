@@ -37,6 +37,7 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         public ICurrencyService _currencyService;
         private ISalesInvoiceService _salesInvoiceService;
+        private ISalesInvoiceMigrationService _salesInvoiceMigrationService;
         private IExchangeRateService _exchangeRateService;
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
         public ReceiptVoucherController()
@@ -61,6 +62,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+            _salesInvoiceMigrationService = new SalesInvoiceMigrationService(new SalesInvoiceMigrationRepository());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
@@ -254,7 +256,7 @@ namespace WebView.Controllers
             //var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
             //                           x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
             var q = _receivableService.GetQueryable().Where(x => !x.IsDeleted && x.RemainingAmount > 0 && x.ContactId == contactid &&
-                                       x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
+                                       x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment).ToList();
 
             var query = (from model in q
                          select new
@@ -271,9 +273,11 @@ namespace WebView.Controllers
                              model.Rate,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
+                             NomorSurat = (model.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? _salesInvoiceService.GetObjectById(model.ReceivableSourceId).NomorSurat : 
+                                            (model.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? _salesInvoiceMigrationService.GetObjectById(model.ReceivableSourceId).NomorSurat : "",
                              model.CreatedAt,
                              model.UpdatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).AsQueryable().Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -315,6 +319,7 @@ namespace WebView.Controllers
                             model.Rate,
                             model.ReceivableSource,
                             model.ReceivableSourceId,
+                            model.NomorSurat,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -331,7 +336,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == id && !x.IsDeleted);
+            var q = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == id && !x.IsDeleted).ToList();
 
             var query = (from model in q
                          select new
@@ -345,8 +350,10 @@ namespace WebView.Controllers
                              model.Rate,
                              model.Amount,
                              model.PPH23,
+                             NomorSurat = (model.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? _salesInvoiceService.GetObjectById(model.Receivable.ReceivableSourceId).NomorSurat : 
+                                            (model.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? _salesInvoiceMigrationService.GetObjectById(model.Receivable.ReceivableSourceId).NomorSurat : "",
                              model.Description,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).AsQueryable().Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -386,6 +393,7 @@ namespace WebView.Controllers
                             model.Rate,
                             model.Amount,
                             model.PPH23,
+                            model.NomorSurat,
                             model.Description,
                       }
                     }).ToArray()
