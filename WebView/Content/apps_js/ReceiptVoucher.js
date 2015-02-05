@@ -151,7 +151,7 @@
         $('#NoBukti').removeAttr('disabled');
         $('#BiayaBank').removeAttr('disabled');
         $('#Pembulatan').removeAttr('disabled');
-        $('#StatusPembulatan').removeAttr('disabled');
+        $('#Status').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#RateToIDR').removeAttr('disabled');
         $('#ExchangeRateAmount').removeAttr('disabled');
@@ -233,7 +233,7 @@
                             $('#IsGBCH').attr('disabled', true);
                             $('#BiayaBank').attr('disabled', true);
                             $('#Pembulatan').attr('disabled', true);
-                            $('#StatusPembulatan').attr('disabled', true);
+                            $('#Status').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -314,7 +314,7 @@
                             $('#IsGBCH').removeAttr('disabled');
                             $('#BiayaBank').removeAttr('disabled');
                             $('#Pembulatan').removeAttr('disabled');
-                            $('#StatusPembulatan').removeAttr('disabled');
+                            $('#Status').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -464,6 +464,7 @@
 
     $('#reconcile_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#reconcile_btn_submit"), false);
         $.ajax({
             url: base_url + "ReceiptVoucher/Reconcile",
             type: "POST",
@@ -472,6 +473,7 @@
                 Id: $('#idreconcile').val(), ReconciliationDate: $('#ReconciliationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#reconcile_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -577,8 +579,8 @@
 
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
-        var e = document.getElementById("Status");
-        var status = e.selectedIndex + 1;
+        var f = document.getElementById("Status");
+        var status = f.selectedIndex + 1;
 
         ClickableButton($("#form_btn_save"), false);
         $.ajax({
@@ -623,7 +625,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'PPH 23', 'No Surat', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'PPh 23', 'No Surat', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -662,6 +664,7 @@
         clearForm('#item_div');
         $('#Amount').numberbox('clear');
         $('#AmountPaid').numberbox('clear');
+        $('#PPH23').numberbox('clear');
         $('#Rate').numberbox('clear');
         $('#Remaining').numberbox('clear');
         $('#Currency').text("");
@@ -786,14 +789,14 @@
             data: JSON.stringify({
                 Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
                 AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue'),
-                Amount: $("#Amount").numberbox('getValue'), PPH23: $("#PPH23").numberbox('getValue')
+                Amount: $("#Amount").numberbox('getValue'), PPH23: $("#PPH23").numberbox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -1002,12 +1005,11 @@
             $('#Currency').text(ret.currency);
             if (ret.currency == $('#CurrencyCashBank').val()) {
                 $('#Rate').attr('disabled', true);
-                $('#Rate').numberbox('setValue', 1);
             }
             else {
                 $('#Rate').removeAttr('disabled');
-                $('#Rate').numberbox('setValue', 1);
             }
+            $('#Rate').numberbox('setValue', 1);
             $('#Remaining').numberbox('setValue',ret.remainingamount);
             $('#lookup_div_receivable').dialog('close');
         } else {
