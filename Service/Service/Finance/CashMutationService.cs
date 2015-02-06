@@ -69,9 +69,10 @@ namespace Service.Service
         #region PaymentVoucher
         public CashMutation CreateCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank)
         {
+            decimal Total = paymentVoucher.TotalAmount - (paymentVoucher.TotalPPH21 + paymentVoucher.TotalPPH23 - paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan));
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(paymentVoucher.TotalAmount);
+            cashMutation.Amount = Math.Abs(Total);
             cashMutation.MutationDate = paymentVoucher.IsGBCH ? (DateTime) paymentVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) paymentVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.PaymentVoucher;
             cashMutation.SourceDocumentId = paymentVoucher.Id;

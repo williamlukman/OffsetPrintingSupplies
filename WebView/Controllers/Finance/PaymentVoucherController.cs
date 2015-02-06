@@ -20,6 +20,7 @@ namespace WebView.Controllers
         private IPurchaseOrderService _purchaseOrderService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IPurchaseInvoiceService _purchaseInvoiceService;
+        private IPurchaseInvoiceMigrationService _purchaseInvoiceMigrationService;
         private IPurchaseInvoiceDetailService _purchaseInvoiceDetailService;
         private IPurchaseReceivalService _purchaseReceivalService;
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
@@ -27,6 +28,7 @@ namespace WebView.Controllers
         private IPayableService _payableService;
         private IItemService _itemService;
         private IPaymentVoucherService _paymentVoucherService;
+        private IPaymentRequestService _paymentRequestService;
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
         private IContactService _contactService;
@@ -44,6 +46,7 @@ namespace WebView.Controllers
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
+            _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
             _purchaseInvoiceDetailService = new PurchaseInvoiceDetailService(new PurchaseInvoiceDetailRepository(), new PurchaseInvoiceDetailValidator());
             _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
@@ -51,6 +54,7 @@ namespace WebView.Controllers
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
+            _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
@@ -94,6 +98,10 @@ namespace WebView.Controllers
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.NoBukti,
+                             model.TotalPPH23,
+                             model.TotalPPH21,
+                             model.BiayaBank,
+                             Pembulatan = model.Pembulatan * (model.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1),
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -144,6 +152,10 @@ namespace WebView.Controllers
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.NoBukti,
+                            model.TotalPPH23,
+                            model.TotalPPH21,
+                            model.BiayaBank,
+                            model.Pembulatan,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -176,6 +188,7 @@ namespace WebView.Controllers
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              Currency = model.Currency.Name,
+                             model.Rate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -219,6 +232,7 @@ namespace WebView.Controllers
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.Currency,
+                            model.Rate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -236,7 +250,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted && x.ContactId == contactid && x.RemainingAmount > 0 &&
-                                                   x.PayableSource != Constant.PayableSource.SalesDownPayment);
+                                                   x.PayableSource != Constant.PayableSource.SalesDownPayment).ToList();
 
             var query = (from model in q
                          select new
@@ -250,11 +264,15 @@ namespace WebView.Controllers
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              Currency = model.Currency.Name,
+                             model.Rate,
                              model.PayableSource,
                              model.PayableSourceId,
+                             NomorSurat = (model.PayableSource == Constant.PayableSource.PurchaseInvoice) ? _purchaseInvoiceService.GetObjectById(model.PayableSourceId).NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? _purchaseInvoiceMigrationService.GetObjectById(model.PayableSourceId).NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PaymentRequest) ? _paymentRequestService.GetObjectById(model.PayableSourceId).NoBukti : "",
                              model.CreatedAt,
                              model.UpdatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).AsQueryable().Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -288,13 +306,15 @@ namespace WebView.Controllers
                             model.Code,
                             model.ContactId,
                             model.Contact,
-                            model.PayableSource,
-                            model.PayableSourceId,
                             model.DueDate,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.Currency,
+                            model.Rate,
+                            model.PayableSource,
+                            model.PayableSourceId,
+                            model.NomorSurat,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -312,7 +332,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _paymentVoucherDetailService.GetQueryable().Include("PaymentVoucher").Include("Payable")
-                                                .Where(x => x.PaymentVoucherId == id && !x.IsDeleted);
+                                                .Where(x => x.PaymentVoucherId == id && !x.IsDeleted).ToList();
 
             var query = (from model in q
                          select new
@@ -325,8 +345,13 @@ namespace WebView.Controllers
                             model.AmountPaid,
                             model.Rate,
                             model.Amount,
+                            model.PPH23,
+                            model.PPH21,
+                            NomorSurat = (model.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ? _purchaseInvoiceService.GetObjectById(model.Payable.PayableSourceId).NomorSurat :
+                                                (model.Payable.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? _purchaseInvoiceMigrationService.GetObjectById(model.Payable.PayableSourceId).NomorSurat :
+                                                (model.Payable.PayableSource == Constant.PayableSource.PaymentRequest) ? _paymentRequestService.GetObjectById(model.Payable.PayableSourceId).NoBukti : "",
                             model.Description,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).AsQueryable().Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -363,9 +388,12 @@ namespace WebView.Controllers
                             model.Currency,
                             model.PayableId,
                             model.PayableCode,
-                            model.Amount,
-                            model.Rate,
                             model.AmountPaid,
+                            model.Rate,
+                            model.Amount,
+                            model.PPH23,
+                            model.PPH21,
+                            model.NomorSurat,
                             model.Description,
                       }
                     }).ToArray()
@@ -401,6 +429,11 @@ namespace WebView.Controllers
                 model.TotalAmount,
                 model.RateToIDR,
                 model.NoBukti,
+                model.TotalPPH23,
+                model.TotalPPH21,
+                model.BiayaBank,
+                model.Pembulatan,
+                model.StatusPembulatan,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -430,6 +463,8 @@ namespace WebView.Controllers
                 Remaining = model.Payable.RemainingAmount,
                 Currency = model.Payable.Currency.Name,
                 model.Description,
+                model.PPH23,
+                model.PPH21,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -459,10 +494,15 @@ namespace WebView.Controllers
         public dynamic InsertDetail(PaymentVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
+            decimal totalpph21 = 0;
             try
             {
                 model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService);
-                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
+                var obj = _paymentVoucherService.GetObjectById(model.PaymentVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
+                totalpph21 = obj.TotalPPH21;
             }
             catch (Exception ex)
             {
@@ -474,7 +514,9 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
+                totalpph21,
             });
         }
 
@@ -484,6 +526,16 @@ namespace WebView.Controllers
             try
             {
                 var data = _paymentVoucherService.GetObjectById(model.Id);
+                bool PembulatanOnly = true;
+                if (data.ContactId != model.ContactId) PembulatanOnly = false;
+                if (data.CashBankId != model.CashBankId) PembulatanOnly = false;
+                if (data.PaymentDate != model.PaymentDate) PembulatanOnly = false;
+                if (data.IsGBCH != model.IsGBCH) PembulatanOnly = false;
+                if (data.DueDate != model.DueDate) PembulatanOnly = false;
+                if (data.NoBukti != model.NoBukti) PembulatanOnly = false;
+                if (data.RateToIDR != model.RateToIDR) PembulatanOnly = false;
+                //if (data.BiayaBank != model.BiayaBank) PembulatanOnly = false;
+
                 data.ContactId = model.ContactId;
                 data.CashBankId = model.CashBankId;
                 data.PaymentDate = model.PaymentDate;
@@ -492,8 +544,18 @@ namespace WebView.Controllers
                 //data.TotalAmount = model.TotalAmount;
                 data.NoBukti = model.NoBukti;
                 data.RateToIDR = model.RateToIDR;
-                model = _paymentVoucherService.UpdateObject(data,_paymentVoucherDetailService,_payableService,
-                    _contactService,_cashBankService);
+                data.BiayaBank = model.BiayaBank;
+                data.Pembulatan = model.Pembulatan;
+                data.StatusPembulatan = model.StatusPembulatan;
+                if (PembulatanOnly && !data.IsConfirmed)
+                {
+                    model = _paymentVoucherService.CalculateTotalAmount(data, _paymentVoucherDetailService);
+                }
+                else
+                {
+                    model = _paymentVoucherService.UpdateObject(data, _paymentVoucherDetailService, _payableService,
+                        _contactService, _cashBankService);
+                }
             }
             catch (Exception ex)
             {
@@ -531,11 +593,16 @@ namespace WebView.Controllers
         public dynamic DeleteDetail(PaymentVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
+            decimal totalpph21 = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
                 model = _paymentVoucherDetailService.SoftDeleteObject(data,_paymentVoucherService);
-                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
+                var obj = _paymentVoucherService.GetObjectById(model.PaymentVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
+                totalpph21 = obj.TotalPPH21;
             }
             catch (Exception ex)
             {
@@ -546,7 +613,9 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
+                totalpph21,
             });
         }
 
@@ -554,6 +623,8 @@ namespace WebView.Controllers
         public dynamic UpdateDetail(PaymentVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
+            decimal totalpph21 = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
@@ -562,8 +633,13 @@ namespace WebView.Controllers
                 data.AmountPaid = model.AmountPaid;
                 data.Rate = model.Rate;
                 data.Description = model.Description;
+                data.PPH23 = model.PPH23;
+                data.PPH21 = model.PPH21;
                 model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
-                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
+                var obj = _paymentVoucherService.GetObjectById(model.PaymentVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
+                totalpph21 = obj.TotalPPH21;
             }
             catch (Exception ex)
             {
@@ -574,7 +650,9 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
+                totalpph21,
             });
         }
 

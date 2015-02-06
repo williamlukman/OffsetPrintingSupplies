@@ -58,7 +58,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
                    'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled','ReconciliationDate',
-                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Created At', 'Updated At'],
+                    'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Total PPh23', 'Total PPh21', 'Biaya Bank', 'Pembulatan', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -77,6 +77,10 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'nobukti', index: 'nobukti', width: 100 },
+                  { name: 'totalpph23', index: 'totalpph23', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'totalpph21', index: 'totalpph21', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'biayabank', index: 'biayabank', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pembulatan', index: 'pembulatan', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -139,11 +143,16 @@
         ClearData();
         clearForm('#frm');
         $('#TotalAmount').numberbox('clear');
+        $('#TotalPPH23').numberbox('clear');
+        $('#TotalPPH21').numberbox('clear');
         $('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
         $('#NoBukti').removeAttr('disabled');
+        $('#BiayaBank').removeAttr('disabled');
+        $('#Pembulatan').removeAttr('disabled');
+        $('#Status').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#RateToIDR').removeAttr('disabled');
         $('#ExchangeRateAmount').removeAttr('disabled');
@@ -188,12 +197,23 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#TotalPPH23').numberbox('setValue', result.TotalPPH23);
+                            $('#TotalPPH21').numberbox('setValue', result.TotalPPH21);
+                            $('#BiayaBank').numberbox('setValue', result.BiayaBank);
+                            $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
                             }
                             else {
+                                e.selectedIndex = 1;
+                            }
+                            var e = document.getElementById("Status");
+                            if (result.StatusPembulatan == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.StatusPembulatan == 2) {
                                 e.selectedIndex = 1;
                             }
                             $('#CurrencyCashBank').val(result.Currency);
@@ -213,6 +233,9 @@
                             $('#TotalAmount').attr('disabled', true);
                             $('#NoBukti').attr('disabled', true);
                             $('#IsGBCH').attr('disabled', true);
+                            $('#BiayaBank').attr('disabled', true);
+                            $('#Pembulatan').attr('disabled', true);
+                            $('#Status').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -256,12 +279,23 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#TotalPPH23').numberbox('setValue', result.TotalPPH23);
+                            $('#TotalPPH21').numberbox('setValue', result.TotalPPH21);
+                            $('#BiayaBank').numberbox('setValue', result.BiayaBank);
+                            $('#Pembulatan').numberbox('setValue', result.Pembulatan);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
                             }
                             else {
+                                e.selectedIndex = 1;
+                            }
+                            var e = document.getElementById("Status");
+                            if (result.StatusPembulatan == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.StatusPembulatan == 2) {
                                 e.selectedIndex = 1;
                             }
                             $('#CurrencyCashBank').val(result.Currency);
@@ -281,6 +315,9 @@
                             $('#btnCashBank').removeAttr('disabled');
                             $('#NoBukti').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
+                            $('#BiayaBank').removeAttr('disabled');
+                            $('#Pembulatan').removeAttr('disabled');
+                            $('#Status').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -430,6 +467,7 @@
 
     $('#reconcile_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#reconcile_btn_submit"), false);
         $.ajax({
             url: base_url + "PaymentVoucher/Reconcile",
             type: "POST",
@@ -438,6 +476,7 @@
                 Id: $('#idreconcile').val(), ReconciliationDate: $('#ReconciliationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#reconcile_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -461,16 +500,27 @@
         $('#reconcile_div').dialog('close');
     });
 
-    $("#Rate").blur(function () {
-        var total = parseFloat($('#Amount').numberbox('getValue')) * parseFloat($('#Rate').numberbox('getValue'));
-        //total = Math.round(total * 100) / 100;
-        $('#AmountPaid').numberbox('setValue', total);
-    });
+    //$("#Rate").blur(function () {
+    //    var total = parseFloat($('#Amount').numberbox('getValue')) * parseFloat($('#Rate').numberbox('getValue'));
+    //    //total = Math.round(total * 100) / 100;
+    //    $('#AmountPaid').numberbox('setValue', total);
+    //    //$('#PPH23').numberbox('setValue', pph23);
+    //});
 
-    $("#AmountPaid").blur(function () {
+    //$("#AmountPaid").blur(function () {
+    //    var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+    //    //total = Math.round(total * 100) / 100;
+    //    $('#Amount').numberbox('setValue', total);
+    //});
+
+    $("#AmountPaid, #Rate").blur(function () {
         var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
         //total = Math.round(total * 100) / 100;
+        var pph23 = parseFloat($('#AmountPaid').numberbox('getValue')) * 2.0 / 100.0;
+        var pph21 = parseFloat($('#AmountPaid').numberbox('getValue')) * 2.5 / 100.0;
         $('#Amount').numberbox('setValue', total);
+        //$('#PPH23').numberbox('setValue', pph23);
+        //$('#PPH21').numberbox('setValue', pph21);
     });
 
     $('#btn_del').click(function () {
@@ -547,6 +597,8 @@
 
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
+        var f = document.getElementById("Status");
+        var status = f.selectedIndex + 1;
 
         ClickableButton($("#form_btn_save"), false);
         $.ajax({
@@ -557,7 +609,8 @@
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
                 IsGBCH: gbch, RateToIDR: $("#RateToIDR").numberbox('getValue'),
                 PaymentDate: $('#PaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                NoBukti: $("#NoBukti").val(),
+                NoBukti: $('#NoBukti').val(), BiayaBank: $("#BiayaBank").numberbox('getValue'), Pembulatan: $("#Pembulatan").numberbox('getValue'),
+                StatusPembulatan: status,
             }),
             //async: false,
             //cache: false,
@@ -590,7 +643,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Currency', 'Payable Id', 'Payable Code', 'Amount Paid', 'Rate', 'Actual Amount', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Payable Id', 'Payable Code', 'Amount Paid', 'Rate', 'Actual Amount', 'PPh 23', 'PPh 21', 'No Surat', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -601,6 +654,9 @@
                   { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'rate', index: 'rate', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 11, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'pph23', index: 'pph23', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pph21', index: 'pph21', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         //page: '1',
@@ -626,10 +682,13 @@
         clearForm('#item_div');
         $('#Amount').numberbox('clear');
         $('#AmountPaid').numberbox('clear');
+        $('#PPH23').numberbox('clear');
+        $('#PPH21').numberbox('clear');
         $('#Rate').numberbox('clear');
         $('#Remaining').numberbox('clear');
         $('#Currency').text("");
         $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
+        $('#PaidCurrency').text($('#CurrencyCashBank').val());
         $('#item_div').dialog('open');
     });
 
@@ -661,8 +720,11 @@
                             $('#Amount').val(result.Amount);
                             $('#Rate').numberbox('setValue', result.Rate);
                             $('#AmountPaid').numberbox('setValue', result.AmountPaid);
+                            $('#PPH23').numberbox('setValue', result.PPH23);
+                            $('#PPH21').numberbox('setValue', result.PPH21);
                             $('#Currency').text(result.Currency);
                             $('#ToCurrency').text(' To ' + $('#CurrencyCashBank').val());
+                            $('#PaidCurrency').text($('#CurrencyCashBank').val());
                             $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
@@ -712,6 +774,8 @@
                             else {
                                 ReloadGridDetail();
                                 $("#TotalAmount").numberbox('setValue', result.totalamount);
+                                $("#TotalPPH23").numberbox('setValue', result.totalpph23);
+                                $("#TotalPPH21").numberbox('setValue', result.totalpph21);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -748,14 +812,14 @@
             data: JSON.stringify({
                 Id: id, PaymentVoucherId: $("#id").val(), PayableId: $("#PayableId").val(), Description: $("#Description").val(),
                 AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue'),
-                Amount: $("#Amount").numberbox('getValue')
+                Amount: $("#Amount").numberbox('getValue'), PPH23: $("#PPH23").numberbox('getValue'), PPH21: $("#PPH21").numberbox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -771,6 +835,8 @@
                 else {
                     ReloadGridDetail();
                     $("#TotalAmount").numberbox('setValue', result.totalamount);
+                    $("#TotalPPH23").numberbox('setValue', result.totalpph23);
+                    $("#TotalPPH21").numberbox('setValue', result.totalpph21);
                     $("#item_div").dialog('close')
                 }
             }
@@ -917,20 +983,22 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id', 'Due Date', 'Total', 'Remaining',
-                    'PendClearance', 'Currency', 
+        colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total',
+                    'Remaining', 'PendClearance', 'Currency', 'Rate', 'Payable Source', 'Id', 'No Surat'
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
-                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true},
-                  { name: 'contact', index: 'contact', width: 150, sortable: false },
-                  { name: 'payablesource', index: 'payablesource', width: 180, sortable: false },
-                  { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
+                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
+                  { name: 'contact', index: 'contact', width: 250, sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'payablesource', index: 'payablesource', width: 180, sortable: false },
+                  { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),
@@ -967,11 +1035,11 @@
                 $('#Rate').removeAttr('disabled');
             }
             $('#Rate').numberbox('setValue', 1);
-            $('#AmountPaid').numberbox('setValue', ret.remainingamount);
-            var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
-            //total = Math.round(total * 100) / 100;
-            $('#Amount').numberbox('setValue', total);
             $('#Remaining').numberbox('setValue', ret.remainingamount);
+            //$('#AmountPaid').numberbox('setValue', ret.remainingamount);
+            //var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+            ////total = Math.round(total * 100) / 100;
+            //$('#Amount').numberbox('setValue', total);
             $('#lookup_div_payable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

@@ -33,7 +33,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 70 },
-				  { name: 'nomorsurat', index: 'nomorsurat', width: 70 },
+				  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
                   { name: 'contactid', index: 'contactid', width: 40, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
 				  { name: 'payablesource', index: 'payablesource', width: 150, align: 'right' },
