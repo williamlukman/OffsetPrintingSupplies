@@ -1,0 +1,5 @@
+Code	String	255
+Name	String	255	
+UoM	String	255	
+Qty	Number		
+Note	Memo		

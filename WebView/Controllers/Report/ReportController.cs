@@ -2849,6 +2849,69 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region PurchaseReceivalConfirm
+        public ActionResult PurchaseReceivalConfirm()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutPurchaseReceivalConfirm(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+
+                var q = db.PurchaseReceivalDetails.Include(x => x.PurchaseOrderDetail).Include(x => x.PurchaseReceival)
+                                                              .Where(x => !x.IsDeleted && !x.PurchaseReceival.IsDeleted && x.PurchaseReceivalId == Id);
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    Code = g.Item.Sku, //g.OrderCode,
+                    Name = g.Item.Name,
+                    Qty = g.Quantity,
+                    UoM = g.Item.UoM.Name,
+                    Note = "", //g.Item.Sku,
+                    //Amount = g.Amount / g.Quantity, // * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate
+                }).OrderBy(x => x.Code).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/PurchaseReceival.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["CashBankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("No", obj.PurchaseReceival.NomorSurat ?? "");
+                rd.SetParameterValue("OrderNo", obj.PurchaseOrderDetail.PurchaseOrder.NomorSurat ?? ""); //obj.RecoveryOrder.Employee.Name
+                rd.SetParameterValue("Tgl", obj.PurchaseReceival.ReceivalDate);
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("Remark", obj.PurchaseReceival.Description ?? "");
+                rd.SetParameterValue("Supplier", obj.PurchaseReceival.PurchaseOrder.Contact.Name ?? "");
+                rd.SetParameterValue("Pengirim", ""); //obj.PurchaseReceival.PurchaseOrder.Contact.Name
+                rd.SetParameterValue("QC", "");
+                rd.SetParameterValue("Logistik", "");
+                rd.SetParameterValue("Acc", "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
         #region FakturPajak
         public ActionResult FakturPajak()
         {

@@ -121,7 +121,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportPurchaseReceival?Id=" + id);
+                        window.open(base_url + "Report/PrintoutPurchaseReceivalConfirm?Id=" + id);
                     }
                 }
             });
