@@ -491,10 +491,13 @@ namespace WebView.Controllers
         public dynamic InsertDetail(ReceiptVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
             try
             {
                 model = _receiptVoucherDetailService.CreateObject(model,_receiptVoucherService,_cashBankService,_receivableService,_currencyService);
-                totalamount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
+                var obj = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
             }
             catch (Exception ex)
             {
@@ -506,7 +509,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
             });
         }
 
@@ -583,11 +587,14 @@ namespace WebView.Controllers
         public dynamic DeleteDetail(ReceiptVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
             try
             {
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
                 model = _receiptVoucherDetailService.SoftDeleteObject(data,_receiptVoucherService);
-                totalamount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
+                var obj = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
             }
             catch (Exception ex)
             {
@@ -598,7 +605,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
             });
         }
 
@@ -606,6 +614,7 @@ namespace WebView.Controllers
         public dynamic UpdateDetail(ReceiptVoucherDetail model)
         {
             decimal totalamount = 0;
+            decimal totalpph23 = 0;
             try
             {
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
@@ -616,7 +625,9 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.PPH23 = model.PPH23;
                 model = _receiptVoucherDetailService.UpdateObject(data,_receiptVoucherService,_cashBankService,_receivableService,_currencyService);
-                totalamount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
+                var obj = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId);
+                totalamount = obj.TotalAmount;
+                totalpph23 = obj.TotalPPH23;
             }
             catch (Exception ex)
             {
@@ -627,7 +638,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalamount,
+                totalpph23,
             });
         }
 

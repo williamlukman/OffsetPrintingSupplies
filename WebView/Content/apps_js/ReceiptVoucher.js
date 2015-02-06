@@ -753,6 +753,7 @@
                             else {
                                 ReloadGridDetail();
                                 $("#TotalAmount").numberbox('setValue', result.totalamount);
+                                $("#TotalPPH23").numberbox('setValue', result.totalpph23);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -811,7 +812,8 @@
                 }
                 else {
                     ReloadGridDetail();
-                    $("#TotalAmount").numberbox('setValue',result.totalamount);
+                    $("#TotalAmount").numberbox('setValue', result.totalamount);
+                    $("#TotalPPH23").numberbox('setValue', result.totalpph23);
                     $("#item_div").dialog('close')
                 }
             }
