@@ -200,6 +200,7 @@ namespace WebView.Controllers
                 model.Description,
                 model.Amount,
                 model.NoBukti,
+                model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
