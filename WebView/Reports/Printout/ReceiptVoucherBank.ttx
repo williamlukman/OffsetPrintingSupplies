@@ -1,0 +1,6 @@
+Code	String	255
+Name	String	255	
+Status	String	255	
+Amount	Number	
+AmountIDR	Number	
+ContactName	String	255

@@ -2493,7 +2493,7 @@ namespace Service.Service
             // Credit GBCH, Debit CashBank
             #region Credit GBCH, Debit CashBank
 
-            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan));
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -receiptVoucher.Pembulatan : receiptVoucher.Pembulatan));
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
@@ -2551,7 +2551,7 @@ namespace Service.Service
             // Debit GBCH, Credit CashBank
             #region Debit GBCH, Credit CashBank
 
-            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? receiptVoucher.Pembulatan : -receiptVoucher.Pembulatan));
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -receiptVoucher.Pembulatan : receiptVoucher.Pembulatan));
             DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);

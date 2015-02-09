@@ -57,7 +57,7 @@
         url: base_url + 'PaymentVoucher/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
-                   'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled','ReconciliationDate',
+                   'Is GBCH', 'GBCH No.', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled','ReconciliationDate',
                     'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Total PPh23', 'Total PPh21', 'Biaya Bank', 'Pembulatan', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -68,6 +68,7 @@
                   { name: 'cashbankname', index: 'cashbankname', width: 100 },
                   { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isgbch', index: 'isgbch', width: 45 },
+                  { name: 'gbch_no', index: 'gbch_no', width: 100 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'currency', index: 'currency', width: 100 },
@@ -136,7 +137,24 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PaymentVoucher/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/PrintoutPaymentVoucherBank?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -154,6 +172,7 @@
         $('#Pembulatan').removeAttr('disabled');
         $('#Status').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
+        $('#GBCH_No').removeAttr('disabled');
         $('#RateToIDR').removeAttr('disabled');
         $('#ExchangeRateAmount').removeAttr('disabled');
         $('#CurrencyId').removeAttr('disabled');
@@ -202,6 +221,7 @@
                             $('#TotalPPH21').numberbox('setValue', result.TotalPPH21);
                             $('#BiayaBank').numberbox('setValue', result.BiayaBank);
                             $('#Pembulatan').numberbox('setValue', result.Pembulatan);
+                            $('#GBCH_No').val(result.GBCH_No);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
@@ -233,6 +253,7 @@
                             $('#TotalAmount').attr('disabled', true);
                             $('#NoBukti').attr('disabled', true);
                             $('#IsGBCH').attr('disabled', true);
+                            $('#GBCH_No').attr('disabled', true);
                             $('#BiayaBank').attr('disabled', true);
                             $('#Pembulatan').attr('disabled', true);
                             $('#Status').attr('disabled', true);
@@ -284,6 +305,7 @@
                             $('#TotalPPH21').numberbox('setValue', result.TotalPPH21);
                             $('#BiayaBank').numberbox('setValue', result.BiayaBank);
                             $('#Pembulatan').numberbox('setValue', result.Pembulatan);
+                            $('#GBCH_No').val(result.GBCH_No);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
@@ -315,6 +337,7 @@
                             $('#btnCashBank').removeAttr('disabled');
                             $('#NoBukti').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
+                            $('#GBCH_No').removeAttr('disabled');
                             $('#BiayaBank').removeAttr('disabled');
                             $('#Pembulatan').removeAttr('disabled');
                             $('#Status').removeAttr('disabled');
@@ -610,7 +633,7 @@
                 IsGBCH: gbch, RateToIDR: $("#RateToIDR").numberbox('getValue'),
                 PaymentDate: $('#PaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
                 NoBukti: $('#NoBukti').val(), BiayaBank: $("#BiayaBank").numberbox('getValue'), Pembulatan: $("#Pembulatan").numberbox('getValue'),
-                StatusPembulatan: status,
+                StatusPembulatan: status, GBCH_No: $('#GBCH_No').val(),
             }),
             //async: false,
             //cache: false,

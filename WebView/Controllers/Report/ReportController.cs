@@ -2758,7 +2758,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Currency", obj.SalesInvoice.Currency.Name == "Rupiah" ? "Rp." : (obj.SalesInvoice.Currency.Name == "Euro") ? "EUR" : obj.SalesInvoice.Currency.Name ?? "");
                 rd.SetParameterValue("OrderNo", obj.SalesInvoice.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
                 rd.SetParameterValue("Remark", "");
-                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.SalesInvoice.AmountReceivable, true, obj.SalesInvoice.Currency.Name, ""));
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.SalesInvoice.AmountReceivable, true, obj.SalesInvoice.Currency.Name, "Cent"));
                 rd.SetParameterValue("Term", obj.SalesInvoice.DeliveryOrder.SalesOrder.Contact.DefaultPaymentTerm);
                 rd.SetParameterValue("DOno", obj.DeliveryOrderDetail.DeliveryOrder.NomorSurat ?? "");
                 rd.SetParameterValue("OurRef", obj.SalesInvoice.DeliveryOrder.SalesOrder.NomorSurat ?? "");
@@ -2834,7 +2834,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Currency", obj.PurchaseInvoice.Currency.Name == "Rupiah" ? "Rp." : (obj.PurchaseInvoice.Currency.Name == "Euro") ? "EUR" : obj.PurchaseInvoice.Currency.Name ?? "");
                 rd.SetParameterValue("OrderNo", obj.PurchaseInvoice.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
                 rd.SetParameterValue("Remark", "");
-                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.PurchaseInvoice.AmountPayable, true, obj.PurchaseInvoice.Currency.Name, ""));
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.PurchaseInvoice.AmountPayable, true, obj.PurchaseInvoice.Currency.Name, "Cent"));
                 rd.SetParameterValue("Term", obj.PurchaseReceivalDetail.PurchaseReceival.PurchaseOrder.Contact.DefaultPaymentTerm);
                 rd.SetParameterValue("DOno", obj.PurchaseReceivalDetail.PurchaseReceival.NomorSurat);
                 rd.SetParameterValue("OurRef", "");
@@ -3029,9 +3029,9 @@ namespace WebView.Controllers
                     Code = g.Account.Code, //g.OrderCode,
                     Name = g.Account.Name,
                     Amount = g.Amount,
-                    Status = g.Status == Constant.GeneralLedgerStatus.Credit ? "Credit" : "Debit",
+                    Status = g.Status == Constant.GeneralLedgerStatus.Credit ? "K" : "D",
                     //Amount = g.Amount / g.Quantity, // * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate
-                }).OrderByDescending(x => x.Status).ToList();
+                }).OrderBy(x => x.Status).ToList();
 
                 if (!query.Any())
                 {
@@ -3055,6 +3055,410 @@ namespace WebView.Controllers
                 rd.SetParameterValue("CompanyName", company.Name ?? "");
                 rd.SetParameterValue("Disiapkan", "");
                 rd.SetParameterValue("Diperiksa", "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region JurnalPaymentRequest
+        public ActionResult JurnalPaymentRequest()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutJurnalPaymentRequest(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+
+                var q = db.PaymentRequestDetails.Include(x => x.PaymentRequest).Include(x => x.Account)
+                                                              .Where(x => !x.IsDeleted && !x.PaymentRequest.IsDeleted && x.PaymentRequestId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    Code = g.Account.Code, //g.OrderCode,
+                    Name = g.Account.Name,
+                    Amount = g.Amount,
+                    Status = (g.Status == Constant.GeneralLedgerStatus.Credit) ? "K" : "D",
+                    //Amount = g.Amount / g.Quantity, // * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate
+                }).OrderBy(x => x.Status).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                query.Add(new
+                {
+                    Code = obj.PaymentRequest.AccountPayable.Code,
+                    Name = obj.PaymentRequest.AccountPayable.Name,
+                    Amount = obj.PaymentRequest.Amount,
+                    Status = "K",
+                });
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/JurnalPaymentRequest.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["CashBankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                var CurCode = (obj.PaymentRequest.Currency.Name == "Rupiah") ? "IDR" :
+                                    (obj.PaymentRequest.Currency.Name == "Euro") ? "EUR" : obj.PaymentRequest.Currency.Name;
+                rd.SetParameterValue("No", obj.PaymentRequest.NoBukti ?? "");
+                rd.SetParameterValue("Tgl", obj.PaymentRequest.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("Disiapkan", "");
+                rd.SetParameterValue("Disetujui", "");
+                rd.SetParameterValue("Diterima", "");
+                rd.SetParameterValue("Currency", CurCode);
+                rd.SetParameterValue("Rate", obj.PaymentRequest.ExchangeRateAmount);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region ReceiptVoucherBank
+        public ActionResult ReceiptVoucherBank()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutReceiptVoucherBank(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+
+                var q = db.ReceiptVoucherDetails.Include(x => x.ReceiptVoucher).Include(x => x.Receivable)
+                                                              .Where(x => !x.IsDeleted && !x.ReceiptVoucher.IsDeleted && x.ReceiptVoucherId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = new List<object>();
+
+                decimal TotalGain = 0;
+                decimal TotalLoss = 0;
+                foreach (var det in q)
+                {
+                    var CurCode = (det.Receivable.Currency.Name == "Rupiah") ? "IDR" :
+                                    (det.Receivable.Currency.Name == "Euro") ? "EUR" : det.Receivable.Currency.Name;
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.AccountReceivable + SqlFunctions.StringConvert((decimal?)det.Receivable.CurrencyId).Trim()).FirstOrDefault();
+                    var NomorSurat = (det.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == det.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "" :
+                                                    (det.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == det.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "" : "";
+                    decimal netAmount = det.AmountPaid; //- det.PPH23;
+                    //if (det.Id == obj.Id) netAmount -= (obj.ReceiptVoucher.BiayaBank + (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? obj.ReceiptVoucher.Pembulatan : -obj.ReceiptVoucher.Pembulatan));
+                    
+                    query.Add(new {
+                        Code = acc.Code,
+                        Amount = (netAmount),
+                        AmountIDR = Math.Round(netAmount/det.Rate, 2) * det.Receivable.Rate,
+                        Name = "DPP" + (det.ReceiptVoucher.Contact.IsTaxable ? "+PPN" : "") + " INV. "+NomorSurat+ ((det.Receivable.Currency.Name != "Rupiah" && det.Receivable.Currency.Name != "IDR") ? " : "+CurCode+" "+ Math.Round(netAmount/det.Rate, 2) +" * "+det.Receivable.Rate : ""),
+                        Status = "K",
+                        ContactName = det.ReceiptVoucher.Contact.Name ?? "",
+                    });
+
+                    if (det.PPH23 > 0)
+                    {
+                        acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PPH23).FirstOrDefault();
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = -(det.PPH23),
+                            AmountIDR = -(det.PPH23) * obj.ReceiptVoucher.RateToIDR,
+                            Name = acc.Name,
+                            Status = "D",
+                            ContactName = obj.ReceiptVoucher.Contact.Name ?? "",
+                        });
+                    }
+
+                    if (det.Receivable.Rate < (det.ReceiptVoucher.RateToIDR * det.Rate))
+                    {
+                        TotalGain += Math.Round((det.ReceiptVoucher.RateToIDR * det.Rate * det.Amount) - (det.Receivable.Rate * det.Amount), 2);
+                    }
+                    else if (det.Receivable.Rate > (det.ReceiptVoucher.RateToIDR * det.Rate))
+                    {
+                        TotalLoss += Math.Round((det.Receivable.Rate * det.Amount) - (det.ReceiptVoucher.RateToIDR * det.Rate * det.Amount), 2);
+                    }
+                }
+
+                //if (obj.ReceiptVoucher.TotalPPH23 > 0)
+                //{
+                //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PPH23).FirstOrDefault();
+                //    query.Add(new
+                //    {
+                //        Code = acc.Code,
+                //        Amount = -(obj.ReceiptVoucher.TotalPPH23),
+                //        AmountIDR = -(obj.ReceiptVoucher.TotalPPH23) * obj.ReceiptVoucher.RateToIDR,
+                //        Name = acc.Name,
+                //        Status = "D",
+                //        ContactName = obj.ReceiptVoucher.Contact.Name ?? "",
+                //    });
+                //}
+
+                if (obj.ReceiptVoucher.BiayaBank > 0)
+                {
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaAdminBank).FirstOrDefault();
+                    query.Add(new
+                    {
+                        Code = acc.Code,
+                        Amount = -(obj.ReceiptVoucher.BiayaBank),
+                        AmountIDR = -(obj.ReceiptVoucher.BiayaBank) * obj.ReceiptVoucher.RateToIDR,
+                        Name = acc.Name,
+                        Status = "D",
+                        ContactName = obj.ReceiptVoucher.Contact.Name ?? "",
+                    });
+                }
+
+                if (obj.ReceiptVoucher.Pembulatan != 0)
+                {
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaPembulatan).FirstOrDefault();
+                    query.Add(new
+                    {
+                        Code = acc.Code,
+                        Amount = (obj.ReceiptVoucher.Pembulatan) * (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1),
+                        AmountIDR = (obj.ReceiptVoucher.Pembulatan) * obj.ReceiptVoucher.RateToIDR * (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1),
+                        Name = acc.Name,
+                        Status = (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit) ? "K" : "D",
+                        ContactName = obj.ReceiptVoucher.Contact.Name ?? "",
+                    });
+                }
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var banklist = db.CashBanks.Where(x => !x.IsDeleted && x.IsBank).Include(x => x.Currency).OrderBy(x => x.Currency.Name).ThenBy(x => x.Name)
+                    .Select(m => new
+                    {
+                        Currency = (m.Currency.Name == "Rupiah") ? "IDR" : (m.Currency.Name == "Euro") ? "EUR" : m.Currency.Name ?? "",
+                        Name = m.Name,
+                        Desc = m.Description,
+                    }).ToList();
+
+                if (!obj.ReceiptVoucher.CashBank.IsBank)
+                {
+                    banklist = banklist.Take(0).ToList();
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/ReceiptVoucherBank.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                rd.Subreports["BankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                decimal Total = obj.ReceiptVoucher.TotalAmount - obj.ReceiptVoucher.TotalPPH23 - obj.ReceiptVoucher.BiayaBank + (obj.ReceiptVoucher.Pembulatan * (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? 1 : -1));
+                var currency = (obj.ReceiptVoucher.CashBank.Currency.Name == "Rupiah") ? "IDR" :
+                                    (obj.ReceiptVoucher.CashBank.Currency.Name == "Euro") ? "EUR" : obj.ReceiptVoucher.CashBank.Currency.Name;
+                rd.SetParameterValue("No", obj.ReceiptVoucher.NoBukti ?? "");
+                rd.SetParameterValue("Tgl", obj.ReceiptVoucher.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("CurSym", (currency == "USD" || currency == "SGD") ? "$" : (currency == "EUR") ? "€" : (currency == "GBP") ? "£" : (currency == "JPY") ? "¥" : (currency == "IDR") ? "Rp" : currency);
+                rd.SetParameterValue("Rate", obj.ReceiptVoucher.RateToIDR);
+                rd.SetParameterValue("IsBank", obj.ReceiptVoucher.CashBank.IsBank);
+                rd.SetParameterValue("NoRek", obj.ReceiptVoucher.CashBank.Description ?? "");
+                rd.SetParameterValue("NoCek", obj.ReceiptVoucher.IsGBCH ? obj.ReceiptVoucher.GBCH_No ?? "" : "");
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Total, true, obj.ReceiptVoucher.CashBank.Currency.Name, "Sen"));
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("Disiapkan", "");
+                rd.SetParameterValue("Diterima", "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region PaymentVoucherBank
+        public ActionResult PaymentVoucherBank()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutPaymentVoucherBank(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+
+                var q = db.PaymentVoucherDetails.Include(x => x.PaymentVoucher).Include(x => x.Payable)
+                                                              .Where(x => !x.IsDeleted && !x.PaymentVoucher.IsDeleted && x.PaymentVoucherId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = new List<object>();
+
+                decimal TotalGain = 0;
+                decimal TotalLoss = 0;
+                foreach (var det in q)
+                {
+                    var CurCode = (det.Payable.Currency.Name == "Rupiah") ? "IDR" :
+                                    (det.Payable.Currency.Name == "Euro") ? "EUR" : det.Payable.Currency.Name;
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.AccountPayable + SqlFunctions.StringConvert((decimal?)det.Payable.CurrencyId).Trim()).FirstOrDefault();
+                    var NomorSurat = (det.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == det.Payable.PayableSourceId).FirstOrDefault().NomorSurat ?? "" :
+                                     (det.Payable.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? db.PurchaseInvoiceMigrations.Where(x => x.Id == det.Payable.PayableSourceId).FirstOrDefault().NomorSurat ?? "" :
+                                     (det.Payable.PayableSource == Constant.PayableSource.PaymentRequest) ? db.PaymentRequests.Where(x => x.Id == det.Payable.PayableSourceId).FirstOrDefault().NoBukti ?? "" : "";
+                    decimal netAmount = det.AmountPaid; //- det.PPH23;
+                    //if (det.Id == obj.Id) netAmount -= (obj.ReceiptVoucher.BiayaBank + (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? obj.ReceiptVoucher.Pembulatan : -obj.ReceiptVoucher.Pembulatan));
+
+                    query.Add(new
+                    {
+                        Code = acc.Code,
+                        Amount = (netAmount),
+                        AmountIDR = Math.Round(netAmount / det.Rate, 2) * det.Payable.Rate,
+                        Name = ((det.Payable.PayableSource == Constant.PayableSource.PaymentRequest) ? "Payment Request No. "+NomorSurat : "DPP" + (det.PaymentVoucher.Contact.IsTaxable ? "+PPN" : "") + " INV. " + NomorSurat) + ((det.Payable.Currency.Name != "Rupiah" && det.Payable.Currency.Name != "IDR") ? " : " + CurCode + " " + Math.Round(netAmount / det.Rate, 2) + " * " + det.Payable.Rate : ""),
+                        Status = "D",
+                        ContactName = det.PaymentVoucher.Contact.Name ?? "",
+                    });
+
+                    if (det.PPH23 > 0)
+                    {
+                        acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.HutangPPH23).FirstOrDefault();
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = -(det.PPH23),
+                            AmountIDR = -(det.PPH23) * obj.PaymentVoucher.RateToIDR,
+                            Name = acc.Name,
+                            Status = "K",
+                            ContactName = obj.PaymentVoucher.Contact.Name ?? "",
+                        });
+                    }
+
+                    if (det.PPH21 > 0)
+                    {
+                        acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.HutangPPH21).FirstOrDefault();
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = -(det.PPH21),
+                            AmountIDR = -(det.PPH21) * obj.PaymentVoucher.RateToIDR,
+                            Name = acc.Name,
+                            Status = "K",
+                            ContactName = obj.PaymentVoucher.Contact.Name ?? "",
+                        });
+                    }
+
+                    if (det.Payable.Rate < det.PaymentVoucher.RateToIDR)
+                    {
+                        TotalLoss += Math.Round((det.PaymentVoucher.RateToIDR * det.Rate * det.Amount) - (det.Payable.Rate * det.Amount), 2);
+                    }
+                    else if (det.Payable.Rate > det.PaymentVoucher.RateToIDR)
+                    {
+                        TotalGain += Math.Round((det.Payable.Rate * det.Amount) - (det.PaymentVoucher.RateToIDR * det.Rate * det.Amount), 2);
+                    }
+                }
+
+                //if (obj.PaymentVoucher.TotalPPH23 > 0)
+                //{
+                //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.HutangPPH23).FirstOrDefault();
+                //    query.Add(new
+                //    {
+                //        Code = acc.Code,
+                //        Amount = -(obj.PaymentVoucher.TotalPPH23),
+                //        AmountIDR = -(obj.PaymentVoucher.TotalPPH23) * obj.PaymentVoucher.RateToIDR,
+                //        Name = acc.Name,
+                //        Status = "K",
+                //        ContactName = obj.PaymentVoucher.Contact.Name ?? "",
+                //    });
+                //}
+
+                if (obj.PaymentVoucher.BiayaBank > 0)
+                {
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaAdminBank).FirstOrDefault();
+                    query.Add(new
+                    {
+                        Code = acc.Code,
+                        Amount = (obj.PaymentVoucher.BiayaBank),
+                        AmountIDR = (obj.PaymentVoucher.BiayaBank) * obj.PaymentVoucher.RateToIDR,
+                        Name = acc.Name,
+                        Status = "D",
+                        ContactName = obj.PaymentVoucher.Contact.Name ?? "",
+                    });
+                }
+
+                if (obj.PaymentVoucher.Pembulatan != 0)
+                {
+                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaPembulatan).FirstOrDefault();
+                    query.Add(new
+                    {
+                        Code = acc.Code,
+                        Amount = (obj.PaymentVoucher.Pembulatan) * (obj.PaymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -1 : 1),
+                        AmountIDR = (obj.PaymentVoucher.Pembulatan) * obj.PaymentVoucher.RateToIDR * (obj.PaymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -1 : 1),
+                        Name = acc.Name,
+                        Status = (obj.PaymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit) ? "K" : "D",
+                        ContactName = obj.PaymentVoucher.Contact.Name ?? "",
+                    });
+                }
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var banklist = db.CashBanks.Where(x => !x.IsDeleted && x.IsBank).Include(x => x.Currency).OrderBy(x => x.Currency.Name).ThenBy(x => x.Name)
+                    .Select(m => new
+                    {
+                        Currency = (m.Currency.Name == "Rupiah") ? "IDR" : (m.Currency.Name == "Euro") ? "EUR" : m.Currency.Name ?? "",
+                        Name = m.Name,
+                        Desc = m.Description,
+                    }).ToList();
+
+                if (!obj.PaymentVoucher.CashBank.IsBank)
+                {
+                    banklist = banklist.Take(0).ToList();
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/PaymentVoucherBank.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                rd.Subreports["BankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                decimal Total = obj.PaymentVoucher.TotalAmount - obj.PaymentVoucher.TotalPPH23 - obj.PaymentVoucher.TotalPPH21 + obj.PaymentVoucher.BiayaBank + (obj.PaymentVoucher.Pembulatan * (obj.PaymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -1 : 1));
+                var currency = (obj.PaymentVoucher.CashBank.Currency.Name == "Rupiah") ? "IDR" :
+                                    (obj.PaymentVoucher.CashBank.Currency.Name == "Euro") ? "EUR" : obj.PaymentVoucher.CashBank.Currency.Name;
+                rd.SetParameterValue("No", obj.PaymentVoucher.NoBukti ?? "");
+                rd.SetParameterValue("Tgl", obj.PaymentVoucher.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("CurSym", (currency == "USD" || currency == "SGD") ? "$" : (currency == "EUR") ? "€" : (currency == "GBP") ? "£" : (currency == "JPY") ? "¥" : (currency == "IDR") ? "Rp" : currency);
+                rd.SetParameterValue("Rate", obj.PaymentVoucher.RateToIDR);
+                rd.SetParameterValue("IsBank", obj.PaymentVoucher.CashBank.IsBank);
+                rd.SetParameterValue("NoRek", obj.PaymentVoucher.CashBank.Description ?? "");
+                rd.SetParameterValue("NoCek", obj.PaymentVoucher.IsGBCH ? obj.PaymentVoucher.GBCH_No ?? "" : "");
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Total, true, obj.PaymentVoucher.CashBank.Currency.Name, "Sen"));
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("Disiapkan", "");
+                rd.SetParameterValue("Diterima", "");
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");

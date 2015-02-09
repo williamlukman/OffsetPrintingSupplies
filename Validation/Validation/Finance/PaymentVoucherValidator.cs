@@ -62,6 +62,18 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
+        public PaymentVoucher VIfGBCHThenHasGBCHNo(PaymentVoucher paymentVoucher)
+        {
+            if (paymentVoucher.IsGBCH)
+            {
+                if (paymentVoucher.GBCH_No == null || paymentVoucher.GBCH_No.Trim() == "")
+                {
+                    paymentVoucher.Errors.Add("GBCH_No", "Jika GBCH maka GBCH No. harus diisi");
+                }
+            }
+            return paymentVoucher;
+        }
+
         public PaymentVoucher VIfGBCHThenHasDueDate(PaymentVoucher paymentVoucher)
         {
             if (paymentVoucher.IsGBCH)
@@ -181,8 +193,10 @@ namespace Validation.Validation
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
                 {
-                    totalamount += detail.Amount;
+                    totalamount += detail.AmountPaid; //Amount;
                 }
+
+                totalamount = totalamount - (paymentVoucher.TotalPPH21 + paymentVoucher.TotalPPH23 - paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan));
 
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 if (cashBank.Amount < totalamount)
@@ -216,6 +230,42 @@ namespace Validation.Validation
             if (paymentVoucher.ReconciliationDate == null)
             {
                 paymentVoucher.Errors.Add("ReconciliationDate", "Harus memiliki reconciliation date");
+            }
+            return paymentVoucher;
+        }
+
+        public PaymentVoucher VHasValidRateToIDR(PaymentVoucher paymentVoucher)
+        {
+            if (paymentVoucher.RateToIDR <= 0)
+            {
+                paymentVoucher.Errors.Add("RateToIDR", "Harus lebih besar dari 0");
+            }
+            return paymentVoucher;
+        }
+
+        public PaymentVoucher VHasValidBiayaBank(PaymentVoucher paymentVoucher)
+        {
+            if (paymentVoucher.BiayaBank < 0)
+            {
+                paymentVoucher.Errors.Add("BiayaBank", "Tidak boleh negatif");
+            }
+            return paymentVoucher;
+        }
+
+        public PaymentVoucher VHasValidPembulatan(PaymentVoucher paymentVoucher)
+        {
+            if (paymentVoucher.Pembulatan < 0)
+            {
+                paymentVoucher.Errors.Add("Pembulatan", "Tidak boleh negatif");
+            }
+            return paymentVoucher;
+        }
+
+        public PaymentVoucher VHasValidStatusPembulatan(PaymentVoucher paymentVoucher)
+        {
+            if (paymentVoucher.StatusPembulatan != Constant.GeneralLedgerStatus.Debit && paymentVoucher.StatusPembulatan != Constant.GeneralLedgerStatus.Credit)
+            {
+                paymentVoucher.Errors.Add("Status", "Harus Debit atau Credit");
             }
             return paymentVoucher;
         }
@@ -257,7 +307,17 @@ namespace Validation.Validation
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VIfGBCHThenIsBank(paymentVoucher, _cashBankService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VIfGBCHThenHasGBCHNo(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VIfGBCHThenHasDueDate(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VHasValidRateToIDR(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VHasValidBiayaBank(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VHasValidPembulatan(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VHasValidStatusPembulatan(paymentVoucher);
             return paymentVoucher;
         }
 

@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public DateTime ReceiptDate { get; set; }
         public decimal RateToIDR { get; set; }
         public bool IsGBCH { get; set; }
+        public string GBCH_No { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }

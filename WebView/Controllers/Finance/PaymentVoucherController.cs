@@ -89,6 +89,7 @@ namespace WebView.Controllers
                              CashBank = model.CashBank.Name,
                              model.PaymentDate,
                              model.IsGBCH,
+                             model.GBCH_No,
                              model.DueDate,
                              model.TotalAmount,
                              Currency = model.CashBank.Currency.Name,
@@ -143,6 +144,7 @@ namespace WebView.Controllers
                             model.CashBank,
                             model.PaymentDate,
                             model.IsGBCH,
+                            model.GBCH_No,
                             model.DueDate,
                             model.TotalAmount,
                             model.Currency,
@@ -425,6 +427,7 @@ namespace WebView.Controllers
                 Currency = model.CashBank.Currency.Name,
                 model.PaymentDate,
                 model.IsGBCH,
+                model.GBCH_No,
                 model.DueDate,
                 model.TotalAmount,
                 model.RateToIDR,
@@ -434,6 +437,7 @@ namespace WebView.Controllers
                 model.BiayaBank,
                 model.Pembulatan,
                 model.StatusPembulatan,
+                model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -531,6 +535,7 @@ namespace WebView.Controllers
                 if (data.CashBankId != model.CashBankId) PembulatanOnly = false;
                 if (data.PaymentDate != model.PaymentDate) PembulatanOnly = false;
                 if (data.IsGBCH != model.IsGBCH) PembulatanOnly = false;
+                if (data.GBCH_No != model.GBCH_No) PembulatanOnly = false;
                 if (data.DueDate != model.DueDate) PembulatanOnly = false;
                 if (data.NoBukti != model.NoBukti) PembulatanOnly = false;
                 if (data.RateToIDR != model.RateToIDR) PembulatanOnly = false;
@@ -540,6 +545,7 @@ namespace WebView.Controllers
                 data.CashBankId = model.CashBankId;
                 data.PaymentDate = model.PaymentDate;
                 data.IsGBCH = model.IsGBCH;
+                data.GBCH_No = model.GBCH_No;
                 data.DueDate = model.DueDate;
                 //data.TotalAmount = model.TotalAmount;
                 data.NoBukti = model.NoBukti;

@@ -62,6 +62,18 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
+        public ReceiptVoucher VIfGBCHThenHasGBCHNo(ReceiptVoucher receiptVoucher)
+        {
+            if (receiptVoucher.IsGBCH)
+            {
+                if (receiptVoucher.GBCH_No == null || receiptVoucher.GBCH_No.Trim() == "")
+                {
+                    receiptVoucher.Errors.Add("GBCH_No", "Jika GBCH maka GBCH No. harus diisi");
+                }
+            }
+            return receiptVoucher;
+        }
+
         public ReceiptVoucher VIfGBCHThenHasDueDate(ReceiptVoucher receiptVoucher)
         {
             if (receiptVoucher.IsGBCH)
@@ -180,8 +192,10 @@ namespace Validation.Validation
                 IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
                 foreach (var detail in details)
                 {
-                    totalamount += detail.Amount;
+                    totalamount += detail.AmountPaid; //Amount;
                 }
+
+                totalamount = totalamount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -receiptVoucher.Pembulatan : receiptVoucher.Pembulatan));
 
                 CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                 if (cashBank.Amount < totalamount)
@@ -220,6 +234,15 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
+        public ReceiptVoucher VHasValidRateToIDR(ReceiptVoucher receiptVoucher)
+        {
+            if (receiptVoucher.RateToIDR <= 0)
+            {
+                receiptVoucher.Errors.Add("RateToIDR", "Harus lebih besar dari 0");
+            }
+            return receiptVoucher;
+        }
+
         public ReceiptVoucher VHasValidBiayaBank(ReceiptVoucher receiptVoucher)
         {
             if (receiptVoucher.BiayaBank < 0)
@@ -231,7 +254,7 @@ namespace Validation.Validation
 
         public ReceiptVoucher VHasValidPembulatan(ReceiptVoucher receiptVoucher)
         {
-            if (receiptVoucher.BiayaBank < 0)
+            if (receiptVoucher.Pembulatan < 0)
             {
                 receiptVoucher.Errors.Add("Pembulatan", "Tidak boleh negatif");
             }
@@ -284,7 +307,11 @@ namespace Validation.Validation
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VIfGBCHThenIsBank(receiptVoucher, _cashBankService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VIfGBCHThenHasGBCHNo(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VIfGBCHThenHasDueDate(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VHasValidRateToIDR(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasValidBiayaBank(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
