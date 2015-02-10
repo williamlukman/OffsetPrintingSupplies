@@ -2449,6 +2449,68 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region IdentifyBlanket
+        public ActionResult IdentifyBlanket()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutIdentifyBlanket(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.Blankets.Include(x => x.Machine).Include(x => x.Contact).Include(x => x.LeftBarItem).Include(x => x.RightBarItem).Include(x => x.RollBlanketItem)
+                                                              .Where(x => !x.IsDeleted && x.Id == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    Name = g.Name,
+                    Marketing = "", //user,
+                    Customer = g.Contact.Name,
+                    Machine = g.Machine.Name,
+                    AC = g.AC,
+                    AR = g.AR,
+                    Thick = g.thickness,
+                    Bar1 = g.HasLeftBar ? g.LeftBarItem.Name : "",
+                    Bar2 = g.HasRightBar ? g.RightBarItem.Name : "",
+                    Corner = "",
+                    Notes = g.Description,
+                }).OrderBy(x => x.Name).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/IdentifyBlanket.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", DateTime.Today);
+                //rd.SetParameterValue("Marketing", user); //obj.RecoveryOrder.Employee.Name
+                rd.SetParameterValue("Inspector", "");
+                rd.SetParameterValue("CheckedBy", "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
         #region SalesOrderConfirm
         public ActionResult SalesOrderConfirm()
         {
@@ -3123,6 +3185,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Disiapkan", "");
                 rd.SetParameterValue("Disetujui", "");
                 rd.SetParameterValue("Diterima", "");
+                rd.SetParameterValue("Remarks", obj.PaymentRequest.Description);
                 rd.SetParameterValue("Currency", CurCode);
                 rd.SetParameterValue("Rate", obj.PaymentRequest.ExchangeRateAmount);
 

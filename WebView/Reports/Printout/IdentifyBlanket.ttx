@@ -1,0 +1,10 @@
+Marketing	String	255	
+Customer	String	255	
+Machine	String	255	
+AC	Number		
+AR	Number		
+Thick	Number		
+Bar1	String	255	
+Bar2	String	255	
+Corner	String	255	
+Notes	Memo		
