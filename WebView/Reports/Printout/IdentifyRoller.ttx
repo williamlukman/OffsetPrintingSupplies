@@ -1,0 +1,16 @@
+ID	Number		
+Machine	String	255	
+RollerNo	String	255	
+RD	Number		
+CD	Number		
+RL	Number		
+WL	Number		
+TL	Number		
+GL	Number		
+GrooveLength	Number		
+GrooveQty	Number		
+CoreType	String	255	
+Acc	Boolean		
+Request	String	255	
+Remark	String	255	
+Material	String	255	

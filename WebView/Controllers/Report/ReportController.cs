@@ -2511,6 +2511,86 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region IdentifyRoller
+        public ActionResult IdentifyRoller()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutIdentifyRoller(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.CoreIdentificationDetails.Include(x => x.CoreIdentification).Include(x => x.Machine).Include(x => x.CoreBuilder).Include(x => x.RollerType)
+                                                              .Where(x => !x.IsDeleted && !x.CoreIdentification.IsDeleted && x.CoreIdentificationId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    ID = g.DetailId,
+                    Machine = g.Machine.Name,
+                    RollerNo = g.RollerNo,
+                    RD = g.RD,
+                    CD = g.CD,
+                    RL = g.RL,
+                    WL = g.WL,
+                    TL = g.TL,
+                    GL = g.GL,
+                    GrooveLength = g.GrooveLength,
+                    GrooveQty = g.GrooveQTY,
+                    CoreType = g.CoreBuilder.CoreBuilderTypeCase,
+                    Acc = db.CoreAccessoryDetails.Where(x => !x.IsDeleted && x.CoreIdentificationDetailId == g.Id).FirstOrDefault() != null,
+                    Request = g.RepairRequestCase == Constant.RepairRequestCase.All ? "Bearing Seat & Centre Drill & Repair Corosive" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeat ? "Bearing Seat" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndCentreDrill ? "Bearing Seat & Centre Drill" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndRepairCorosive ? "Bearing Seat & Repair Corosive" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrill ? "Centre Drill" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrillAndRepairCorosive ? "Centre Drill & Repair Corosive" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.RepairCorosive ? "Repair Corosive" : 
+                                /*g.RepairRequestCase == Constant.RepairRequestCase.None ? "None" :*/ "",
+                    Remark = "",
+                    Material = g.MaterialCase == Constant.MaterialCase.New ? "New" : "Used",
+                }).OrderBy(x => x.ID).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/IdentifyRoller.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("NoForm", obj.CoreIdentification.Code);
+                rd.SetParameterValue("IncomingDate", obj.CoreIdentification.IncomingRoll.GetValueOrDefault());
+                rd.SetParameterValue("IdentifyDate", obj.CoreIdentification.IdentifiedDate);
+                rd.SetParameterValue("Customer", obj.CoreIdentification.Contact.Name);
+                rd.SetParameterValue("Press", "");
+                rd.SetParameterValue("NoDiss", obj.CoreIdentification.NomorDisassembly);
+                rd.SetParameterValue("Inspector", "");
+                rd.SetParameterValue("CheckedBy", "");
+                rd.SetParameterValue("GivenBy", "");
+                rd.SetParameterValue("ReceivedBy", "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
         #region SalesOrderConfirm
         public ActionResult SalesOrderConfirm()
         {
