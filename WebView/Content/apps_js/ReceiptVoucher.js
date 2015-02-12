@@ -37,7 +37,6 @@
                 $(this).numberbox('clear');
         });
     }
-
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#reconcile_div").dialog('close');
@@ -453,6 +452,7 @@
     $('#reconcile_btn_cancel').click(function () {
         $('#reconcile_div').dialog('close');
     });
+
 
     $("#AmountPaid, #Rate").blur(function () {
         var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));

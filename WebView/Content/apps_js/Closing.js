@@ -248,7 +248,7 @@
         var id = $("#form_btn_save").data('kode');
         var exchangerateclosingContainer = [];
         var exchangerateclosingContainerIdx = 0;
-        $('#list_exchangerateclosing').each(function () {
+        $('#list_containerSE tr').each(function () {
             if (exchangerateclosingContainerIdx > 0) {
                 obj = {};
                 obj['CurrencyId'] = $.trim($(this).find('td:eq(0)').text());
