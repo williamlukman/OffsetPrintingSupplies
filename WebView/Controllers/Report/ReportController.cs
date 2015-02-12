@@ -2543,13 +2543,13 @@ namespace WebView.Controllers
                     GrooveLength = g.GrooveLength,
                     GrooveQty = g.GrooveQTY,
                     CoreType = g.CoreBuilder.CoreBuilderTypeCase,
-                    Acc = db.CoreAccessoryDetails.Where(x => !x.IsDeleted && x.CoreIdentificationDetailId == g.Id).FirstOrDefault() != null,
-                    Request = g.RepairRequestCase == Constant.RepairRequestCase.All ? "Bearing Seat & Centre Drill & Repair Corosive" :
-                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeat ? "Bearing Seat" :
-                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndCentreDrill ? "Bearing Seat & Centre Drill" :
-                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndRepairCorosive ? "Bearing Seat & Repair Corosive" :
-                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrill ? "Centre Drill" :
-                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrillAndRepairCorosive ? "Centre Drill & Repair Corosive" :
+                    Acc = (db.CoreAccessoryDetails.Where(x => !x.IsDeleted && x.CoreIdentificationDetailId == g.Id).FirstOrDefault() != null) ? "Y" : "N",
+                    Request = g.RepairRequestCase == Constant.RepairRequestCase.All ? "BS & CD & Repair Corosive" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeat ? "BS" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndCentreDrill ? "BS & CD" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.BearingSeatAndRepairCorosive ? "BS & Repair Corosive" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrill ? "CD" :
+                                g.RepairRequestCase == Constant.RepairRequestCase.CentreDrillAndRepairCorosive ? "CD & Repair Corosive" :
                                 g.RepairRequestCase == Constant.RepairRequestCase.RepairCorosive ? "Repair Corosive" : 
                                 /*g.RepairRequestCase == Constant.RepairRequestCase.None ? "None" :*/ "",
                     Remark = "",

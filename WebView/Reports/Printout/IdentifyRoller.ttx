@@ -10,7 +10,7 @@ GL	Number
 GrooveLength	Number		
 GrooveQty	Number		
 CoreType	String	255	
-Acc	Boolean		
+Acc	String	1		
 Request	String	255	
 Remark	String	255	
 Material	String	255	
