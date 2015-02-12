@@ -65,7 +65,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -86,17 +86,18 @@
 		          rowOrderType = $(this).getRowData(cl).ordertype;
 		          if (rowOrderType == '0') {
 		              rowOrderType = "Trial";
-		          } else {
+		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
+		          } else {
+		              rowOrderType = "Consignment";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
 		      }
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
 
 
     //TOOL BAR BUTTON
@@ -291,6 +292,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "VirtualOrder/Confirm",
             type: "POST",
@@ -299,6 +301,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -450,7 +453,7 @@
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         //page: '1',
-        //pager: $('#pagerdetail'),
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -475,8 +478,8 @@
 		      //}
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: true })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -628,7 +631,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListCustomer';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -640,10 +643,27 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'npwp', index: 'npwp', width: 100 },
+                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'pic', index: 'pic', width: 120 },
+                  { name: 'piccontact', index: 'piccontactno', width: 100 },
+                  { name: 'email', index: 'email', width: 150 },
+                  { name: 'taxcode', index: 'taxcode', width: 50 },
+                  { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
+    			  { name: 'contactgroupid', index: 'contactgroupid', width: 60, align: "center", hidden: true },
+				  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'contacttype', index: 'contacttype', width: 60, hidden: true },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
@@ -700,7 +720,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'name', index: 'name', width: 240 },
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },

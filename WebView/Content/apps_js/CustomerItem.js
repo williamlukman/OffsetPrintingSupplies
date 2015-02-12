@@ -42,7 +42,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     //    $("#list").setGridParam({ url: base_url + 'MstWarehouse/GetList', page: '1' }).trigger("reloadGrid");
 
@@ -58,7 +58,7 @@
             colModel: [
                       { name: 'id', index: 'id', width: 35, align: "center" },
                       { name: 'sku', index: 'sku', width: 70 },
-                      { name: 'name', index: 'name', width: 120 },
+                      { name: 'name', index: 'name', width: 240 },
                       { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                       { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -92,7 +92,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     }
 
@@ -108,7 +108,7 @@
             colModel: [
                       { name: 'itemid', index: 'itemid', width: 80, align: "center"},
                       { name: 'sku', index: 'sku', width: 80 },
-                      { name: 'item', index: 'item', width: 200},
+                      { name: 'item', index: 'item', width: 240},
                       { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],
@@ -128,7 +128,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
     // itemwarehouse
@@ -142,7 +142,7 @@
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center"},
                       { name: 'code', index: 'code', width: 80 },
-                      { name: 'name', index: 'name', width: 200 },
+                      { name: 'name', index: 'name', width: 240 },
                       { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],
@@ -162,7 +162,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
 
@@ -192,7 +192,7 @@
     //              { name: 'name', index: 'name', width: 80 },
     //              { name: 'description', index: 'description', width: 250 },
     //              { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-    //              { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    //              { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
     //    ],
     //    page: '1',
     //    pager: jQuery('#pager'),
@@ -218,8 +218,8 @@
     //      }
 
     //});//END GRID
-    //$("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //// .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    //$("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+    //// .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -253,11 +253,11 @@
 
     //GRID Detail+++++++++++++++
    
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListCustomer';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -272,7 +272,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
@@ -286,7 +286,7 @@
         height: $("#lookup_div_contact").height() - 110,
     });
     $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {

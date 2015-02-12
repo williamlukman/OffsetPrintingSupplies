@@ -108,7 +108,7 @@ namespace Service.Service
                 WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseFromId, WarehouseMutationDetail.ItemId);
                 WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseToId, WarehouseMutationDetail.ItemId);
 
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForWarehouseMutation(WarehouseMutationDetail, warehouseItemFrom, warehouseItemTo);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForWarehouseMutation(WarehouseMutationDetail, warehouseItemFrom, warehouseItemTo);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

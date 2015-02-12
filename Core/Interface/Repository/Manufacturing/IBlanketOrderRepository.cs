@@ -19,6 +19,7 @@ namespace Core.Interface.Repository
         BlanketOrder ConfirmObject(BlanketOrder blanketOrder);
         BlanketOrder UnconfirmObject(BlanketOrder blanketOrder);
         BlanketOrder CompleteObject(BlanketOrder blanketOrder);
+        BlanketOrder UndoCompleteObject(BlanketOrder blanketOrder);
         BlanketOrder AdjustQuantity(BlanketOrder blanketOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(BlanketOrder blanketOrder);

@@ -14,7 +14,7 @@ namespace Validation.Validation
 
         public SalesOrder VHasUniqueNomorSurat(SalesOrder salesOrder, ISalesOrderService _salesOrderService)
         {
-            IList<SalesOrder> duplicates = _salesOrderService.GetQueryable().Where(x => x.NomorSurat == salesOrder.NomorSurat && x.Id != salesOrder.Id).ToList();
+            IList<SalesOrder> duplicates = _salesOrderService.GetQueryable().Where(x => x.NomorSurat == salesOrder.NomorSurat && x.Id != salesOrder.Id & !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 salesOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");

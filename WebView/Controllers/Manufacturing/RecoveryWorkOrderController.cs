@@ -75,6 +75,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.CoreIdentificationId,
+                             model.CoreIdentification.NomorDisassembly,
                              WarehouseId = model.CoreIdentification.WarehouseId,
                              WarehouseCode = model.CoreIdentification.Warehouse.Code,
                              Warehouse = model.CoreIdentification.Warehouse.Name,
@@ -123,6 +124,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.CoreIdentificationId,
+                            model.NomorDisassembly,
                             model.WarehouseId,
                             model.WarehouseCode,
                             model.Warehouse,
@@ -157,6 +159,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.CoreIdentificationId,
+                             model.CoreIdentification.NomorDisassembly,
                              WarehouseId = model.CoreIdentification.WarehouseId,
                              WarehouseCode = model.CoreIdentification.Warehouse.Code,
                              Warehouse = model.CoreIdentification.Warehouse.Name,
@@ -204,6 +207,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.CoreIdentificationId,
+                            model.NomorDisassembly,
                             model.WarehouseId,
                             model.WarehouseCode,
                             model.Warehouse,
@@ -229,7 +233,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _recoveryOrderDetailService.GetQueryable().Include("RollerBuilder")
+            var q = _recoveryOrderDetailService.GetQueryable().Include("RollerBuilder").Include("CoreBuilder").Include("Compound")
                                                .Where(x => x.RecoveryOrderId == id && !x.IsDeleted);
 
             var query = (from model in q
@@ -238,9 +242,14 @@ namespace WebView.Controllers
                              model.Id,
                              model.CoreIdentificationDetailId,
                              model.RollerBuilderId,
+                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
                              RollerBuilder = model.RollerBuilder.Name,
                              model.CoreTypeCase,
+                             CoreBuilder = model.CoreIdentificationDetail.CoreBuilder.Name,
+                             Compound = model.RollerBuilder.Compound.Name,
                              model.CompoundUsage,
+                             CompoundUnderLayer = model.CompoundUnderLayerId != null ? model.CompoundUnderLayer.Name : "",
+                             model.CompoundUnderLayerUsage,
                              model.IsRejected,
                              model.RejectedDate,
                              model.IsFinished,
@@ -278,9 +287,14 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.CoreIdentificationDetailId,
                             model.RollerBuilderId,
+                            model.RollerBuilderBaseSku,
                             model.RollerBuilder,
                             model.CoreTypeCase,
+                            model.CoreBuilder,
+                            model.Compound,
                             model.CompoundUsage,
+                            model.CompoundUnderLayer,
+                            model.CompoundUnderLayerUsage,
                             model.IsRejected,
                             model.RejectedDate,
                             model.IsFinished,
@@ -300,6 +314,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _recoveryOrderDetailService.GetQueryable().Include("CoreIdentificationDetail").Include("RollerBuilder")
+                                               .Include("CoreBuilder").Include("Compound")
                                                .Where(x => x.RecoveryOrderId == id && x.IsFinished && !x.CoreIdentificationDetail.IsDelivered && !x.IsDeleted);
 
             var query = (from model in q
@@ -313,10 +328,14 @@ namespace WebView.Controllers
                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
                             RollerBuilder = model.RollerBuilder.Name,
                             model.CoreTypeCase,
+                            CoreBuilder = model.CoreIdentificationDetail.CoreBuilder.Name,
+                            Compound = model.RollerBuilder.Compound.Name,
+                            model.CompoundUsage,
+                            CompoundUnderLayer = model.CompoundUnderLayerId != null ? model.CompoundUnderLayer.Name : "",
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -365,10 +384,14 @@ namespace WebView.Controllers
                             model.RollerBuilderId,
                             model.RollerBuilder,
                             model.CoreTypeCase,
+                            model.CoreBuilder,
+                            model.Compound,
+                            model.CompoundUsage,
+                            model.CompoundUnderLayer,
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -403,6 +426,7 @@ namespace WebView.Controllers
                 model.Code,
                 model.WarehouseId,
                 model.CoreIdentificationId,
+                model.CoreIdentification.NomorDisassembly,
                 CoreIdentification =_coreIdentificationService.GetObjectById(model.CoreIdentificationId).Code,
                 WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
@@ -436,6 +460,11 @@ namespace WebView.Controllers
                                    model.CoreIdentificationDetailId).CoreBuilderId).Name,
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                Compound = _itemService.GetObjectById(_rollerBuilderService.GetObjectById(model.RollerBuilderId).CompoundId).Name,
+                model.CompoundUsage,
+                CompoundUnderLayer = model.CompoundUnderLayerId != null ? 
+                                     _itemService.GetObjectById(model.CompoundUnderLayerId.GetValueOrDefault()).Name : "",
+                model.CompoundUnderLayerUsage,
                 model.CoreTypeCase,
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
@@ -522,7 +551,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.SoftDeleteObject(model,_recoveryOrderDetailService,_recoveryAccessoryDetailService);
+                model = _recoveryOrderService.SoftDeleteObject(data,_recoveryOrderDetailService,_recoveryAccessoryDetailService);
             }
             catch (Exception ex)
             {
@@ -627,9 +656,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-     
-      
-
     }
 }

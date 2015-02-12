@@ -13,6 +13,9 @@ namespace Core.DomainModel
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
         public string NomorSurat { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
+        public string Remark { get; set; }
 
         public decimal TotalCOGS { get; set; }
         public bool IsConfirmed { get; set; }

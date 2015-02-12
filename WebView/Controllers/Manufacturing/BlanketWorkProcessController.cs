@@ -15,8 +15,9 @@ namespace WebView.Controllers
 {
     public class BlanketWorkProcessController : Controller
     {
-      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BlanketWorkProcessController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BlanketWorkProcessController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -31,6 +32,7 @@ namespace WebView.Controllers
         public BlanketWorkProcessController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -60,7 +62,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
-                                              .Include("Item").Where(x => !x.IsDeleted);
+                                              .Include("Item").Where(x => !x.IsDeleted && x.BlanketOrder.IsConfirmed);
 
             var query = (from model in q
                          select new
@@ -68,6 +70,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.BlanketOrderId,
                              BlanketOrderCode = model.BlanketOrder.Code,
+                             BlanketOrderProductionNo = model.BlanketOrder.ProductionNo,
                              model.BlanketId,
                              BlanketSku = model.Blanket.Sku,
                              Blanket = model.Blanket.Name,
@@ -81,7 +84,7 @@ namespace WebView.Controllers
                              model.IsSideSealed,
                              model.IsBarPrepared,
                              model.IsAdhesiveTapeApplied,
-                             model.AdhesiveUsage,
+                             model.RollBlanketUsage,
                              model.IsBarMounted,
                              model.IsBarHeatPressed,
                              model.IsBarPullOffTested,
@@ -127,6 +130,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.BlanketOrderId,
                             model.BlanketOrderCode,
+                            model.BlanketOrderProductionNo,
                             model.BlanketId,
                             model.BlanketSku,
                             model.Blanket,
@@ -140,7 +144,7 @@ namespace WebView.Controllers
                             model.IsSideSealed,
                             model.IsBarPrepared,
                             model.IsAdhesiveTapeApplied,
-                            model.AdhesiveUsage,
+                            model.RollBlanketUsage,
                             model.IsBarMounted,
                             model.IsBarHeatPressed,
                             model.IsBarPullOffTested,
@@ -175,6 +179,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.BlanketOrderId,
                 _blanketOrderService.GetObjectById(model.BlanketOrderId).Code,
+                _blanketOrderService.GetObjectById(model.BlanketOrderId).ProductionNo,
                 model.BlanketId,
                 BlanketSku = _blanketService.GetObjectById(model.BlanketId).Sku,
                 Blanket =_blanketService.GetObjectById(model.BlanketId).Name,
@@ -192,7 +197,7 @@ namespace WebView.Controllers
                 model.IsSideSealed,
                 model.IsBarPrepared,
                 model.IsAdhesiveTapeApplied,
-                model.AdhesiveUsage,
+                model.RollBlanketUsage,
                 model.IsBarMounted,
                 model.IsBarHeatPressed,
                 model.IsBarPullOffTested,
@@ -209,55 +214,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic ProgressDetail(BlanketOrderDetail model)
-        {
-            var models = new BlanketOrderDetail();
-            models.Errors = new Dictionary<string, string>();
-            decimal usage = model.AdhesiveUsage;
-            try
-            {
-                var data = _blanketOrderDetailService.GetObjectById(model.Id);
-                if (model.IsCut && !data.IsCut) { models = _blanketOrderDetailService.CutObject(data, _blanketOrderService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsSideSealed && !data.IsSideSealed) { models = _blanketOrderDetailService.SideSealObject(data); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPrepared && !data.IsBarPrepared) { models = _blanketOrderDetailService.PrepareObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data, model.AdhesiveUsage, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarMounted && !data.IsBarMounted) { models = _blanketOrderDetailService.MountObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarHeatPressed && !data.IsBarHeatPressed) { models = _blanketOrderDetailService.HeatPressObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPullOffTested && !data.IsBarPullOffTested) { models = _blanketOrderDetailService.PullOffTestObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsQCAndMarked && !data.IsQCAndMarked) { models = _blanketOrderDetailService.QCAndMarkObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsPackaged  && !data.IsPackaged) { models = _blanketOrderDetailService.PackageObject(data); }
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                models.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                models.Errors
-            });
-        }
-
-
-       
-
-        [HttpPost]
         public dynamic Finish(BlanketOrderDetail model)
         {
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
+                data.RollBlanketUsage = model.RollBlanketUsage;
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -279,7 +243,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UnfinishObject(data, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -300,7 +264,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.RejectObject(data,model.RejectedDate.Value,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    ,_blanketService,_itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -322,7 +286,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UndoRejectObject(data,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    ,_blanketService,_itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

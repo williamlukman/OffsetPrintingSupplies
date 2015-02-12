@@ -11,9 +11,15 @@ namespace Core.DomainModel
         public int RecoveryOrderId { get; set; }
         public int CoreIdentificationDetailId { get; set; }
         public int RollerBuilderId { get; set; }
+        public Nullable<int> CompoundUnderLayerId { get; set; }
 
         public decimal TotalCost { get; set; }
-        public int CompoundUsage { get; set; }
+        public decimal AccessoriesCost { get; set; }
+        public decimal CoreCost { get; set; }
+        public decimal CompoundCost { get; set; }
+
+        public decimal CompoundUsage { get; set; }
+        public decimal CompoundUnderLayerUsage { get; set; }
 
         public string CoreTypeCase { get; set; }
         public bool IsDisassembled { get; set; }
@@ -39,6 +45,7 @@ namespace Core.DomainModel
         public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
         public virtual RecoveryOrder RecoveryOrder { get; set; }
         public virtual RollerBuilder RollerBuilder { get; set; }
+        public Item CompoundUnderLayer { get; set; }
         public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
     }
 }

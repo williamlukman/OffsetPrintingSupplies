@@ -17,6 +17,7 @@ namespace WebView.Controllers
     {
       private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BlanketWorkOrderController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -31,6 +32,7 @@ namespace WebView.Controllers
         public BlanketWorkOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -66,6 +68,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ProductionNo,
                              Contact = model.Contact.Name,
                              Warehouse = model.Warehouse.Name,
                              model.QuantityReceived,
@@ -108,6 +111,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.ProductionNo,
                             model.Contact,
                             model.Warehouse,
                             model.QuantityReceived,
@@ -138,6 +142,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ProductionNo,
                              Contact = model.Contact.Name,
                              Warehouse = model.Warehouse.Name,
                              model.QuantityReceived,
@@ -180,6 +185,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.ProductionNo,
                             model.Contact,
                             model.Warehouse,
                             model.QuantityReceived,
@@ -255,6 +261,7 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                             model.Id,
                              model.BlanketSku,
                              model.Blanket,
                              model.RollBlanketItemSku,
@@ -288,6 +295,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.ProductionNo,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.WarehouseId,
@@ -296,6 +304,7 @@ namespace WebView.Controllers
                 model.QuantityReceived,
                 model.HasDueDate,
                 model.DueDate,
+                model.IsConfirmed,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -314,12 +323,15 @@ namespace WebView.Controllers
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 
+
             return Json(new
             {
                 model.Id,
+                model.BlanketOrderId,
+                model.BlanketId,
                 BlanketSku = _blanketService.GetObjectById(model.BlanketId).Sku,
                 Blanket = _blanketService.GetObjectById(model.BlanketId).Name,
-                RollBlanketSku = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
+                RollBlanketSku = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
                 RollBlanket = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
                 BlanketLeftBarSku = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
                                     _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
@@ -373,17 +385,51 @@ namespace WebView.Controllers
             });
         }
 
+        public dynamic CopyDetail(int BlanketId, int BlanketOrderId, int TotalCopy)
+        {
+            IDictionary<string, string> Errors = new Dictionary<string, string>();
+            try
+            {
+                for (int i = 0; i < TotalCopy; i++)
+                {
+                    BlanketOrderDetail model = new BlanketOrderDetail { BlanketId = BlanketId, BlanketOrderId = BlanketOrderId };
+                    model = _blanketOrderDetailService.CreateObject(model, _blanketOrderService, _blanketService);
+                    if (model.Errors.Any() && !Errors.Any())
+                    {
+                        Errors.Add("Generic", model.Errors.ElementAtOrDefault(0).Value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Insert Failed", ex);
+                if (!Errors.Any()) { Errors.Add("Generic", "Error : " + ex); }
+            }
+
+            return Json(new
+            {
+                Errors
+            });
+        }
+
         [HttpPost]
         public dynamic Update(BlanketOrder model)
         {
             try
             {
                 var data = _blanketOrderService.GetObjectById(model.Id);
-                data.ContactId = model.ContactId;
-                data.WarehouseId = model.WarehouseId;
+                if (!data.IsConfirmed)
+                {
+                    data.ContactId = model.ContactId;
+                    data.WarehouseId = model.WarehouseId;
+                    data.QuantityReceived = model.QuantityReceived;
+                }
                 data.Code = model.Code;
-                data.QuantityReceived = model.QuantityReceived;
-                model = _blanketOrderService.UpdateObject(data,_blanketOrderDetailService);
+                data.ProductionNo = model.ProductionNo;
+                data.HasDueDate = model.HasDueDate;
+                data.DueDate = model.DueDate;
+                model = data.IsConfirmed ? _blanketOrderService.UpdateAfterConfirmObject(data,_blanketOrderDetailService) :
+                                           _blanketOrderService.UpdateObject(data,_blanketOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -510,7 +556,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -532,7 +578,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UnfinishObject(data, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -553,7 +599,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.RejectObject(data,model.RejectedDate.Value,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    ,_blanketService,_itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -575,7 +621,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UndoRejectObject(data,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                    ,_blanketService,_itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -142,7 +142,7 @@ namespace TestValidation
                     d._stockAdjustmentDetailService.CreateObject(d.stockAD2, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                     d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                            d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                            d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.contact = new Contact()
                     {
                         Name = "Abbey",

@@ -16,7 +16,7 @@
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_process" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a>
-        <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Accessory</a>
+        <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add/Edit Accessory</a>
         <a id="btn_reject" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Reject</a>
         <a id="btn_unreject" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Undo Reject</a>
         <a id="btn_finish" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Finish</a>
@@ -61,7 +61,7 @@
                                 <label>Roller Sku</label>
                             </td>
                             <td>
-                              <input id="RollerBuilderSku" type="text" size="10" disabled="disabled"/>
+                              <input id="RollerBuilderBaseSku" type="text" size="10" disabled="disabled"/>
                             </td>
                             <td>
                                 <label>Name</label>
@@ -113,9 +113,27 @@
                                     </tr>
                                     <tr>
                                         <td></td>
-                                        <td colspan="4">
-                                            Compound Usage
-                                           <input id="CompoundUsage" name="CompoundUsage" type="text" size="7" maxlength="7" style="margin-left: 35px; margin-right: -35px; padding-left: 0px" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
+                                        <td>Compound Usage</td>
+                                        <td>
+                                            <input id="Compound" name="Compound" type="text" size="20" maxlength="20" class="editable upper" disabled="disabled" />
+                                        </td>
+                                        <td>
+                                           <input id="CompoundUsage" name="CompoundUsage" type="text" size="7" maxlength="7" style="margin-left: 35px; margin-right: -35px; padding-left: 0px" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <label>UnderLayer Usage</label>
+                                        </td>
+                                        <td>
+                                            <input id="CompoundUnderLayerId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                            <input id="btnCompoundUnderLayer" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                            <a id="btn_removeUnderLayer" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-no'">&nbsp;</a>
+                                            <input id="CompoundUnderLayer" name="CompoundUnderLayerId" type="text" size="20" maxlength="20" class="editable upper" disabled="disabled" />
+                                        </td>
+                                        <td>
+                                           <input id="CompoundUnderLayerUsage" name="CompoundUnderLayerUsage" type="text" size="7" maxlength="7" style="margin-left: 35px; margin-right: -35px; padding-left: 0px" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                                         </td>
                                     </tr>
                                     <tr>
@@ -130,7 +148,6 @@
                                          <td>5 .</td>
                                         <td> FacedOff </td>
                                         <td><input type="checkbox" name="IsFacedOff" id="IsFacedOff" ></td>
-                                      
                                         <td>
                                        </td>
                                     </tr>
@@ -257,9 +274,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Rejected-->
+    <!-- End Dialog Box Rejected-->
 
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -272,10 +289,9 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
 
-
-<!-- Look Up item -->
+    <!-- Look Up item -->
     <div id="lookup_div_item" class="easyui-dialog" title="List Accessories" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -287,6 +303,21 @@
         <table id="lookup_table_item" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_item" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up item -->
+    <!-- END Look Up item -->
+
+    <!-- Look Up compoundunderlayer -->
+    <div id="lookup_div_compoundunderlayer" class="easyui-dialog" title="List compoundunderlayer" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_compoundunderlayer" class="grid_toolbar">
+            <a id="lookup_btn_add_compoundunderlayer" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_compoundunderlayer" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_compoundunderlayer" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_compoundunderlayer" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up compoundunderlayer -->
+
   </div>
 

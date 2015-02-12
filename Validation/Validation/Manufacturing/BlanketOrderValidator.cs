@@ -193,14 +193,14 @@ namespace Validation.Validation
             return blanketOrder;
         }
 
-        public BlanketOrder VAllDetailsHaveNotBeenCutNorRejected(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
+        public BlanketOrder VAllDetailsHaveNotBeenFinishedNorRejected(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
         {
             IList<BlanketOrderDetail> details = _blanketOrderDetailService.GetObjectsByBlanketOrderId(blanketOrder.Id);
             foreach (var detail in details)
             {
-                if (detail.IsCut || detail.IsRejected)
+                if (detail.IsFinished || detail.IsRejected)
                 {
-                    blanketOrder.Errors.Add("Generic", "Semua blanket order detail harus belum di cut atau di reject");
+                    blanketOrder.Errors.Add("Generic", "Semua blanket order detail harus belum di finish atau di reject");
                     return blanketOrder;
                 }
             }
@@ -223,11 +223,17 @@ namespace Validation.Validation
             return blanketOrder;
         }
 
+        public BlanketOrder VUpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketOrderService _blanketOrderService)
+        {
+            VCreateObject(blanketOrder, _blanketOrderService);
+            return blanketOrder;
+        }
+
         public BlanketOrder VDeleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
         {
             VHasNotBeenConfirmed(blanketOrder);
             if (!isValid(blanketOrder)) { return blanketOrder; }
-            VAllDetailsHaveNotBeenCutNorRejected(blanketOrder, _blanketOrderDetailService);
+            VAllDetailsHaveNotBeenFinishedNorRejected(blanketOrder, _blanketOrderDetailService);
             return blanketOrder;
         }
 
@@ -260,7 +266,7 @@ namespace Validation.Validation
             if (!isValid(blanketOrder)) { return blanketOrder; }
             VHasNotBeenCompleted(blanketOrder);
             if (!isValid(blanketOrder)) { return blanketOrder; }
-            VAllDetailsHaveNotBeenCutNorRejected(blanketOrder, _blanketOrderDetailService);
+            VAllDetailsHaveBeenFinishedOrRejected(blanketOrder, _blanketOrderDetailService);
             return blanketOrder;
         }
 
@@ -271,6 +277,14 @@ namespace Validation.Validation
             VHasNotBeenCompleted(blanketOrder);
             if (!isValid(blanketOrder)) { return blanketOrder; }
             VAllDetailsHaveBeenFinishedOrRejected(blanketOrder, _blanketOrderDetailService);
+            return blanketOrder;
+        }
+
+        public BlanketOrder VUndoCompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
+        {
+            VHasBeenCompleted(blanketOrder);
+            if (!isValid(blanketOrder)) { return blanketOrder; }
+            VAllDetailsHaveNotBeenFinishedNorRejected(blanketOrder, _blanketOrderDetailService);
             return blanketOrder;
         }
 
@@ -290,6 +304,13 @@ namespace Validation.Validation
         {
             blanketOrder.Errors.Clear();
             VUpdateObject(blanketOrder, _blanketOrderDetailService, _blanketOrderService);
+            return isValid(blanketOrder);
+        }
+
+        public bool ValidUpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketOrderService _blanketOrderService)
+        {
+            blanketOrder.Errors.Clear();
+            VUpdateAfterConfirmObject(blanketOrder, _blanketOrderDetailService, _blanketOrderService);
             return isValid(blanketOrder);
         }
 
@@ -319,6 +340,13 @@ namespace Validation.Validation
         {
             blanketOrder.Errors.Clear();
             VCompleteObject(blanketOrder, _blanketOrderDetailService);
+            return isValid(blanketOrder);
+        }
+
+        public bool ValidUndoCompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
+        {
+            blanketOrder.Errors.Clear();
+            VUndoCompleteObject(blanketOrder, _blanketOrderDetailService);
             return isValid(blanketOrder);
         }
 

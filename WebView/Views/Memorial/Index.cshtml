@@ -21,6 +21,7 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
     <div id="table_div">
@@ -53,7 +54,15 @@
                              <label>Code</label>
                             </td>
                             <td colspan="5" >
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                               <input id="Code" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                             <label>No Bukti</label>
+                            </td>
+                            <td colspan="5" >
+                               <input id="NoBukti" name="NoBukti" type="text" size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -66,7 +75,7 @@
                             <td >
                                 <label>Amount</label></td>
                             <td colspan="5">
-                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                             </td>     
                         </tr> 
                                              
@@ -121,7 +130,7 @@
                         Amount
                     </td>
                     <td>
-                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
                     </td>
                   </tr>
               </table>

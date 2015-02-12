@@ -36,7 +36,7 @@ namespace Core.Interface.Service
                                  IPriceMutationService _priceMutationService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                  IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
                                  IStockMutationService _stockMutationService, IBlanketOrderDetailService _blanketOrderDetailService);
-        Blanket AdjustQuantity(Blanket blanket, int quantity);
+        Blanket AdjustQuantity(Blanket blanket, decimal quantity);
         Blanket AdjustPendingReceival(Blanket blanket, int quantity);
         Blanket AdjustPendingDelivery(Blanket blanket, int quantity);
         bool DeleteObject(int Id);

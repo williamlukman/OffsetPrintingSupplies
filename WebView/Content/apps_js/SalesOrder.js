@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;
@@ -41,30 +41,35 @@
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
+    $("#print_form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
+    $("#lookup_div_employee").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
+    $("#EmployeeId").hide();
     $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'SalesOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency','SalesDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Marketing Id', 'Marketing', 'Currency','SalesDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
-                  { name: 'currency', index: 'currency', width: 150 },
+                  { name: 'contact', index: 'contact', width: 200 },
+				  { name: 'employeeid', index: 'employeeid', width: 100, hidden: true },
+                  { name: 'employee', index: 'employee', width: 150 },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'salesdate', index: 'salesdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -117,7 +122,12 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportSalesOrder?Id=" + id);
+                        //window.open(base_url + "Report/ReportSalesOrder?Id=" + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_CurrencyId').val(result.CurrencyId);
+                        $("#print_form_div").dialog('open');
                     }
                 }
             });
@@ -130,6 +140,7 @@
         $('#SalesDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#CurrencyId').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
+        $('#btnEmployee').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#SalesDateDiv').show();
@@ -166,6 +177,8 @@
                             $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#EmployeeId').val(result.EmployeeId);
+                            $('#Employee').val(result.Employee);
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
                             $('#SalesDate2').val(dateEnt(result.SalesDate));
@@ -174,6 +187,7 @@
                             $('#form_btn_save').hide();
                             $('#CurrencyId').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
+                            $('#btnEmployee').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -214,10 +228,13 @@
                             $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#EmployeeId').val(result.EmployeeId);
+                            $('#Employee').val(result.Employee);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
+                            $('#btnEmployee').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#SalesDateDiv2').hide();
@@ -285,6 +302,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesOrder/Confirm",
             type: "POST",
@@ -293,6 +311,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -314,6 +333,15 @@
 
     $('#confirm_btn_cancel').click(function () {
         $('#confirm_div').dialog('close');
+    });
+
+    $('#print_btn_submit').click(function () {
+        window.open(base_url + 'Report/PrintoutSalesOrderConfirm?Id=' + $('#print_id').val() + '&Rate1=' + $('#print_Rate1').val() + '&Rate2=' + $('#print_Rate2').val() + '&Rate=' + $('#print_Rate').val());
+        $('#print_form_div').dialog('close');
+    });
+
+    $('#print_btn_cancel').click(function () {
+        $('#print_form_div').dialog('close');
     });
 
     $('#btn_del').click(function () {
@@ -395,7 +423,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ContactId: $("#ContactId").val(), SalesDate: $('#SalesDate').datebox('getValue'),
+                Id: id, ContactId: $("#ContactId").val(), EmployeeId: $("#EmployeeId").val(), SalesDate: $('#SalesDate').datebox('getValue'),
                 NomorSurat: $("#NomorSurat").val(), CurrencyId: currency
             }),
             async: false,
@@ -508,6 +536,7 @@
                             }
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
+                            $('#UoM').val(result.UoM);
                             $('#Quantity').numberbox('setValue',result.Quantity);
                             $('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
@@ -623,7 +652,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListCustomer';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -635,10 +664,27 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'npwp', index: 'npwp', width: 100 },
+                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'pic', index: 'pic', width: 120 },
+                  { name: 'piccontact', index: 'piccontactno', width: 100 },
+                  { name: 'email', index: 'email', width: 150 },
+                  { name: 'taxcode', index: 'taxcode', width: 50 },
+                  { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
+    			  { name: 'contactgroupid', index: 'contactgroupid', width: 60, align: "center", hidden: true },
+				  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'contacttype', index: 'contacttype', width: 60, hidden: true },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
@@ -677,6 +723,67 @@
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
+    // -------------------------------------------------------Look Up employee-------------------------------------------------------
+    $('#btnEmployee').click(function () {
+        var lookUpURL = base_url + 'Employee/GetList';
+        var lookupGrid = $('#lookup_table_employee');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_employee').dialog('open');
+    });
+
+    jQuery("#lookup_table_employee").jqGrid({
+        url: base_url + 'Employee/GetList',
+        datatype: "json",
+        colNames: ['ID', 'Name', 'Contact No', 'Email', 'Address', 'Description', 'Created At', 'Updated At'],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'email', index: 'email', width: 150 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_employee'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_employee").width() - 10,
+        height: $("#lookup_div_employee").height() - 110,
+    });
+    $("#lookup_table_employee").jqGrid('navGrid', '#lookup_toolbar_employee', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_employee').click(function () {
+        $('#lookup_div_employee').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_employee').click(function () {
+        var id = jQuery("#lookup_table_employee").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_employee").jqGrid('getRowData', id);
+
+            $('#EmployeeId').val(ret.id).data("kode", id);
+            $('#Employee').val(ret.name);
+
+            $('#lookup_div_employee').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+    // ---------------------------------------------End Lookup employee----------------------------------------------------------------
+
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
@@ -697,16 +804,17 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM', 'Price'],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'Customer Item', 'UoM', 'Price'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'name', index: 'name', width: 240 },
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }},
-                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
+                  { name: 'customersquantity', index: 'customersquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
                   { name: 'uom', index: 'uom', width: 40 },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
@@ -738,7 +846,7 @@
 
             $('#ItemId').val(ret.id).data("kode", id);
             $('#Item').val(ret.name);
-
+            $('#UoM').val(ret.uom);
             $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

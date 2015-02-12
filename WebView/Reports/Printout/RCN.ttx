@@ -1,0 +1,13 @@
+NoIdent	String	255
+Qty	Number
+Pos	String	255
+RD	String	255
+CD	String	255
+RL	String	255
+WL	String	255
+TL	String	255
+Compound	String	255
+Acc	String	255
+RollerType	String	255
+ItemNo	String	255
+Comment	String	255		

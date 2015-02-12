@@ -97,7 +97,7 @@ namespace Service.Service
                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
+            if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService, _itemService))
             {
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
@@ -129,7 +129,7 @@ namespace Service.Service
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingReceival += purchaseReceivalDetail.Quantity;
@@ -146,7 +146,7 @@ namespace Service.Service
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity)
+        public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity)
         {
             purchaseReceivalDetail.PendingInvoicedQuantity -= Quantity;
             if (purchaseReceivalDetail.PendingInvoicedQuantity == 0) { purchaseReceivalDetail.IsAllInvoiced = true; }
@@ -154,7 +154,7 @@ namespace Service.Service
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity, IPurchaseReceivalService _purchaseReceivalService)
+        public PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity, IPurchaseReceivalService _purchaseReceivalService)
         {
             PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
             _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);

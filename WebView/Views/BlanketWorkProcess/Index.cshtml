@@ -15,7 +15,7 @@
     title=".: @ViewBag.Title :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
-        <a id="btn_process" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a>
+        <a id="btn_process" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">View</a>
         <a id="btn_reject" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Reject</a>
         <a id="btn_unreject" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Undo Reject</a>
         <a id="btn_finish" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Finish</a>
@@ -27,12 +27,11 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
         <div id="form_toolbar" class="form_toolbar">
-            <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
             <a id="form_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
 
@@ -116,43 +115,44 @@
                                     <tr>
                                         <td>1 .</td>
                                         <td  width="160" nowrap style="width: 160px"> Cutting</td>
-                                        <td><input type="checkbox" name="iscut" id="iscut" ></td>
+                                        <td><input type="checkbox" name="iscut" id="iscut" disabled="disabled"></td>
                                         <td class="bar">5 .</td>
                                         <td class="bar">Bar Mounted</td>
-                                        <td><input type="checkbox" name="isbarmounted" id="isbarmounted" ></td>
+                                        <td><input type="checkbox" name="isbarmounted" id="isbarmounted" disabled="disabled"></td>
                                     </tr>
                                     <tr>
                                         <td>2 .</td>
                                         <td width="160" nowrap style="width: 180px"> Side Seal</td>
-                                        <td><input type="checkbox" name="issidesealed" id="issidesealed" ></td>
+                                        <td><input type="checkbox" name="issidesealed" id="issidesealed" disabled="disabled"></td>
                                         <td class="bar">6 .</td>
                                         <td class="bar">Bar Heat Pressed </td>
-                                        <td><input type="checkbox" name="isbarheatpressed" id="isbarheatpressed" ></td>
+                                        <td><input type="checkbox" name="isbarheatpressed" id="isbarheatpressed" disabled="disabled"></td>
                                     </tr>
                                     <tr>
                                         <td class="bar">3 .</td>
                                         <td class="bar">Bar Prepared </td>
-                                        <td><input type="checkbox" name="isbarprepared" id="isbarprepared" ></td>
+                                        <td><input type="checkbox" name="isbarprepared" id="isbarprepared" disabled="disabled"></td>
                                         <td class="bar">7 .</td>
                                         <td class="bar">Bar Pull Off Tested </td>
-                                        <td><input type="checkbox" name="isbarpullofftested" id="isbarpullofftested" ></td>
+                                        <td><input type="checkbox" name="isbarpullofftested" id="isbarpullofftested" disabled="disabled"></td>
                                     </tr>
                                     <tr>
                                         <td>4 .</td>
                                         <td>Adhesive Tape Applied </td>
-                                        <td><input type="checkbox" name="isadhesivetapeapplied" id="isadhesivetapeapplied" ></td>
+                                        <td><input type="checkbox" name="isadhesivetapeapplied" id="isadhesivetapeapplied" disabled="disabled"></td>
                                         <td>8 .</td>
                                         <td>QC And Marked </td>
-                                        <td><input type="checkbox" name="isqcandmarked" id="isqcandmarked" ></td>                                                                                
+                                        <td><input type="checkbox" name="isqcandmarked" id="isqcandmarked" disabled="disabled"></td>                                                                                
                                     </tr>
                                     <tr>
                                         <td></td>
-                                        <td colspan="2">Adhesive Amount 
-                                            <input id="AdhesiveUsage" name="AdhesiveUsage" type="text" size="8" maxlength="8" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
+                                        <td>Roll Blanket Amount</td>
+                                        <td>
+                                            <input id="ViewRollBlanketUsage" name="ViewRollBlanketUsage" type="text" size="3" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  disabled="disabled"/>
                                         </td>
                                         <td>9 .</td>
                                         <td>Packaged </td>
-                                        <td><input type="checkbox" name="ispackaged" id="ispackaged" ></td>
+                                        <td><input type="checkbox" name="ispackaged" id="ispackaged" disabled="disabled"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -163,9 +163,9 @@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
- <!-- Dialog Box  Item-->
+    <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
         data-options="modal:true" title=".: Input Item :.">
 
@@ -220,10 +220,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Item-->
+    <!-- End Dialog Box Item-->
 
-
- <!-- Dialog Box Finish-->
+    <!-- Dialog Box Finish-->
     <div id="finished_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Finished @ViewBag.Title :.">
 
@@ -242,6 +241,12 @@
                       </td>
                   </tr>
                   <tr>
+                      <td>Roll Blanket Amount</td>
+                      <td>
+                         <input id="RollBlanketUsageFinish" name="RollBlanketUsageFinish" type="text" size="3" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
+                      </td>
+                  </tr>
+                  <tr>
                       <td>
                           Finish Date
                       </td>
@@ -255,9 +260,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Finish-->
+    <!-- End Dialog Box Finish-->
 
- <!-- Dialog Box Rejected-->
+    <!-- Dialog Box Rejected-->
     <div id="rejected_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Rejected @ViewBag.Title :.">
 
@@ -276,6 +281,12 @@
                       </td>`
                   </tr>
                   <tr>
+                      <td>Roll Blanket Amount</td>
+                      <td>
+                         <input id="RollBlanketUsageReject" name="RollBlanketUsageReject" type="text" size="3" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
+                      </td>
+                  </tr>
+                  <tr>
                       <td>
                           Rejected Date
                       </td>
@@ -285,11 +296,10 @@
                          <input name="Isrejected" type="text" size="1" hidden="hidden"/>
                       </td>
                   </tr>
-              </table>
-          
+              </table>      
         </div>
     </div>
-<!-- End Dialog Box Rejected-->
+    <!-- End Dialog Box Rejected-->
 
   </div>
 

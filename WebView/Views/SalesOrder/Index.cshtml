@@ -67,7 +67,17 @@
                             <td>
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="WarehouseId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                                <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Marketing</label></td>
+                            <td>
+                                <input id="EmployeeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnEmployee" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Employee" name="EmployeeId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -105,6 +115,78 @@
     </div>
 <!-- End Dialog Box -->
 
+<!-- Print Box -->
+    <div id="print_form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+        title=".:  @ViewBag.Title :.">
+
+        <div id="print_form_toolbar" class="form_toolbar">
+            <a id="print_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Submit</a>
+            <a id="print_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>  
+
+        <div style="overflow: auto">
+            <form id="print_frm">
+               @* <fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                       
+                    <table id = "print_tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                        <tr nowrap>
+                            <td width="139" nowrap style="width: 100px">
+                                <label>ID</label>
+                            </td>
+                            <td width="200">
+                                <input id="print_id" type="text" size="5" disabled="disabled"/>
+                                <input id="print_Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>No. Surat:</label>
+                            </td>
+                            <td>
+                                <input id="print_NomorSurat" name="NomorSurat" type="text" size="25" disabled/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Currency </label></td>
+                            <td>
+                                <select id="print_CurrencyId" disabled>
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Rate From :</label>
+                            </td>
+                            <td>
+                                <input id="print_Rate1" name="Rate1" type="number" size="25" value="1.00"/>
+                            </td>
+                            <td>
+                                <label>Rate To :</label>
+                            </td>
+                            <td>
+                                <input id="print_Rate2" name="Rate2" type="number" size="25" value="1.00"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Current Rate :</label>
+                            </td>
+                            <td>
+                                <input id="print_Rate" name="Rate" type="number" size="25" value="1.00"/>
+                            </td>
+                        </tr>
+                    </table>
+               @* </fieldset>*@
+            </form>
+        </div>
+    </div>
+    <!-- End Print Box -->
+
  <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
         data-options="modal:true" title=".: Input Item :.">
@@ -141,7 +223,8 @@
                             QTY
                         </td>
                         <td>
-                               <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                            <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                            <input id="UoM" name ="UoM" type="text" size="7" maxlength="10" class="editable upper" disabled="disabled" />
                         </td>
                     </tr>
                    <tr>
@@ -204,10 +287,9 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
 
-
- <!-- Look Up contact -->
+    <!-- Look Up contact -->
     <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -219,10 +301,23 @@
         <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up contact -->
+    <!-- END Look Up contact -->
 
+    <!-- Look Up employee -->
+    <div id="lookup_div_employee" class="easyui-dialog" title="List Marketing Person" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
 
- <!-- Look Up item -->
+        <div id="lookup_toolbar_employee" class="grid_toolbar">
+            <a id="lookup_btn_add_employee" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_employee" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_employee" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_employee" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up employee -->
+
+    <!-- Look Up item -->
     <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -234,7 +329,7 @@
         <table id="lookup_table_item" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_item" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up item -->
+    <!-- END Look Up item -->
 
   </div>
 

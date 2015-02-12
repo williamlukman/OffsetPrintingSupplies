@@ -11,6 +11,7 @@ namespace Core.Constants
         {
             public static string Sheetfed = "Sheetfed";
             public static string Web = "Web";
+            public static string Both = "Both";
         }
 
         public class MaterialCase
@@ -29,6 +30,7 @@ namespace Core.Constants
         {
             public static string Hollow = "Hollow";
             public static string Shaft = "Shaft";
+            public static string None = "None";
         }
 
         public class CroppingType
@@ -40,6 +42,12 @@ namespace Core.Constants
         {
             public static int BearingSeat = 1;
             public static int CentreDrill = 2;
+            public static int None = 3;
+            public static int BearingSeatAndCentreDrill = 4;
+            public static int RepairCorosive = 5;
+            public static int BearingSeatAndRepairCorosive = 6;
+            public static int CentreDrillAndRepairCorosive = 7;
+            public static int All = 8;
         }
     }
 }

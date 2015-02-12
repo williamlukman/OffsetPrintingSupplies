@@ -19,17 +19,17 @@
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
-
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstUoM/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Size', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'size', index: 'size', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -47,8 +47,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -92,6 +92,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
+                            $('#Size').val(result.Size);
                             $('#form_div').dialog('open');
                         }
                     }
@@ -101,7 +102,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -180,7 +180,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(),
+                Id: id, Name: $("#Name").val(), Size: ("#Size").val()
             }),
             async: false,
             cache: false,

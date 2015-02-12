@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PaymentRequest/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PaymentRequest/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PaymentRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PaymentRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -52,7 +52,7 @@
         url: base_url + 'PaymentRequest/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Description', 'Amount',
-                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'Created At', 'Updated At'],
+                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'No Bukti', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
@@ -64,8 +64,9 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'requesteddate', index: 'requesteddate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'nobukti', index: 'nobukti', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -106,7 +107,24 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PaymentRequest/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/PrintoutJurnalPaymentRequest?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -114,6 +132,7 @@
         clearForm('#frm');
         $('#RequestedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#NoBukti').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#btnAccountPayable').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -150,6 +169,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
@@ -166,8 +186,9 @@
                             $('#DueDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
-                            $('#btnAccountPayable').attr('disabled', true);;
-                            $('#btnContact').attr('disabled', true);;
+                            $('#btnAccountPayable').attr('disabled', true);
+                            $('#btnContact').attr('disabled', true);
+                            $('#NoBukti').attr('disabled', true);
 
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -205,6 +226,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
@@ -224,6 +246,7 @@
                             $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnAccountPayable').removeAttr('disabled');
+                            $('#NoBukti').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -290,6 +313,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PaymentRequest/Confirm",
             type: "POST",
@@ -298,6 +322,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -405,14 +430,15 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), Description: $("#Description").val(),
                 RequestedDate: $('#RequestedDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                CurrencyId: $('#Currency').data("kode"), AccountPayableId: $("#AccountPayableId").val()
+                CurrencyId: $('#Currency').data("kode"), AccountPayableId: $("#AccountPayableId").val(),
+                NoBukti: $('#NoBukti').val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -634,6 +660,7 @@
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
     // -------------------------------------------------------Look Up accountPayable-------------------------------------------------------
+
     $('#btnAccountPayable').click(function () {
         var lookUpURL = base_url + 'ChartOfAccount/GetAccountPayable';
         var lookupGrid = $('#lookup_table_accountPayable');
@@ -647,10 +674,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'AccountPayable Code', 'AccountPayable Name', 'Currency','CurrencyId'],
+        colNames: ['Id', 'AccountPayable Code', 'AccountPayable Code', 'AccountPayable Name', 'Currency','CurrencyId'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true },
 				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+                  { name: 'parsecode', index: 'parsecode', width: 80 },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'currency', index: 'currency', width: 80 },
                   { name: 'currencyId', index: 'currencyId', width: 80 },
@@ -660,7 +688,7 @@
         pager: $('#lookup_pager_accountPayable'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'id',
+        sortname: 'Code',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -668,8 +696,8 @@
         width: $("#lookup_div_accountPayable").width() - 10,
         height: $("#lookup_div_accountPayable").height() - 110,
     });
-    $("#lookup_table_accountPayable").jqGrid('navGrid', '#lookup_toolbar_accountPayable', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_accountPayable").jqGrid('navGrid', '#lookup_toolbar_accountPayable', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_accountPayable').click(function () {
@@ -712,10 +740,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy', 'CashBank', 'Legacy Code'],
+        colNames: ['Id', 'Account Code', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy', 'CashBank', 'Legacy Code'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true },
-				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col", hidden: true },
+                  { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'group', index: 'group', width: 90 },
                   { name: 'level', index: 'level', width: 50 },
@@ -737,8 +766,8 @@
         width: $("#lookup_div_account").width() - 10,
         height: $("#lookup_div_account").height() - 110,
     });
-    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_account').click(function () {
@@ -764,7 +793,7 @@
 
     // -------------------------------------------------------Look Up Contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListSupplier';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -780,7 +809,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'name', index: 'name', width: 250 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),

@@ -16,6 +16,7 @@ namespace Core.Constants
             public static string PageViewNotAllowed = "You are not allowed to View this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string PagePrintNotAllowed = "You are not allowed to Print this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string ErrorPageHasNoClosingDate = "No report has been produced for this closing date.";
+            public static string ErrorPageRecordNotFound = "No record has been found.";
         }
         #endregion
 
@@ -42,6 +43,7 @@ namespace Core.Constants
             public static string ReceiptVoucher = "ReceiptVoucher";
             public static string RecoveryOrder = "RecoveryOrder";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
+            public static string Repacking = "Repacking";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
@@ -94,15 +96,18 @@ namespace Core.Constants
             public static string SalesDownPayment = "SalesDownPayment";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseDownPaymentAllocationDetail = "PurchaseDownPaymentAllocationDetail";
+            public static string PurchaseInvoiceMigration = "PurchaseInvoiceMigration";
         }
 
         public class ReceivableSource
         {
+            public static string ReceiptRequest = "ReceiptRequest";
             public static string SalesInvoice = "SalesInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string SalesDownPayment = "SalesDownPayment";
             public static string SalesDownPaymentAllocationDetail = "SalesDownPaymentAllocationDetail";
+            public static string SalesInvoiceMigration = "SalesInvoiceMigration";
         }
         #endregion
 
@@ -123,8 +128,15 @@ namespace Core.Constants
 
         public class MenuName
         {
+            public static string CompanyInfo = "Company Info";
             public static string Contact = "Contact";
+            public static string ContactGroup = "Contact Group";
+            public static string ContactDetail = "Contact Detail";
+            public static string SupplierDetail = "Supplier Detail";
+            public static string Employee = "Employee";
+            public static string Supplier = "Supplier";
             public static string ItemType = "ItemType";
+            public static string SubType = "SubType";
             public static string UoM = "UoM";
             public static string Machine = "Machine";
             public static string RollerType = "Roller Type";
@@ -134,23 +146,36 @@ namespace Core.Constants
             public static string CashMutation = "Cash Mutation";
             public static string CashBankAdjustment = "CashBank Adjustment";
             public static string CashBankMutation = "CashBank Mutation";
+            public static string Currency = "Currency";
+            public static string ExchangeRate = "Exchange Rate";
             public static string PaymentRequest = "Payment Request";
-            public static string DownPayment = "Down Payment";
+            public static string PurchaseDownPayment = "Purchase Down Payment";
+            public static string PurchaseDPAllocation = "Purchase DP Allocation";
             public static string PurchaseAllowance = "Purchase Allowance";
+            public static string ReceiptRequest = "Receipt Request";
             public static string SalesAllowance = "Sales Allowance";
+            public static string SalesDownPayment = "Sales Down Payment";
+            public static string SalesDPAllocation = "Sales DP Allocation";
 
             public static string Blanket = "Blanket";
+            public static string BlendingRecipe = "Blending Recipe";
             public static string CoreBuilder = "CoreBuilder";
             public static string Item = "Item";
+            public static string ItemAvgPrice = "Item Avg Price";
             public static string RollerBuilder = "RollerBuilder";
+            public static string Repacking = "Repacking";
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
+            public static string CustomerStockAdjustment = "Customer's Stock Adjustment";
+            public static string CustomerStockMutation = "Customer's Stock Mutation";
             public static string Warehouse = "Warehouse";
             public static string WarehouseItem = "Warehouse Item";
+            public static string CustomerItem = "Customer's Warehouse Item";
             public static string WarehouseMutation = "Warehouse Mutation";
 
             public static string BlanketWorkOrder = "Blanket Work Order";
             public static string BlanketWorkProcess = "Blanket Work Process";
+            public static string BlendingWorkOrder = "Blending Work Order";
             public static string RollerIdentification = "Roller Identification";
             public static string RollerAccessoryDetail = "Roller Accessory Detail";
             public static string RollerWarehouseMutation = "Roller Warehouse Mutation";
@@ -164,9 +189,11 @@ namespace Core.Constants
             public static string PaymentVoucher = "Payment Voucher";
             public static string Payable = "Payable";
 
+            public static string SalesQuotation = "Sales Quotation";
             public static string SalesOrder = "Sales Order";
             public static string VirtualOrder = "Virtual Order";
             public static string TemporaryDeliveryOrder = "Temporary Delivery Order";
+            public static string TemporaryDeliveryOrderClearance = "Temporary Delivery Order Clearance";
             public static string DeliveryOrder = "Delivery Order";
             public static string SalesInvoice = "Sales Invoice";
             public static string CashSalesInvoice = "Cash Sales Invoice";
@@ -182,13 +209,14 @@ namespace Core.Constants
             public static string Closing = "Closing";
             public static string GeneralLedger = "General Ledger";
             public static string ValidComb = "Valid Comb";
+            public static string ValidCombIncomeStatement = "Valid Comb Income Statement";
             public static string BalanceSheet = "Balance Sheet";
             public static string IncomeStatement = "Income Statement";
             public static string Memorial = "Memorial";
 
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
-            public static string CompanyInfo = "Company Info";
+            
         }
         #endregion
     }

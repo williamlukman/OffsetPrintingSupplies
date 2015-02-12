@@ -16,8 +16,9 @@ namespace WebView.Controllers
 {
     public class PurchaseReceivalController : Controller
     {
-       private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseReceivalController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseReceivalController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -33,10 +34,12 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private ICurrencyService _currencyService;
         private IExchangeRateService _exchangeRateService;
+        private IContactService _contactService;
         
         public PurchaseReceivalController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -52,6 +55,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
         public ActionResult Index()
@@ -68,13 +72,14 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Where(x => !x.IsDeleted);
+            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
@@ -118,6 +123,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
@@ -142,13 +148,14 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Where(x => x.IsConfirmed && !x.IsDeleted);
+            var q = _purchaseReceivalService.GetQueryable().Where(x => x.IsConfirmed && !x.IsDeleted && !x.IsInvoiceCompleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
@@ -205,6 +212,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
@@ -247,6 +255,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.PurchaseOrderDetail.PendingReceivalQuantity,
                              Price = model.PurchaseOrderDetail.Price,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -287,6 +296,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.PendingReceivalQuantity,
                             model.Price,
                       }
                     }).ToArray()
@@ -310,6 +320,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                Contact = _contactService.GetObjectById(_purchaseOrderService.GetObjectById(model.PurchaseOrderId).ContactId).Name,
                 model.NomorSurat,
                 model.PurchaseOrderId,
                 PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
@@ -483,7 +494,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,
-                        _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, 
+                        _purchaseOrderDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, 
                         _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
@@ -506,7 +517,7 @@ namespace WebView.Controllers
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,
                         _purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,
-                        _itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
+                        _itemService,_itemTypeService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

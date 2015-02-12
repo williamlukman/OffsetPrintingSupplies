@@ -67,8 +67,8 @@ namespace Service.Service
         }
 
         public BlendingWorkOrder ConfirmObject(BlendingWorkOrder blendingWorkOrder, DateTime ConfirmationDate, IBlendingRecipeService _blendingRecipeService, IBlendingRecipeDetailService _blendingRecipeDetailService,
-                                               IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
+                                               IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, 
+                                               IWarehouseItemService _warehouseItemService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             blendingWorkOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(blendingWorkOrder, _blendingRecipeDetailService, _warehouseItemService, _closingService))
@@ -82,15 +82,18 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     Item itemdet = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemTypeDet = _itemTypeService.GetObjectById(itemdet.ItemTypeId);
                     TotalCost += detail.Quantity * itemdet.AvgPrice;
                     warehouseItem = _warehouseItemService.FindOrCreateObject(blendingWorkOrder.WarehouseId, detail.ItemId);
                     stockMutation = _stockMutationService.CreateStockMutationForBlendingWorkOrderSource(blendingWorkOrder, detail, warehouseItem);
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    _generalLedgerJournalService.CreateConfirmationJournalForBlendingWorkOrderDetail(blendingWorkOrder, itemTypeDet.AccountId.GetValueOrDefault(), detail.Quantity * itemdet.AvgPrice, _accountService);
                 }
 
                 // update avg cost of target item before mutated
                 BlendingRecipe blendingRecipe = _blendingRecipeService.GetObjectById(blendingWorkOrder.BlendingRecipeId);
                 Item item = _itemService.GetObjectById(blendingRecipe.TargetItemId);
+                ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                 _itemService.CalculateAndUpdateAvgPrice(item, blendingRecipe.TargetQuantity, TotalCost / blendingRecipe.TargetQuantity);
                 
                 // add target item
@@ -99,7 +102,7 @@ namespace Service.Service
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
 
                 // post GL (credit raw, debit finishedgoods)
-                _generalLedgerJournalService.CreateConfirmationJournalForBlendingWorkOrder(blendingWorkOrder, _accountService, TotalCost);
+                _generalLedgerJournalService.CreateConfirmationJournalForBlendingWorkOrder(blendingWorkOrder, itemType.AccountId.GetValueOrDefault(), _accountService, TotalCost);
                 
                 _repository.ConfirmObject(blendingWorkOrder);
             }
@@ -107,8 +110,9 @@ namespace Service.Service
         }
 
         public BlendingWorkOrder UnconfirmObject(BlendingWorkOrder blendingWorkOrder, IBlendingRecipeService _blendingRecipeService, IBlendingRecipeDetailService _blendingRecipeDetailService,
-                                                 IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                                 IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
+                                                 IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, 
+                                                 IWarehouseItemService _warehouseItemService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService,
+                                                 IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(blendingWorkOrder, _warehouseItemService, _blendingRecipeService, _closingService))
             {
@@ -121,6 +125,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     Item itemdet = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemTypeDet = _itemTypeService.GetObjectById(itemdet.ItemTypeId);
                     TotalCost += detail.Quantity * itemdet.AvgPrice;
                     warehouseItem = _warehouseItemService.FindOrCreateObject(blendingWorkOrder.WarehouseId, detail.ItemId);
                     stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BlendingRecipeDetail, detail.Id);
@@ -128,12 +133,13 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(x, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutations(stockMutations);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForBlendingWorkOrderDetail(blendingWorkOrder, itemTypeDet.AccountId.GetValueOrDefault(), detail.Quantity * itemdet.AvgPrice, _accountService);
                 }
 
                 // update avg cost of target item before mutated
                 BlendingRecipe blendingRecipe = _blendingRecipeService.GetObjectById(blendingWorkOrder.BlendingRecipeId);
                 Item item = _itemService.GetObjectById(blendingRecipe.TargetItemId);
+                ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                 _itemService.CalculateAndUpdateAvgPrice(item, (-1)*blendingRecipe.TargetQuantity, TotalCost / blendingRecipe.TargetQuantity);
 
                 // deduce target item
@@ -143,10 +149,9 @@ namespace Service.Service
                 {
                     _stockMutationService.ReverseStockMutateObject(x, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 // post GL (debit raw, credit finishedgoods)
-                _generalLedgerJournalService.CreateUnconfirmationJournalForBlendingWorkOrder(blendingWorkOrder, _accountService, TotalCost);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForBlendingWorkOrder(blendingWorkOrder, itemType.AccountId.GetValueOrDefault(), _accountService, TotalCost);
                 
                 _repository.UnconfirmObject(blendingWorkOrder);
             }

@@ -14,7 +14,7 @@ namespace Core.Interface.Validation
         BlanketOrderDetail VHasBeenCut(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenSideSealed(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarPrepared(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail);
+        BlanketOrderDetail VHasRollBlanketAmount(BlanketOrderDetail blanketOrderDetail);
 
         BlanketOrderDetail VHasBeenAdhesiveTapeApplied(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarMounted(BlanketOrderDetail blanketOrderDetail);
@@ -40,11 +40,14 @@ namespace Core.Interface.Validation
         BlanketOrderDetail VHasNotBeenFinished(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VBlanketOrderHasNotBeenConfirmed(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         BlanketOrderDetail VBlanketOrderHasNotBeenCompleted(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
+        BlanketOrderDetail VRollBlanketIsInStock(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService,
+                                                 IBlanketOrderService _blanketOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
 
         BlanketOrderDetail VCreateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService);
         BlanketOrderDetail VUpdateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService);
         BlanketOrderDetail VDeleteObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
-        BlanketOrderDetail VFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
+        BlanketOrderDetail VFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                         IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BlanketOrderDetail VUnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
 
         BlanketOrderDetail VCutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
@@ -56,13 +59,15 @@ namespace Core.Interface.Validation
         BlanketOrderDetail VPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail VQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail VPackageObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
+        BlanketOrderDetail VRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                         IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BlanketOrderDetail VUndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
 
         bool ValidCreateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService);
         bool ValidUpdateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService);
         bool ValidDeleteObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
-        bool ValidFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
+        bool ValidFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
 
         bool ValidCutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderSerivce);
@@ -74,7 +79,8 @@ namespace Core.Interface.Validation
         bool ValidPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         bool ValidQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         bool ValidPackageObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
+        bool ValidRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
 
         bool isValid(BlanketOrderDetail blanketOrderDetail);

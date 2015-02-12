@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\Accounting\AccountValidator.cs" />
     <Compile Include="Validation\Accounting\ClosingValidator.cs" />
+    <Compile Include="Validation\Accounting\ValidCombIncomeStatementValidator.cs" />
     <Compile Include="Validation\Accounting\GLNonBaseCurrencyValidator.cs" />
     <Compile Include="Validation\Accounting\VCNonBaseCurrencyValidator.cs" />
     <Compile Include="Validation\Accounting\ExchangeRateClosingValidator.cs" />
@@ -51,6 +52,8 @@
     <Compile Include="Validation\Finance\CashMutationValidator.cs" />
     <Compile Include="Validation\Finance\CashBankAdjustmentValidator.cs" />
     <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
+    <Compile Include="Validation\Finance\ReceiptRequestDetailValidator.cs" />
+    <Compile Include="Validation\Finance\ReceiptRequestValidator.cs" />
     <Compile Include="Validation\Finance\ExchangeRateValidator.cs" />
     <Compile Include="Validation\Finance\CurrencyValidator.cs" />
     <Compile Include="Validation\Finance\SalesDownPaymentAllocationDetailValidator.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlendingWorkOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RepackingValidator.cs" />
     <Compile Include="Validation\Manufacturing\CoreAccessoryDetailValidator.cs" />
     <Compile Include="Validation\Finance\PayableValidator.cs" />
     <Compile Include="Validation\Finance\PaymentRequestValidator.cs" />
@@ -92,6 +96,10 @@
     <Compile Include="Validation\StockAndMaster\CompoundValidator.cs" />
     <Compile Include="Validation\StockAndMaster\BlendingRecipeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\BlendingRecipeDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactGroupValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\SubTypeValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\EmployeeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockAdjustmentValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockAdjustmentDetailValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockMutationValidator.cs" />

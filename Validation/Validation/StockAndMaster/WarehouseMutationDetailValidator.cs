@@ -98,7 +98,7 @@ namespace Validation.Validation
             WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
             WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseFromId, WarehouseMutationDetail.ItemId);
             WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseToId, WarehouseMutationDetail.ItemId);
-            int Quantity = CaseConfirm ? warehouseItemFrom.Quantity : warehouseItemTo.Quantity;
+            decimal Quantity = CaseConfirm ? warehouseItemFrom.Quantity : warehouseItemTo.Quantity;
             if ( Quantity < WarehouseMutationDetail.Quantity)
             {
                 WarehouseMutationDetail.Errors.Add("Quantity", "Stock barang tidak boleh kurang dari jumlah mutasi barang");

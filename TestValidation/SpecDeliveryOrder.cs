@@ -57,6 +57,7 @@ namespace TestValidation
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+        IExchangeRateService _exchangeRateService;
 
         IPriceMutationService _priceMutationService;
         IAccountService _accountService;
@@ -93,7 +94,7 @@ namespace TestValidation
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
-
+                _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
@@ -105,8 +106,6 @@ namespace TestValidation
                 _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
                 _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
 
-                if (!_accountService.GetLegacyObjects().Any())
-                {
                     Account AKTIVA1 = _accountService.CreateObject(new Account() { Code = "1", Name = "AKTIVA", Group = 1, Level = 1, ParentId = null, IsLegacy = true, IsLeaf = false, LegacyCode = "A1" }, _accountService);
                     Account AKTIVALANCAR2 = _accountService.CreateObject(new Account() { Code = "11", Name = "AKTIVA LANCAR ", Group = 1, Level = 2, ParentId = AKTIVA1.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A11" }, _accountService);
                     Account KASDANSETARAKAS3 = _accountService.CreateObject(new Account() { Code = "1101", Name = "KAS DAN SETARA KAS ", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A1101" }, _accountService);
@@ -140,7 +139,7 @@ namespace TestValidation
                     Account PPHPS225 = _accountService.CreateObject(new Account() { Code = "11070001", Name = "PPH PS 22", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account PPHPS235 = _accountService.CreateObject(new Account() { Code = "11070002", Name = "PPH PS 23", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account PPHPS255 = _accountService.CreateObject(new Account() { Code = "11070003", Name = "PPH PS 25", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-                    Account PPNMASUKAN5 = _accountService.CreateObject(new Account() { Code = "11070004", Name = "PPN MASUKAN", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
+                    Account PPNMASUKAN5 = _accountService.CreateObject(new Account() { Code = "11070004", Name = "PPN MASUKAN", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "A1107" }, _accountService);
                     Account PPHPS245 = _accountService.CreateObject(new Account() { Code = "11070005", Name = "PPH PS 24", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account BIAYADIBAYARDIMUKA3 = _accountService.CreateObject(new Account() { Code = "1108", Name = "BIAYA DIBAYAR DIMUKA", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                     Account BIAYADIBAYARDIMUKA4 = _accountService.CreateObject(new Account() { Code = "110801", Name = "BIAYA DIBAYAR DIMUKA", Group = 1, Level = 4, ParentId = BIAYADIBAYARDIMUKA3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
@@ -393,7 +392,6 @@ namespace TestValidation
                     Account PENDAPATANNONOPERASIONAL4 = _accountService.CreateObject(new Account() { Code = "710301", Name = "PENDAPATAN NON OPERASIONAL (POP)", Group = 5, Level = 4, ParentId = PENDAPATANNONOPERASIONAL3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                     Account LABAPENJUALANAKTIVATETAP5POP = _accountService.CreateObject(new Account() { Code = "71030001", Name = "LABA PENJUALAN AKTIVA TETAP (POP)", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account LABASALELEASEBACK5 = _accountService.CreateObject(new Account() { Code = "71030002", Name = "LABA SALE & LEASE BACK", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-                }
 
                 if (!_currencyService.GetAll().Any())
                 {
@@ -420,7 +418,7 @@ namespace TestValidation
                 };
                 contact = _contactService.CreateObject(contact);
 
-                type = _itemTypeService.CreateObject("Item", "Item");
+                type = _itemTypeService.CreateObject("Item", "Item", false, BAHANBAKUOTHER5, _accountService);
 
                 warehouse = new Warehouse()
                 {
@@ -490,7 +488,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBotolAqua, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                                                      _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
 
                 salesOrder1 = new SalesOrder()
                 {
@@ -601,7 +599,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder1.Id,
-                        DeliveryDate = new DateTime(2000, 1, 1)
+                        DeliveryDate = new DateTime(2000, 1, 1),
+                        NomorSurat = "1"
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder1, _salesOrderService, _warehouseService);
 
@@ -609,7 +608,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder2.Id,
-                        DeliveryDate = new DateTime(2014, 5, 5)
+                        DeliveryDate = new DateTime(2014, 5, 5),
+                        NomorSurat = "2",
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder2, _salesOrderService, _warehouseService);
 
@@ -617,7 +617,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder1.Id,
-                        DeliveryDate = new DateTime(2014, 5, 5)
+                        DeliveryDate = new DateTime(2014, 5, 5),
+                        NomorSurat = "3",
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder3, _salesOrderService, _warehouseService);
 
@@ -685,15 +686,15 @@ namespace TestValidation
                     };
                     _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_batiktulis_do2a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
 
-                    deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                    deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
-                    deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
+                    deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
-                    deliveryOrder3 = _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
+                    deliveryOrder3 = _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
                 };
 
                 it["validates_deliveryorders"] = () =>
@@ -712,7 +713,7 @@ namespace TestValidation
                 {
                     deliveryOrder1 = _deliveryOrderService.UnconfirmObject(deliveryOrder1, _deliveryOrderDetailService,
                                                                            _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService,
-                                                                           _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                           _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService,
                                                                            _blanketService, _warehouseItemService, _accountService,
                                                                            _generalLedgerJournalService, _closingService, _customerStockMutationService, _customerItemService);
                     deliveryOrder1.Errors.Count().should_be(0);

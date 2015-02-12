@@ -36,7 +36,7 @@
                   { name: 'amount', index: 'amount', width: 150, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -65,8 +65,8 @@
 		   }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -181,6 +181,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "CashBankMutation/Confirm",
             type: "POST",
@@ -189,6 +190,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -294,12 +296,6 @@
                 Id: id, SourceCashBankId: $("#SourceCashBankId").val(), TargetCashBankId: $("#TargetCashBankId").val(),
                 Amount: $("#Amount").numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue')
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -368,8 +364,8 @@
         width: $("#lookup_div_sourcecashbank").width() - 10,
         height: $("#lookup_div_sourcecashbank").height() - 110,
     });
-    $("#lookup_table_sourcecashbank").jqGrid('navGrid', '#lookup_toolbar_sourcecashbank', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_sourcecashbank").jqGrid('navGrid', '#lookup_toolbar_sourcecashbank', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_sourcecashbank').click(function () {
@@ -426,8 +422,8 @@
         width: $("#lookup_div_targetcashbank").width() - 10,
         height: $("#lookup_div_targetcashbank").height() - 110,
     });
-    $("#lookup_table_targetcashbank").jqGrid('navGrid', '#lookup_toolbar_targetcashbank', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_targetcashbank").jqGrid('navGrid', '#lookup_toolbar_targetcashbank', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_targetcashbank').click(function () {

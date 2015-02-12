@@ -656,7 +656,7 @@ namespace Service.Service
                 // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
                 // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
 
-                int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                decimal Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
                 Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
                 CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
                 WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
@@ -689,7 +689,7 @@ namespace Service.Service
                 // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
                 // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
 
-                int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                decimal Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
                 Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
                 CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
                 WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
@@ -712,6 +712,8 @@ namespace Service.Service
                 //{
                 //    _itemService.AdjustCustomerVirtual(item, Quantity);
                 //}
+
+                _repository.Delete(customerStockMutation);
             }
         }
 

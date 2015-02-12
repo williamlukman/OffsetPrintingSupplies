@@ -52,7 +52,7 @@ namespace Validation.Validation
             {
                 if (detail.DetailId == coreIdentificationDetail.DetailId && detail.Id != coreIdentificationDetail.Id)
                 {
-                    coreIdentificationDetail.Errors.Add("DetailId", "Tidak boleh di duplikasi");
+                    coreIdentificationDetail.Errors.Add("Generic", "Tidak boleh di duplikasi");
                     return coreIdentificationDetail;
                 }
             }
@@ -64,7 +64,7 @@ namespace Validation.Validation
             if (coreIdentificationDetail.MaterialCase != Core.Constants.Constant.MaterialCase.New &&
                 coreIdentificationDetail.MaterialCase != Core.Constants.Constant.MaterialCase.Used)
             {
-                coreIdentificationDetail.Errors.Add("MaterialCase", "Hanya boleh 1. New atau 2. Used");
+                coreIdentificationDetail.Errors.Add("Generic", "Hanya boleh 1. New atau 2. Used");
             }
             return coreIdentificationDetail;
         }
@@ -74,7 +74,7 @@ namespace Validation.Validation
             CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
             if (coreBuilder == null)
             {
-                coreIdentificationDetail.Errors.Add("CoreBuilderId", "Tidak terasosiasi dengan coreBuilder");
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak terasosiasi dengan coreBuilder");
             }
             return coreIdentificationDetail;
         }
@@ -84,7 +84,7 @@ namespace Validation.Validation
             RollerType rollerType = _rollerTypeService.GetObjectById(coreIdentificationDetail.RollerTypeId);
             if (rollerType == null)
             {
-                coreIdentificationDetail.Errors.Add("RollerTypeId", "Tidak terasosiasi dengan rollerType");
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak terasosiasi dengan rollerType");
             }
             return coreIdentificationDetail;
         }
@@ -94,7 +94,7 @@ namespace Validation.Validation
             Machine machine = _machineService.GetObjectById(coreIdentificationDetail.MachineId);
             if (machine == null)
             {
-                coreIdentificationDetail.Errors.Add("MachineId", "Tidak terasosiasi dengan machine");
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak terasosiasi dengan machine");
             }
             return coreIdentificationDetail;
         }
@@ -102,9 +102,15 @@ namespace Validation.Validation
         public CoreIdentificationDetail VHasRepairRequestCase(CoreIdentificationDetail coreIdentificationDetail)
         {
             if (coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeat &&
-                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill)
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.None &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeatAndCentreDrill &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.RepairCorosive &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeatAndRepairCorosive &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrillAndRepairCorosive &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.All)
             {
-                coreIdentificationDetail.Errors.Add("RepairRequestCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
+                coreIdentificationDetail.Errors.Add("Generic", "Hanya dapat diisi dengan Bearing Seat, CentreDrill, Repair Corosive");
             }
             return coreIdentificationDetail;
         }

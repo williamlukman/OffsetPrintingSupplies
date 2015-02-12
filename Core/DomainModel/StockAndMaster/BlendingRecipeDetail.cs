@@ -10,7 +10,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int BlendingRecipeId { get; set; }
         public int ItemId { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

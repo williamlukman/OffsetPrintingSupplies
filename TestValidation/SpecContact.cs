@@ -69,7 +69,8 @@ namespace TestValidation
                     PIC = "Daddy",
                     PICContactNo = "001234888",
                     Email = "abbey@abbeyst.com",
-                    TaxCode = "01"
+                    TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 d.contact = d._contactService.CreateObject(d.contact);
             }
@@ -93,13 +94,14 @@ namespace TestValidation
                     PIC = "Who are you?",
                     PICContactNo = "001234",
                     Email = "empty@noname.com",
-                    TaxCode = "01"
+                    TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 noname = d._contactService.CreateObject(noname);
                 noname.Errors.Count().should_not_be(0);
             };
 
-            it["item_with_same_name"] = () =>
+            it["item_with_same_name_same_contacttype"] = () =>
             {
                 Contact samename = new Contact()
                 {
@@ -109,7 +111,8 @@ namespace TestValidation
                     PIC = "Who are you?",
                     PICContactNo = "001234",
                     Email = "empty@noname.com",
-                    TaxCode = "01"
+                    TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 samename = d._contactService.CreateObject(samename);
                 samename.Errors.Count().should_not_be(0);
@@ -126,9 +129,10 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com",
                     TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 emptyaddress = d._contactService.CreateObject(emptyaddress);
-                emptyaddress.Errors.Count().should_not_be(0);
+                emptyaddress.Errors.Count().should_be(0);
             };
 
             it["withemptycontact"] = () =>
@@ -142,9 +146,10 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com",
                     TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 emptycontact = d._contactService.CreateObject(emptycontact);
-                emptycontact.Errors.Count().should_not_be(0);
+                emptycontact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_pic"] = () =>

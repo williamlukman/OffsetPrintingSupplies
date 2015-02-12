@@ -41,6 +41,7 @@
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
+    $("#print_form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
@@ -51,20 +52,21 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'PurchaseDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'Description', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'currency', index: 'currency', width: 150 },
+                  { name: 'contact', index: 'contact', width: 250 },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'description', index: 'description', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -94,8 +96,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -105,6 +107,10 @@
     });
 
     $('#btn_print').click(function () {
+        $('#remark').show();
+        $('#note').hide();
+        $('#currency').show();
+        $('#rate').show();
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             $.ajax({
@@ -118,7 +124,47 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        $("#print_form_div").data('url', base_url + "Report/PrintoutPurchaseOrderLokal");
+                        //window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_Description').val(result.Description);
+                        $('#print_CurrencyId').val(result.CurrencyId);
+                        $("#print_form_div").dialog('open');
+                    }
+                }
+            });
+        }
+    });
+
+    $('#btn_printimport').click(function () {
+        $('#print_Note').val("Consignee Name in Shipping Docs : B/L, Invoice, Packing List\nPT. Zentrum Graphics Asia\nJl. Raya Serpong Km. 7 Komp. Multiguna A.1 no.1\nPakualam, Serpong Utara, Tangerang Selatan, Banten 15325\nIndonesia");
+        $('#remark').show();
+        $('#note').show();
+        $('#currency').hide();
+        $('#rate').hide();
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        $("#print_form_div").data('url', base_url + "Report/PrintoutPurchaseOrderImport");
+                        //window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_Description').val(result.Description);
+                        $('#print_CurrencyId').val(result.CurrencyId);
+                        $("#print_form_div").dialog('open');
                     }
                 }
             });
@@ -132,6 +178,7 @@
         $('#CurrencyId').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
+        $('#Description').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#PurchaseDateDiv').show();
         $('#PurchaseDateDiv2').hide();
@@ -167,6 +214,7 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#CurrencyId').val(result.CurrencyId);
+                            $('#Description').val(result.Description);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#PurchaseDate2').val(dateEnt(result.PurchaseDate));
                             $('#PurchaseDateDiv2').show();
@@ -175,6 +223,7 @@
                             $('#CurrencyId').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
+                            $('#Description').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -216,9 +265,11 @@
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#CurrencyId').val(result.CurrencyId);
+                            $('#Description').val(result.Description);
                             $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
+                            $('#Description').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#PurchaseDateDiv2').hide();
                             $('#PurchaseDateDiv').show();
@@ -285,6 +336,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseOrder/Confirm",
             type: "POST",
@@ -293,6 +345,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -316,7 +369,15 @@
         $('#confirm_div').dialog('close');
     });
 
+    $('#print_btn_submit').click(function () {
+        var url = $('#print_form_div').data('url');
+        window.open(url + '?Id=' + $('#print_id').val() + '&Rate=' + $('#print_Rate').val() + '&Remark=' + Base64.encode($('#print_Description').val()) + '&Note=' + Base64.encode($('#print_Note').val()));
+        $('#print_form_div').dialog('close');
+    });
 
+    $('#print_btn_cancel').click(function () {
+        $('#print_form_div').dialog('close');
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -397,7 +458,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), PurchaseDate: $('#PurchaseDate').datebox('getValue'),
-                NomorSurat: $('#NomorSurat').val(), CurrencyId : currency
+                NomorSurat: $('#NomorSurat').val(), CurrencyId : currency, Description: $("#Description").val()
             }),
             async: false,
             cache: false,
@@ -441,8 +502,8 @@
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -462,6 +523,8 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#btnItem').removeAttr('disabled');
+        $('#Quantity').removeAttr('disabled');
         $('#item_div').dialog('open');
     });
 
@@ -490,7 +553,15 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').numberbox('setValue',result.Quantity);
-                            $('#Price').numberbox('setValue',result.Price);
+                            $('#Price').numberbox('setValue', result.Price);
+                            if (result.IsConfirmed) {
+                                $('#btnItem').attr('disabled', true);
+                                $('#Quantity').attr('disabled', true);
+                            }
+                            else {
+                                $('#btnItem').removeAttr('disabled');
+                                $('#Quantity').removeAttr('disabled');
+                            }
                             $('#item_div').dialog('open');
                         }
                     }
@@ -601,7 +672,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListSupplier';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -616,7 +687,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
@@ -629,8 +700,8 @@
         width: $("#lookup_div_contact").width() - 10,
         height: $("#lookup_div_contact").height() - 110,
     });
-    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {
@@ -673,7 +744,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'name', index: 'name', width: 240 },
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -681,7 +752,7 @@
                   { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'uom', index: 'uom', width: 40 },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
-                  { name: 'avgprice', index: 'avgprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'avgprice', index: 'avgprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true},
         ],
         page: '1',
         pager: $('#lookup_pager_item'),
@@ -695,8 +766,8 @@
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_item').click(function () {

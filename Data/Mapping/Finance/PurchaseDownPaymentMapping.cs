@@ -24,6 +24,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(pdp => pdp.ContactId)
                 .WillCascadeOnDelete(false);
+            HasRequired(pdp => pdp.Currency)
+                .WithMany()
+                .HasForeignKey(pdp => pdp.CurrencyId)
+                .WillCascadeOnDelete(false);
             Ignore(pdp => pdp.Errors);
         }
     }

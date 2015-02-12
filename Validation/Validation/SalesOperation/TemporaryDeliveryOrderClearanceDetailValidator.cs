@@ -79,7 +79,7 @@ namespace Validation.Validation
                                      ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, bool CaseCreate)
         {
             IList<TemporaryDeliveryOrderClearanceDetail> details = _temporaryDeliveryOrderClearanceDetailService.GetObjectsByTemporaryDeliveryOrderDetailId(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
-            int totalQuantity = 0;
+            decimal totalQuantity = 0;
             foreach (var detail in details)
             {
                 //if (!detail.IsConfirmed)
@@ -91,7 +91,7 @@ namespace Validation.Validation
             TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
             if (totalQuantity > temporaryDeliveryOrderDetail.Quantity)
             {
-                int maxquantity = temporaryDeliveryOrderDetail.Quantity - totalQuantity + temporaryDeliveryOrderClearanceDetail.Quantity;
+                decimal maxquantity = temporaryDeliveryOrderDetail.Quantity - totalQuantity + temporaryDeliveryOrderClearanceDetail.Quantity;
                 temporaryDeliveryOrderClearanceDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return temporaryDeliveryOrderClearanceDetail;

@@ -52,12 +52,13 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
                    'Invoice Date','Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'purchasereceiptid', index: 'purchasereceiptid', width: 100, hidden: true },
                   { name: 'purchasereceipt', index: 'purchasereceipt', width: 70 },
@@ -70,7 +71,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -99,8 +100,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -123,7 +124,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportPurchaseInvoice?Id=" + id);
+                        window.open(base_url + "Report/PrintoutPurchaseInvoiceConfirm?Id=" + id);
                     }
                 }
             });
@@ -321,6 +322,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseInvoice/Confirm",
             type: "POST",
@@ -329,6 +331,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -436,12 +439,12 @@
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
                 NomorSurat: $('#NomorSurat').val(),CurrencyId: $("#Currency").data('kode'), ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -466,7 +469,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Purchase Receival Id', 'PRD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
+        colNames: ['Code', 'Purchase Receival Id', 'PRD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount (Quantity x Price)'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 70, sortable: false },
@@ -474,9 +477,9 @@
                   { name: 'purchasereceivaldetailcode', index: 'purchasereceivaldetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
+                  { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -655,11 +658,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
                    'CurrencyId','Currency','Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
                   { name: 'code', index: 'code', width: 80, hidden: true },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
                   { name: 'purchaseordercode', index: 'purchaseordercode', width: 80, hidden: true },
@@ -672,7 +676,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
                   { name: 'tax', index: 'tax', width: 50 },
         ],
         page: '1',
@@ -687,8 +691,8 @@
         width: $("#lookup_div_purchasereceival").width() - 10,
         height: $("#lookup_div_purchasereceival").height() - 110,
     });
-    $("#lookup_table_purchasereceival").jqGrid('navGrid', '#lookup_toolbar_purchasereceival', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_purchasereceival").jqGrid('navGrid', '#lookup_toolbar_purchasereceival', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_purchasereceival').click(function () {
@@ -739,7 +743,7 @@
                   { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
@@ -755,8 +759,8 @@
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_item').click(function () {

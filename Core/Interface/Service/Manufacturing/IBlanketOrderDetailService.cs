@@ -24,23 +24,23 @@ namespace Core.Interface.Service
         BlanketOrderDetail CutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         BlanketOrderDetail SideSealObject(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail PrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
-        BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal AdhesiveUsage, IBlanketService _blanketService);
+        BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal RollBlanketUsage, IBlanketService _blanketService);
         BlanketOrderDetail MountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail HeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail PullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail QCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail PackageObject(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail RejectObject(BlanketOrderDetail blanketOrderDetail, DateTime RejectedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                        IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                        IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         BlanketOrderDetail UndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                            IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                            IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         BlanketOrderDetail FinishObject(BlanketOrderDetail blanketOrderDetail, DateTime FinishedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                        IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                        IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         BlanketOrderDetail UnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                          IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                          IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         bool DeleteObject(int Id);
     }

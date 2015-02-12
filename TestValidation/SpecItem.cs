@@ -60,6 +60,14 @@ namespace TestValidation
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
+                d.contact = new Contact()
+                {
+                    Name = "President",
+                    IsTaxable = true,
+                    TaxCode = "01",
+                    ContactType = "CUSTOMER"
+                };
+                d.contact = d._contactService.CreateObject(d.contact);
             }
         }
 
@@ -112,12 +120,12 @@ namespace TestValidation
                     ItemId = d.item.Id,
                     Quantity = 10,
                     StockAdjustmentId = d.stockAdjustment.Id,
-                    Price = 50000
+                    Price = 50000,
                 };
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.item.Errors.Count().should_be(0);
             };
@@ -142,7 +150,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.stockAdjustment.Errors.Count().should_not_be(0);
                 d.item.Quantity.should_be(0);
@@ -169,7 +177,7 @@ namespace TestValidation
                 d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
 
                 d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
-                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.item.Errors.Count().should_be(0);
                 d.item.CustomerQuantity.should_be(d.cstockAD1.Quantity);
@@ -196,7 +204,7 @@ namespace TestValidation
                 d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
 
                 d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
-                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.customerStockAdjustment.Errors.Count().should_not_be(0);
                 d.item.CustomerQuantity.should_be(0);
@@ -266,6 +274,15 @@ namespace TestValidation
 
                 compound = d._itemService.CreateObject(compound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
+                Item Adhesive = new Item()
+                {
+                    ItemTypeId = d._itemTypeService.GetObjectByName("AdhesiveRoller").Id,
+                    Name = "Adhesive",
+                    Sku = "ADR00001",
+                    UoMId = d.Pcs.Id
+                };
+                Adhesive = d._itemService.CreateObject(Adhesive, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
+
                 d.stockAdjustment = new StockAdjustment()
                 {
                     WarehouseId = d.localWarehouse.Id,
@@ -284,7 +301,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.rollerBuilder = new RollerBuilder()
                 {
@@ -302,7 +319,8 @@ namespace TestValidation
                     Name = "Roller Builder",
                     Description = "RB",
                     CompoundId = compound.Id,
-                    UoMId = d.Pcs.Id
+                    UoMId = d.Pcs.Id,
+                    AdhesiveId = Adhesive.Id,
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 

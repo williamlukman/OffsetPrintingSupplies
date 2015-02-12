@@ -148,11 +148,11 @@ namespace Validation.Validation
             VHasTaxCode(contact);
             if (!isValid(contact)) { return contact; }
             VHasUniqueName(contact, _contactService);
-            if (!isValid(contact)) { return contact; }
-            VHasAddress(contact);
-            if (!isValid(contact)) { return contact; }
-            VHasContactNo(contact);
-            if (!isValid(contact)) { return contact; }
+            //if (!isValid(contact)) { return contact; }
+            //VHasAddress(contact);
+            //if (!isValid(contact)) { return contact; }
+            //VHasContactNo(contact);
+            //if (!isValid(contact)) { return contact; }
             //VHasPIC(contact);
             //if (!isValid(contact)) { return contact; }
             //VHasPICContactNo(contact);

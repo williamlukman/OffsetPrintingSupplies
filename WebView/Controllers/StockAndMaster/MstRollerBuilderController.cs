@@ -188,8 +188,8 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
-                             model.Name,
                              model.Sku,
+                             model.Name,
                              model.Description,
                              model.Quantity,
                              model.PendingReceival,
@@ -230,8 +230,8 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
                             model.Sku,
+                            model.Name,
                             model.Description,
                             model.Quantity,
                             model.PendingReceival,
@@ -260,8 +260,8 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
-                             model.Name,
                              model.Sku,
+                             model.Name,
                              model.Description,
                              model.Quantity,
                              model.PendingReceival,
@@ -302,8 +302,8 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
                             model.Sku,
+                            model.Name,
                             model.Description,
                             model.Quantity,
                             model.PendingReceival,
@@ -347,7 +347,7 @@ namespace WebView.Controllers
                 model.CompoundId,
                 Compound = _itemService.GetObjectById(model.CompoundId).Name,
                 model.AdhesiveId,
-                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
+                Adhesive = model.AdhesiveId == null ? "" : _itemService.GetObjectById(model.AdhesiveId.GetValueOrDefault()).Name,
                 model.CoreBuilderId,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RD,

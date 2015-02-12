@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -20,12 +21,18 @@ namespace WebView.Controllers
         private IPayableService _payableService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
+        private IPaymentRequestService _paymentRequestService;
+        private IPurchaseDownPaymentService _purchaseDownPaymentService;
+        private IPurchaseInvoiceMigrationService _purchaseInvoiceMigrationService;
 
         public PayableController()
         {
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
+            _purchaseDownPaymentService = new PurchaseDownPaymentService(new PurchaseDownPaymentRepository(), new PurchaseDownPaymentValidator());
+            _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
         }
 
         public ActionResult Index()
@@ -41,57 +48,63 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
-           var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.Code,
-                             model.ContactId,
-                             Contact = model.Contact.Name,
-                             model.PayableSource,
-                             model.PayableSourceId,
-                             model.Amount,
-                             model.RemainingAmount,
-                             model.PendingClearanceAmount,
-                             model.DueDate,
-                             model.CompletionDate,
-                             model.CreatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                var q = db.Payables.Where(x => !x.IsDeleted).Include("Contact");
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.Code,
+                                 NomorSurat = (model.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? db.PurchaseInvoiceMigrations.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PaymentRequest) ? db.PaymentRequests.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NoBukti : "",
+                                 model.ContactId,
+                                 Contact = model.Contact.Name,
+                                 model.PayableSource,
+                                 model.PayableSourceId,
+                                 model.Amount,
+                                 model.RemainingAmount,
+                                 model.PendingClearanceAmount,
+                                 Currency = model.Currency.Name,
+                                 model.Rate,
+                                 model.DueDate,
+                                 model.CompletionDate,
+                                 model.CreatedAt,
+                             }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from payable in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = payable.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from payable in list
+                        select new
+                        {
+                            id = payable.Id,
+                            cell = new object[] {
                             payable.Id,
                             payable.Code,
+                            payable.NomorSurat,
                             payable.ContactId,
                             payable.Contact,
                             payable.PayableSource,
@@ -99,74 +112,86 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
                       }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
+            DateTime endDay = enddate.AddDays(1);
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
-            var q = _payableService.GetQueryable().Include("Contact")
-                                   .Where(x => !x.IsDeleted && x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1));
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.Code,
-                             model.ContactId,
-                             Contact = model.Contact.Name,
-                             model.PayableSource,
-                             model.PayableSourceId,
-                             model.Amount,
-                             model.RemainingAmount,
-                             model.PendingClearanceAmount,
-                             model.DueDate,
-                             model.CompletionDate,
-                             model.CreatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.Payables.Include("Contact")
+                                       .Where(x => !x.IsDeleted && x.CreatedAt >= startdate && x.CreatedAt < endDay);
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.Code,
+                                 NomorSurat = (model.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? db.PurchaseInvoiceMigrations.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NomorSurat :
+                                                (model.PayableSource == Constant.PayableSource.PaymentRequest) ? db.PaymentRequests.Where(x => x.Id == model.PayableSourceId).FirstOrDefault().NoBukti : "",
+                                 model.ContactId,
+                                 Contact = model.Contact.Name,
+                                 model.PayableSource,
+                                 model.PayableSourceId,
+                                 model.Amount,
+                                 model.RemainingAmount,
+                                 model.PendingClearanceAmount,
+                                 Currency = model.Currency.Name,
+                                 model.Rate,
+                                 model.DueDate,
+                                 model.CompletionDate,
+                                 model.CreatedAt,
+                             }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from payable in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = payable.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from payable in list
+                        select new
+                        {
+                            id = payable.Id,
+                            cell = new object[] {
                             payable.Id,
                             payable.Code,
+                            payable.NomorSurat,
                             payable.ContactId,
                             payable.Contact,
                             payable.PayableSource,
@@ -174,12 +199,15 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
                       }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetListSalesDownPayment(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -204,9 +232,10 @@ namespace WebView.Controllers
                              model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
-                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.CompletionDate,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -248,9 +277,10 @@ namespace WebView.Controllers
                             payable.PayableSourceId,
                             payable.DueDate,
                             payable.Amount,
-                            payable.currency,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.CompletionDate,
                             payable.CreatedAt,
                             payable.UpdatedAt,
@@ -282,6 +312,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -325,6 +357,8 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
@@ -356,6 +390,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -399,6 +435,8 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,

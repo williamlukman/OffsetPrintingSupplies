@@ -27,20 +27,21 @@
     $("#list").jqGrid({
         url: base_url + 'Receivable/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact',
-                   'Source', 'Id', 'Amount', 'Currency' , 'Remaining', 'PendingClearance',
-                   'Due Date', 'Completion Date', 'Created At'],
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact', 'Source', 'Id', 'Amount', 
+                   'Remaining', 'PendingClearance', 'Currency', 'Rate', 'Due Date', 'Completion Date', 'Created At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 70 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
                   { name: 'contactid', index: 'contactid', width: 40, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
-				  { name: 'source', index: 'source', width: 120, align: 'right' },
-				  { name: 'sourceid', index: 'sourceid', width: 55 },
+                  { name: 'contact', index: 'contact', width: 170 },
+				  { name: 'receivablesource', index: 'receivablesource', width: 130, align: 'right' },
+				  { name: 'receivablesourceid', index: 'receivablesourceid', width: 55 },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'rate', index: 'rate', width: 100 },
 				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'completiondate', index: 'completiondate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -61,8 +62,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

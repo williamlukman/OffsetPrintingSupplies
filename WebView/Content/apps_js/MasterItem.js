@@ -1,17 +1,17 @@
 ﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
-		vCode;
+		vCode,
+		currentpage = '1';
    
-
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { }, page: currentpage }).trigger("reloadGrid");
     }
-
+    
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
@@ -23,8 +23,10 @@
     $("#form_div").dialog('close');
     $("#lookup_div_itemtype").dialog('close');
     $("#lookup_div_uom").dialog('close');
+    $("#lookup_div_subtype").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ItemTypeId").hide();
+    $("#SubTypeId").hide();
     $("#UoMId").hide();
 
     //GRID +++++++++++++++
@@ -32,30 +34,34 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
-                    'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Customer's QTY",
-                    'UoM', 'Selling Price', 'AvgPrice', "Customer's AvgPrice",
-                    'Description', 'Item Type', 'Tradeable', 'Created At', 'Updated At'],
+                    'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Cust's QTY",
+                    'UoM', 'Selling Price', 'Currency Id', 'Currency', 'Price List', 'AvgPrice', "Cust's AvgPrice",
+                    'Description', 'Item Type', 'Sub Type', 'Tradeable', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
-                  { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'minimumquantity', index: 'minimumquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'customerquantity', index: 'customerquantity', width: 95, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'uom', index: 'uom', width: 40 },
+				  { name: 'name', index: 'name', width: 480 },
+                  { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'minimumquantity', index: 'minimumquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'virtual', index: 'virtual', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'customerquantity', index: 'customerquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 70 },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'customeravgprice', index: 'customeravgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'description', index: 'description', width: 70 },
-                  { name: 'itemtypename', index: 'itemtypename', width: 70 },
-				  { name: 'istradeable', index: 'istradeable', width: 40 },
+    			  { name: 'currencyid', index: 'currencyid', width: 35, align: "center", hidden: true },
+                  { name: 'currency', index: 'currency', width: 70 },
+                  { name: 'pricelist', index: 'pricelist', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'customeravgprice', index: 'customeravgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'description', index: 'description', width: 100 },
+                  { name: 'itemtype', index: 'itemtype', width: 70 },
+                  { name: 'subtype', index: 'subtype', width: 70 },
+				  { name: 'istradeable', index: 'istradeable', width: 40, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
 			      { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-        page: '1',
+        page: currentpage,
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
@@ -63,7 +69,6 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -79,20 +84,23 @@
 
                     rowIsTradeable = $(this).getRowData(cl).istradeable;
                     if (rowIsTradeable == 'true') {
-                        rowIsTradeable = "YES";
+                        rowIsTradeable = "Yes";
                     } else {
-                        rowIsTradeable = "NO";
+                        rowIsTradeable = "No";
                     }
                     $(this).jqGrid('setRowData', ids[i], { istradeable: rowIsTradeable });
                 }
             }
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
-        ReloadGrid();
+        $('input[id*="gs_"]').val("");
+        $('select[id*="gs_"]').val("ALL");
+        currentpage = '1';
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { "filters": "" }, page: currentpage }).trigger("reloadGrid");
     });
 
     $('#btn_print').click(function () {
@@ -130,7 +138,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
-                            $('#SKU').val(result.Sku);
+                            $('#Sku').val(result.Sku);
                             $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
@@ -146,9 +154,11 @@
                             $('#Quantity').numberbox('setValue', (result.Quantity));
                             $('#MinimumQuantity').numberbox('setValue', (result.MinimumQuantity));
                             $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
+                            $('#PriceList').numberbox('setValue', (result.PriceList));
                             $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
                             $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
                             $('#form_div').dialog('open');
+                            $('#CurrencyId').val(result.CurrencyId);
                         }
                     }
                 }
@@ -200,6 +210,7 @@
                     $("#delete_confirm_div").dialog('close');
                 }
                 else {
+                    currentpage = $('#list').getGridParam('page');
                     ReloadGrid();
                     $("#delete_confirm_div").dialog('close');
                 }
@@ -222,23 +233,34 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItem/Update';
+            currentpage = $('#list').getGridParam('page')
+            if ($("#ItemTypeName").val() == 'Blanket' || $("#ItemTypeName").val() == 'Roller' || $("#ItemTypeName").val() == 'Core') {
+                submitURL = base_url + 'MstItem/UpdatePrice';
+            }
+            else {
+                submitURL = base_url + 'MstItem/Update';
+            }
         }
             // Insert
         else {
+            currentpage = '1';
             submitURL = base_url + 'MstItem/Insert';
         }
 
         var f = document.getElementById("IsTradeable");
         var tradeable = f.options[f.selectedIndex].value;
 
+        var g = document.getElementById("CurrencyId");
+        var currency = g.options[g.selectedIndex].value;
+        
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
-                Sku: $("#SKU").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SubTypeId: $("#SubTypeId").val(),
+                SellingPrice: $("#SellingPrice").numberbox('getValue'), PriceList: $("#PriceList").numberbox('getValue'),
+                CurrencyId: currency, Sku: $("#Sku").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
                 MinimumQuantity: $("#MinimumQuantity").numberbox('getValue'), IsTradeable: tradeable
             }),
             async: false,
@@ -304,7 +326,7 @@
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,
@@ -317,8 +339,8 @@
         width: $("#lookup_div_itemtype").width() - 10,
         height: $("#lookup_div_itemtype").height() - 110,
     });
-    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_itemtype').click(function () {
@@ -333,11 +355,32 @@
 
             $('#ItemTypeId').val(ret.id).data("kode", id);
             $('#ItemTypeName').val(ret.name);
-
             $('#lookup_div_itemtype').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
+        $.ajax({
+            dataType: "json",
+            url: base_url + "MstItemType/GetInfoByName?itemType=" + $('#ItemTypeName').val(),
+            success: function (result) {
+                if (result.Id == null) {
+                    $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                }
+                else {
+                    if (JSON.stringify(result.Errors) != '{}') {
+                        var error = '';
+                        for (var key in result.Errors) {
+                            error = error + "<br>" + key + " " + result.Errors[key];
+                        }
+                        $.messager.alert('Warning', error, 'warning');
+                    }
+                    else {
+                        $('#Sku').val(result.SKU);
+                    }
+                }
+            }
+        });
+
     });
 
     
@@ -373,8 +416,8 @@
         width: $("#lookup_div_uom").width() - 10,
         height: $("#lookup_div_uom").height() - 110,
     });
-    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_uom').click(function () {
@@ -398,5 +441,61 @@
 
 
     // ---------------------------------------------End Lookup uom----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up subtype-------------------------------------------------------
+    $('#btnSubType').click(function () {
+        var lookUpURL = base_url + 'MstSubType/GetList';
+        var lookupGrid = $('#lookup_table_subtype');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_subtype').dialog('open');
+    });
+
+    jQuery("#lookup_table_subtype").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name'],
+        colModel: [
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_subtype'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_subtype").width() - 10,
+        height: $("#lookup_div_subtype").height() - 110,
+    });
+    $("#lookup_table_subtype").jqGrid('navGrid', '#lookup_toolbar_subtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_subtype').click(function () {
+        $('#lookup_div_subtype').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_subtype').click(function () {
+        var id = jQuery("#lookup_table_subtype").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_subtype").jqGrid('getRowData', id);
+
+            $('#SubTypeId').val(ret.id).data("kode", id);
+            $('#SubTypeName').val(ret.name);
+
+            $('#lookup_div_subtype').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup subtype----------------------------------------------------------------
 
 }); //END DOCUMENT READY

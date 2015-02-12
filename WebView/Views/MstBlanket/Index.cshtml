@@ -12,11 +12,12 @@
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: Master Blanket :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
     <div id="table_div">
@@ -25,8 +26,8 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
-        title=".: Master Blanket :.">
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top: 10px" data-options="modal:true"  
+        title=".: Master Blanket :." >
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -49,7 +50,7 @@
                             <td >
                                 <input id="Sku" name ="Sku" type="text" size="10" maxlength="40" align="left"/></td>
                         </tr>
-                        <tr>
+                        <tr class="hide-row">
                             <td>
                                 <label>Roll No</label></td>
                             <td >
@@ -59,13 +60,13 @@
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="40" maxlength="40" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="60" maxlength="200" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="40" maxlength="40" align="left" /></td>
+                                <input id="Description" name="Description" type="text" size="60" maxlength="200" align="left" /></td>
                         </tr>
                         <tr id="ItemTypeRow">
                             <td>
@@ -74,6 +75,7 @@
                                <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="ItemType" name="ItemTypeId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />                                         
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -92,14 +94,16 @@
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
-                          <tr>
+                        <tr>
                             <td>
                                 <label>Machine</label></td>
                             <td colspan="3">
                                 <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Machine" name="MachineId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -108,6 +112,16 @@
                                 <input id="AdhesiveId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnAdhesive" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Adhesive" name="AdhesiveId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Adhesive 2</label></td>
+                            <td colspan="3">
+                                <input id="Adhesive2Id"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnAdhesive2" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Adhesive2" name="Adhesive2Id" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -144,28 +158,28 @@
                             <td>
                                 <label>AC</label></td>
                             <td colspan="3">
-                                <input id="AC" name="AC" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="AC" name="AC" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>
                          <tr>
                             <td>
                                 <label>AR</label></td>
                             <td colspan="3">
-                                <input id="AR" name="AR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="AR" name="AR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>
                          <tr>
                             <td>
                                 <label>Thick</label></td>
                             <td colspan="3">
-                                <input id="thickness" name="thickness" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="thickness" name="thickness" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>
                         <tr id="KSRow">
                             <td>
                                 <label>KS</label></td>
                             <td colspan="3">
-                                <input id="KS" name="KS" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="KS" name="KS" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>
                         <tr>
@@ -175,6 +189,7 @@
                                 <select id="ApplicationCase">
                                       <option value="Sheetfed">Sheetfed</option>
                                       <option value="Web">Web</option>
+                                      <option value="Both">Both</option>
                                 </select>
                             </td>
                         </tr>
@@ -190,11 +205,15 @@
                                 <label style="margin-left: 0.7in; margin-right: 0.2in">
                                     Cropped AC
                                 </label>
-                                <input id="LeftOverAC" name="LeftOverAC" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="LeftOverAC" name="LeftOverAC" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                                 <label style="margin-left: 0.1in; margin-right: 0.2in">
                                     Cropped AR
                                 </label>
-                                <input id="LeftOverAR" name="LeftOverAR" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="LeftOverAR" name="LeftOverAR" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
+                                <label style="margin-left: 0.7in; margin-right: 0.2in">
+                                    Cropped Special
+                                </label>
+                                <input id="Special" name="Special" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>                
                     </table>
@@ -232,9 +251,9 @@
         <table id="lookup_table_machine" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_machine" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up machine -->
+    <!-- END Look Up machine -->
 
-        <!-- Look Up adhesive -->
+    <!-- Look Up adhesive -->
     <div id="lookup_div_adhesive" class="easyui-dialog" title="List Adhesive" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -246,9 +265,23 @@
         <table id="lookup_table_adhesive" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_adhesive" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up adhesive -->
+    <!-- END Look Up adhesive -->
 
- <!-- Look Up rollBlanket -->
+        <!-- Look Up adhesive2 -->
+    <div id="lookup_div_adhesive2" class="easyui-dialog" title="List Adhesive 2" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_adhesive2" class="grid_toolbar">
+            <a id="lookup_btn_add_adhesive2" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_adhesive2" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_adhesive2" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_adhesive2" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up adhesive2 -->
+
+    <!-- Look Up rollBlanket -->
     <div id="lookup_div_rollBlanket" class="easyui-dialog" title="List RollBlanket" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 

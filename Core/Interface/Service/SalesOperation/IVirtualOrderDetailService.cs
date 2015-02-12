@@ -24,7 +24,7 @@ namespace Core.Interface.Service
                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         VirtualOrderDetail UnconfirmObject(VirtualOrderDetail virtualOrderDetail, IVirtualOrderService _virtualOrderService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                         IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity);
-        VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity, IVirtualOrderService _virtualOrderService);
+        VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity);
+        VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity, IVirtualOrderService _virtualOrderService);
     }
 }

@@ -63,11 +63,11 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VHasRollBlanketAmount(BlanketOrderDetail blanketOrderDetail)
         {
-            if (blanketOrderDetail.AdhesiveUsage <= 0)
+            if (blanketOrderDetail.RollBlanketUsage <= 0)
             {
-                blanketOrderDetail.Errors.Add("Generic", "Adhesive Amount belum diisi");
+                blanketOrderDetail.Errors.Add("Generic", "Roll Blanket Amount belum diisi");
             }
             return blanketOrderDetail;
         }
@@ -313,7 +313,7 @@ namespace Validation.Validation
 
         public BlanketOrderDetail VDeleteObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
-            VHasNotBeenCut(blanketOrderDetail);
+            VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
@@ -356,7 +356,7 @@ namespace Validation.Validation
 
         public BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasAdhesiveAmount(blanketOrderDetail);
+            VHasRollBlanketAmount(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenAdhesiveTapeApplied(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
@@ -427,7 +427,21 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
+        public BlanketOrderDetail VRollBlanketIsInStock(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService,
+                                                        IBlanketOrderService _blanketOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        {
+            BlanketOrder blanketOrder = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
+            Blanket blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.RollBlanketItemId);
+            if (warehouseItem.Quantity < blanketOrderDetail.RollBlanketUsage)
+            {
+                blanketOrderDetail.Errors.Add("Generic", "Stock quantity Roll Blanket kurang dari " + blanketOrderDetail.RollBlanketUsage);
+            }
+            return blanketOrderDetail;
+        }
+
+        public BlanketOrderDetail VFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                                IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasFinishedDate(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
@@ -435,9 +449,11 @@ namespace Validation.Validation
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenPackaged(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VHasRollBlanketAmount(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VRollBlanketIsInStock(blanketOrderDetail, _blanketService, _blanketOrderService, _itemService, _warehouseItemService);
             return blanketOrderDetail;
         }
 
@@ -449,7 +465,8 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
+        public BlanketOrderDetail VRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                                IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasRejectedDate(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
@@ -458,6 +475,8 @@ namespace Validation.Validation
             VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VBlanketOrderHasNotBeenCompleted(blanketOrderDetail, _blanketOrderService);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VRollBlanketIsInStock(blanketOrderDetail, _blanketService, _blanketOrderService, _itemService, _warehouseItemService);
             return blanketOrderDetail;
         }
 
@@ -552,10 +571,11 @@ namespace Validation.Validation
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
+        public bool ValidFinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                      IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             blanketOrderDetail.Errors.Clear();
-            VFinishObject(blanketOrderDetail, _blanketOrderService);
+            VFinishObject(blanketOrderDetail, _blanketOrderService, _blanketService, _itemService, _warehouseItemService);
             return isValid(blanketOrderDetail);
         }
 
@@ -566,10 +586,11 @@ namespace Validation.Validation
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
+        public bool ValidRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService,
+                                      IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             blanketOrderDetail.Errors.Clear();
-            VRejectObject(blanketOrderDetail, _blanketOrderService);
+            VRejectObject(blanketOrderDetail, _blanketOrderService, _blanketService, _itemService, _warehouseItemService);
             return isValid(blanketOrderDetail);
         }
 

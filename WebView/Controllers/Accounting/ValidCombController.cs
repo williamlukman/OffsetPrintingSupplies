@@ -50,7 +50,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Closing.IsClosed);
+            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Account.IsLeaf);
 
             var query = (from model in q
                          select new
@@ -121,7 +121,7 @@ namespace WebView.Controllers
             }
 
             // Get Data
-            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Closing.IsClosed);
+            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Closing.IsClosed && x.Account.IsLeaf);
 
             var query = (from model in q
                          select new

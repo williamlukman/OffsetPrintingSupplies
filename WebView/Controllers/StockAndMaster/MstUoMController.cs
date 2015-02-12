@@ -46,6 +46,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.Size,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -81,6 +82,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             item.Id,
                             item.Name,
+                            item.Size,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -105,6 +107,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
+                model.Size,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -136,6 +139,7 @@ namespace WebView.Controllers
             {
                 var data = _uomService.GetObjectById(model.Id);
                 data.Name = model.Name;
+                data.Size = model.Size;
                 model = _uomService.UpdateObject(data);
             }
             catch (Exception ex)

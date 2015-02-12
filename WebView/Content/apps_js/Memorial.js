@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'Memorial/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'Memorial/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'Memorial/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'Memorial/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'Memorial/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Description', 'Amount', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Description', 'Amount', 'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -57,8 +57,9 @@
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'nobukti', index: 'nobukti', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -87,8 +88,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -98,13 +99,31 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "Memorial/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/PrintoutJurnalMemorial?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
 
+        $('#NoBukti').removeAttr('disabled');
         $('#Description').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -136,12 +155,14 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#Description').val(result.Description);
                             $('#TotalAmount').val(result.Amount);
                             $('#form_btn_save').hide();
                             $('#btnAccount').removeAttr('disabled');
                             $('#Description').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
+                            $('#NoBukti').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -178,10 +199,12 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#Description').val(result.Description);
                             $('#TotalAmount').val(result.TotalAmount);
                             $('#Description').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
+                            $('#NoBukti').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -246,6 +269,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "Memorial/Confirm",
             type: "POST",
@@ -254,6 +278,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -351,14 +376,15 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Description: $("#Description").val(), Amount : $("#TotalAmount").numberbox('getValue'),
+                Id: id, Description: $("#Description").val(), Amount: $("#TotalAmount").numberbox('getValue'),
+                NoBukti: $('#NoBukti').val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -588,10 +614,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy','CashBank', 'Legacy Code'],
+        colNames: ['Id', 'Account Code', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy','CashBank', 'Legacy Code'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true},
-				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'code', index: 'code', width: 80, classes: "grid-col" },
+                  { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'group', index: 'group', width: 90 },
                   { name: 'level', index: 'level', width: 50 },
@@ -605,7 +632,7 @@
         pager: $('#lookup_pager_account'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'id',
+        sortname: 'code',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -613,8 +640,8 @@
         width: $("#lookup_div_account").width() - 10,
         height: $("#lookup_div_account").height() - 110,
     });
-    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_account').click(function () {

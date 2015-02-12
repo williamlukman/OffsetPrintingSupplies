@@ -59,7 +59,7 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'CoreIdentification Id', 'Warehouse Id',
+        colNames: ['ID', 'Code', 'CoreIdentification Id', 'No. Diss', 'Warehouse Id',
                     'Warehouse Code', 'Warehouse Name', 'QTY Rcv', 'QTY Final',
                     'QTY Rjct', 'Due Date', 'Is Confirmed', 'Confirmation Date', 'Is Completed', 'Created At', 'Updated At'
         ],
@@ -67,6 +67,7 @@
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'coreidentificationid', index: 'coreidentificationid', width: 100, hidden: true },
+                  { name: 'nomordisassembly', index: 'nomordisassembly', width: 100 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousecode', index: 'warehousecode', width: 100, hidden: true },
                   { name: 'warehouse', index: 'warehouse', width: 160 },
@@ -78,7 +79,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'iscompleted', index: 'iscompleted', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -107,8 +108,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -116,7 +117,24 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/PrintoutRollerCollectionNote?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -307,6 +325,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "RecoveryWorkOrder/Confirm",
             type: "POST",
@@ -315,6 +334,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -451,23 +471,27 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['RIF Id', 'RollerBuilder Id', 'Roller', 'Core Type',
-                   'Compound', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
+        colNames: ['RIF Id', 'RollerBuilder Id', 'Sku Roller', 'Roller', 'Core Type',
+                   'Core', 'Compound', 'QTY', 'Compound Under Layer', 'QTY', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
         ],
         colModel: [
                   { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 100, sortable: false, hidden: true },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
+                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
+                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 400, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 70, sortable: false },
+                  { name: 'corebuilder', index: 'corebuilder', width: 300, sortable: false },
+                  { name: 'compound', index: 'compound', width: 150, sortable: false },
                   { name: 'compoundusage', index: 'compoundusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'compoundunderlayer', index: 'compoundunderlayer', width: 150, sortable: false },
+                  { name: 'compoundunderlayerusage', index: 'compoundunderlayerusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isrejected', index: 'isrejected', width: 100, sortable: false, hidden: true },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isfinished', index: 'isfinished', width: 100, sortable: false, hidden: true },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'coreidentificationdetailid',
@@ -481,7 +505,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
@@ -670,8 +694,8 @@
         width: $("#lookup_div_warehouse").width() - 10,
         height: $("#lookup_div_warehouse").height() - 110,
     });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouse').click(function () {
@@ -711,20 +735,22 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Warehouse', 'InHouse', 'Contact',
-                   'QTY', 'Identified Date',
+        colNames: ['ID', 'Code', 'No. Diss', 'Warehouse', 'InHouse', 'Contact',
+                   'QTY', 'Identified Date', 'Incoming Roll Date',
                    'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'nodiss', index: 'nodiss', width: 70 },
                   { name: 'warehouse', index: 'warehouse', width: 150, hidden: true  },
                   { name: 'isinhouse', index: 'isinhouse', width: 50, align: 'right' },
                   { name: 'contact', index: 'contact', width: 130 },
                   { name: 'quantity', index: 'quantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'identifieddate', index: 'identifieddate', search: false, width: 90, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'incomingroll', index: 'incomingroll', search: false, width: 90, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', hidden: true, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', hidden: true, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', hidden: true, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#lookup_pager_coreidentification'),
@@ -738,8 +764,8 @@
         width: $("#lookup_div_coreidentification").width() - 10,
         height: $("#lookup_div_coreidentification").height() - 110,
     });
-    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_coreidentification').click(function () {
@@ -778,17 +804,18 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+        colNames: ['Id', 'RollerIdentificationId', 'Roller No.', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
                     'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 30, sortable: false },
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'rollerno', index: 'rollerno', width: 60, sortable: false },
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
-                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 400, sortable: false },
                   { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true },
@@ -812,8 +839,8 @@
         width: $("#lookup_div_coreidentificationdetail").width() - 10,
         height: $("#lookup_div_coreidentificationdetail").height() - 110,
     });
-    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_coreidentificationdetail').click(function () {
@@ -855,12 +882,43 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['ID', 'Base Sku', 'Name', 'RollerType', 'RD', 'CD', 'RL', 'WL', 'TL',
+                   'Used Sku', 'QTY', 'UoM', 'New Sku', 'QTY', 'UoM', 
+                   'Machine', 'Compound', 'Adhesive','Core Sku', 'Core', 'Description',
+                   'Crown', 'Size', 'Groove', 'W', 'D', 'P', 'Chamfer',
+                   'Created At', 'Updated At'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'basesku', index: 'basesku', width: 60 },
+				  { name: 'name', index: 'name', width: 400 },
+                  { name: 'rollertypename', index: 'rollertypename', width: 75 },
+                  { name: 'rd', index: 'rd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'cd', index: 'cd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'rl', index: 'rl', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'wt', index: 'wt', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'tl', index: 'tl', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'skurollerusedcore', index: 'skurollerusedcore', width: 70 },
+                  { name: 'rollerusedcorequantity', index: 'rollerusedcorequantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'skurollernewcore', index: 'skurollernewcore', width: 70 },
+                  { name: 'rollernewcorequantity', index: 'rollernewcorequantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'machinename', index: 'machinename', width: 100 },
+                  { name: 'compoundname', index: 'compoundname', width: 100 },
+                  { name: 'adhesivename', index: 'adhesivename', width: 100 },
+                  { name: 'coresku', index: 'coresku', width: 60 },
+                  { name: 'corebuildername', index: 'corebuildername', width: 80 },
+                  { name: 'description', index: 'description', width: 80, hidden: true },
+                  { name: 'iscrowning', index: 'iscrowning', width: 48, align: 'right' },
+                  { name: 'crowningsize', index: 'crowningsize', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'isgrooving', index: 'isgrooving', width: 48, align: 'right' },
+                  { name: 'groovingwidth', index: 'groovingwidth', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'groovingdepth', index: 'groovingdepth', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'groovingposition', index: 'groovingposition', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'ischamfer', index: 'ischamfer', width: 48, align: 'right' },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-
         page: '1',
         pager: $('#lookup_pager_rollerbuilder'),
         rowNum: 20,
@@ -872,9 +930,40 @@
         sortorder: "ASC",
         width: $("#lookup_div_rollerbuilder").width() - 10,
         height: $("#lookup_div_rollerbuilder").height() - 110,
-    });
-    $("#lookup_table_rollerbuilder").jqGrid('navGrid', '#lookup_toolbar_rollerbuilder', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowCrowning = $(this).getRowData(cl).iscrowning;
+		          if (rowCrowning == 'true') {
+		              rowCrowning = "Y";
+		          } else {
+		              rowCrowning = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iscrowning: rowCrowning });
+
+		          rowGrooving = $(this).getRowData(cl).isgrooving;
+		          if (rowGrooving == 'true') {
+		              rowGrooving = "Y";
+		          } else {
+		              rowGrooving = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isgrooving: rowGrooving });
+
+		          rowChamfer = $(this).getRowData(cl).ischamfer;
+		          if (rowChamfer == 'true') {
+		              rowChamfer = "Y";
+		          } else {
+		              rowChamfer = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ischamfer: rowChamfer });
+		      }
+		  }
+    });//END GRID
+
+    $("#lookup_table_rollerbuilder").jqGrid('navGrid', '#lookup_toolbar_rollerbuilder', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_rollerbuilder').click(function () {

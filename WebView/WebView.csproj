@@ -29,6 +29,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>true</IncludeIisSettings>
+    <PublishDatabases>false</PublishDatabases>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +40,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="NewConnection1-Deployment" Order="1">
+          <Destination Path="" />
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
+    <IncludeIisSettings>true</IncludeIisSettings>
+    <PublishDatabases>false</PublishDatabases>
+    <IncludeAppPool>false</IncludeAppPool>
+    <DeployIisAppPath>Default Web Site/offsetforex</DeployIisAppPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
@@ -108,11 +122,7 @@
     <Reference Include="CrystalDecisions.ReportSource, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\CrystalDecisions.ReportSource.dll</HintPath>
-      <Private>False</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportSource.11.5.3700.0.Fakes">
-      <HintPath>FakesAssemblies\CrystalDecisions.ReportSource.11.5.3700.0.Fakes.dll</HintPath>
+      <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="CrystalDecisions.Shared, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
@@ -266,8 +276,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Accounting\ChartOfAccountController.cs" />
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
+    <Compile Include="Controllers\Accounting\ValidCombIncomeStatementController.cs" />
+    <Compile Include="Controllers\Accounting\GeneralLedgerSaldoController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\ReceiptRequestController.cs" />
     <Compile Include="Controllers\Finance\ExchangeRateController.cs" />
     <Compile Include="Controllers\Finance\CurrencyController.cs" />
     <Compile Include="Controllers\Finance\SalesDownPaymentAllocationController.cs" />
@@ -283,6 +296,7 @@
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlendingWorkOrderController.cs" />
+    <Compile Include="Controllers\Manufacturing\RepackingController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
     <Compile Include="Controllers\Report\FinanceReportController.cs" />
@@ -294,6 +308,13 @@
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\ContactDetailController.cs" />
+    <Compile Include="Controllers\StockAndMaster\ContactGroupController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstItemAvgPriceController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstSubTypeController.cs" />
+    <Compile Include="Controllers\StockAndMaster\SupplierDetailController.cs" />
+    <Compile Include="Controllers\StockAndMaster\EmployeeController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstSupplierController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockAdjustmentController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstBlendingRecipeController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockMutationController.cs" />
@@ -335,7 +356,6 @@
     </Compile>
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\ConfigurationModels.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\apps_js\BalanceSheet.js" />
@@ -347,6 +367,38 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\ReportSerahTerima.js" />
+    <Content Include="Content\apps_js\ValidCombIncomeStatement.js" />
+    <Content Include="Content\apps_js\MasterItemAvgPrice.js" />
+    <Content Include="Content\apps_js\MasterSubType.js" />
+    <Content Include="Content\apps_js\SupplierDetail.js" />
+    <Content Include="Content\apps_js\Employee.js" />
+    <Content Include="Content\apps_js\ContactDetail.js" />
+    <Content Include="Content\apps_js\ReportSalesPersonnelComparisonYearlyByQty.js" />
+    <Content Include="Content\apps_js\ReportSalesPersonnelComparisonYearlyByValue.js" />
+    <Content Include="Content\apps_js\ReportSalesPersonnelYearly.js" />
+    <Content Include="Content\apps_js\ReportDailyByQuantity.js" />
+    <Content Include="Content\apps_js\ReportMonthlyRollerCompoundUsage.js" />
+    <Content Include="Content\apps_js\ReportVulcanBlanketSales.js" />
+    <Content Include="Content\apps_js\ReportMonthlyBlanketUsage.js" />
+    <Content Include="Content\apps_js\ReportDiscountByDate.js" />
+    <Content Include="Content\apps_js\ReportSalesOrderDailyByDate.js" />
+    <Content Include="Content\apps_js\ReportItemSalesYearlyByQuantity.js" />
+    <Content Include="Content\apps_js\ReportItemSalesYearlyByValue.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesByItem.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesYearly.js" />
+    <Content Include="Content\apps_js\ReportSortedCustomerSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerGroupSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesComparedLastYear.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesQuarterlyComparison.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesQuarterly.js" />
+    <Content Include="Content\apps_js\ReportCustomerGroupSalesQuarterly.js" />
+    <Content Include="Content\apps_js\ReceiptRequest.js" />
+    <Content Include="Content\apps_js\GeneralLedgerJournalSaldo.js" />
+    <Content Include="Content\apps_js\Repacking.js" />
+    <Content Include="Content\apps_js\MasterSupplier.js" />
     <Content Include="Content\apps_js\CustomerStockAdjustment.js" />
     <Content Include="Content\apps_js\MasterBlendingRecipe.js" />
     <Content Include="Content\apps_js\TemporaryDeliveryOrderClearance.js" />
@@ -596,6 +648,7 @@
     <Content Include="Content\easyui\icons\cancel.png" />
     <Content Include="Content\easyui\icons\chart-up-color.png" />
     <Content Include="Content\easyui\icons\chart.png" />
+    <Content Include="Content\easyui\icons\copy.png" />
     <Content Include="Content\easyui\icons\cut.png" />
     <Content Include="Content\easyui\icons\edit_add.png" />
     <Content Include="Content\easyui\icons\edit_remove.png" />
@@ -1143,8 +1196,6 @@
     <Content Include="Content\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Properties\PublishProfiles\webui.pubxml" />
-    <None Include="Properties\PublishProfiles\Zengra.pubxml" />
     <Content Include="Reports\Finance\BalanceSheet.rpt" />
     <Content Include="Reports\Finance\DailyGL.rpt" />
     <Content Include="Reports\Finance\IncomeStatement.rpt" />
@@ -1180,6 +1231,7 @@
     <Content Include="Reports\General\VirtualOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.rpt" />
+    <None Include="Properties\PublishProfiles\eZengra.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Scripts\collapsiblePanel.js" />
@@ -1282,15 +1334,6 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\mousetrap.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1367,9 +1410,52 @@
     <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
     <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
     <Content Include="Views\CustomerStockAdjustment\Index.cshtml" />
+    <Content Include="Views\MstSupplier\Index.cshtml" />
+    <Content Include="Views\AccountLedger\Index.cshtml" />
+    <Content Include="Views\Repacking\Index.cshtml" />
+    <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\ReceiptRequest\Index.cshtml" />
+    <Content Include="Views\Report\CustomerGroupSalesQuarterly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesQuarterly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesQuarterlyComparison.cshtml" />
+    <Content Include="Views\Report\CustomerSalesComparedLastYear.cshtml" />
+    <Content Include="Views\Report\CustomerGroupSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\CustomerSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\SortedCustomerSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\CustomerSalesYearly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesByItem.cshtml" />
+    <Content Include="Views\Report\ItemSalesYearlyByValue.cshtml" />
+    <Content Include="Views\Report\ItemSalesYearlyByQuantity.cshtml" />
+    <Content Include="Views\Report\SalesOrderDailyByDate.cshtml" />
+    <Content Include="Views\Report\DiscountByDate.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\ContactDetail\Index.cshtml" />
+    <Content Include="Views\SupplierDetail\Index.cshtml" />
+    <Content Include="Views\ContactGroup\Index.cshtml" />
+    <Content Include="Views\MstSubType\Index.cshtml" />
+    <Content Include="Views\Report\MonthlyBlanketUsage.cshtml" />
+    <Content Include="Views\Report\VulcanBlanketSales.cshtml" />
+    <Content Include="Views\Report\MonthlyRollerCompoundUsage.cshtml" />
+    <Content Include="Views\Report\DailyByQuantity.cshtml" />
+    <Content Include="Views\Report\SalesPersonnelYearly.cshtml" />
+    <Content Include="Views\Report\SalesPersonnelComparisonYearlyByValue.cshtml" />
+    <Content Include="Views\Report\SalesPersonnelComparisonYearlyByQty.cshtml" />
+    <Content Include="Views\MstItemAvgPrice\Index.cshtml" />
+    <Content Include="Views\ValidCombIncomeStatement\Index.cshtml" />
+    <Content Include="Views\Report\SerahTerima.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Reports\Printout\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -1411,13 +1497,14 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52383</DevelopmentServerPort>
+          <DevelopmentServerPort>1958</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61688/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:61688/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://localhost/Zengra</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

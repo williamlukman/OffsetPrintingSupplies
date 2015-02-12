@@ -77,14 +77,16 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearance ConfirmObject(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, DateTime ConfirmationDate, 
-                                     ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, IStockMutationService _stockMutationService, IItemService _itemService,
-                                     IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                     ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, IStockMutationService _stockMutationService, 
+                                     IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, 
+                                     ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             temporaryDeliveryOrderClearance.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderClearanceDetailService, _closingService))
             {
                 temporaryDeliveryOrderClearance.TotalWasteCoGS = 0;
+                // TODO: Checked TemporaryDeliveryOrder for Full Clearance, set Reconciled to true
                 IList<TemporaryDeliveryOrderClearanceDetail> temporaryDeliveryOrderClearanceDetails = _temporaryDeliveryOrderClearanceDetailService.GetObjectsByTemporaryDeliveryOrderClearanceId(temporaryDeliveryOrderClearance.Id);
                 foreach (var detail in temporaryDeliveryOrderClearanceDetails)
                 {
@@ -92,6 +94,13 @@ namespace Service.Service
                     _temporaryDeliveryOrderClearanceDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService,
                                                                       _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService);
                     temporaryDeliveryOrderClearance.TotalWasteCoGS += detail.WasteCoGS;
+                    if (detail.WasteCoGS > 0)
+                    {
+                        TemporaryDeliveryOrderDetail tdod = _temporaryDeliveryOrderDetailService.GetObjectById(detail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+                        Item item = _itemService.GetObjectById(tdod.ItemId);
+                        ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                        _generalLedgerJournalService.CreateConfirmationJournalForTemporaryDeliveryOrderClearanceDetailWaste(temporaryDeliveryOrderClearance, itemType.AccountId.GetValueOrDefault(), detail.WasteCoGS, _accountService);
+                    }
                 }
                 _repository.ConfirmObject(temporaryDeliveryOrderClearance);
                 if (temporaryDeliveryOrderClearance.IsWaste)
@@ -105,7 +114,7 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearance UnconfirmObject(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService,
-                                                      IStockMutationService _stockMutationService, IItemService _itemService,
+                                                      IStockMutationService _stockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
                                                       IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
@@ -121,6 +130,13 @@ namespace Service.Service
                 foreach (var detail in temporaryDeliveryOrderClearanceDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
+                    if (detail.WasteCoGS > 0)
+                    {
+                        TemporaryDeliveryOrderDetail tdod = _temporaryDeliveryOrderDetailService.GetObjectById(detail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+                        Item item = _itemService.GetObjectById(tdod.ItemId);
+                        ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                        _generalLedgerJournalService.CreateUnconfirmationJournalForTemporaryDeliveryOrderClearanceDetailWaste(temporaryDeliveryOrderClearance, itemType.AccountId.GetValueOrDefault(), detail.WasteCoGS, _accountService);
+                    }
                     _temporaryDeliveryOrderClearanceDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService);
                 }
                 temporaryDeliveryOrderClearance.TotalWasteCoGS = 0;

@@ -54,11 +54,12 @@
     $("#list").jqGrid({
         url: base_url + 'TemporaryDeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
                     'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Is Pushed', 'Push Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
                   { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
@@ -72,7 +73,7 @@
                   { name: 'ispushed', index: 'ispushed', width: 100, hidden: true },
                   { name: 'pushdate', index: 'pushdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -111,7 +112,9 @@
 		              rowOrderType = "Trial";
 		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
-		          } else {
+		          } else if (rowOrderType == '2') {
+		              rowOrderType = "Consignment";
+		          } else if (rowOrderType == '3') {
 		              rowOrderType = "Part Delivery";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
@@ -317,6 +320,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "TemporaryDeliveryOrder/Confirm",
             type: "POST",
@@ -325,6 +329,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -477,7 +482,7 @@
         var virtualorderid;
         var deliveryorderid;
 
-        if (ordertype == 0 || ordertype == 1) {
+        if (ordertype == 0 || ordertype == 1 || ordertype == 2) {
             virtualorderid = $("#PreviousOrderId").val();
             deliveryorderid = null;
         }
@@ -532,17 +537,17 @@
                   { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'orderdetailid', index: 'orderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false },
+                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false, hidden: true },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 300, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'restockquantity', index: 'restockquantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -701,6 +706,7 @@
     $("#item_btn_submit").click(function () {
 
         ClearErrorMessage();
+        ClickableButton($("#item_btn_submit"), false);
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
@@ -721,7 +727,7 @@
         var virtualorderdetailid;
         var salesorderdetailid;
 
-        if (ordertype == 0 || ordertype == 1) {
+        if (ordertype == 0 || ordertype == 1 || ordertype == 2) {
             virtualorderdetailid = $("#PreviousOrderDetailId").val();
             salesorderdetailid = null;
         }
@@ -746,6 +752,7 @@
                 return false;
             },
             success: function (result) {
+                ClickableButton($("#item_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -776,6 +783,7 @@
     // -------------------------------------------------------Look Up previousorder-------------------------------------------------------
     $('#btnPreviousOrder').click(function () {
         var lookUpURL;
+        var index = document.getElementById("OrderType").selectedIndex;
         if (document.getElementById("OrderType").selectedIndex == 0) {
             lookUpURL = base_url + 'VirtualOrder/GetTrialListConfirmedNotCompleted';
         }
@@ -783,6 +791,9 @@
             lookUpURL = base_url + 'VirtualOrder/GetSampleListConfirmedNotCompleted';
         }
         else if (document.getElementById("OrderType").selectedIndex == 2) {
+            lookUpURL = base_url + 'VirtualOrder/GetConsignmentListConfirmedNotCompleted';
+        }
+        else if (document.getElementById("OrderType").selectedIndex == 3) {
             lookUpURL = base_url + 'DeliveryOrder/GetListNotConfirmed';
         }
         var lookupGrid = $('#lookup_table_previousorder');
@@ -808,7 +819,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
 				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehouse', index: 'warehouse', width: 130, hidden: true },
         ],
@@ -852,7 +863,8 @@
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
-        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1) {
+        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1
+            || document.getElementById("OrderType").selectedIndex == 2) {
             lookUpURL = base_url + 'VirtualOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
         }
         else {

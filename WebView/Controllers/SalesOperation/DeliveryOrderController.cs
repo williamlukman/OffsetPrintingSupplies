@@ -18,6 +18,7 @@ namespace WebView.Controllers
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("DeliveryOrderController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -37,10 +38,13 @@ namespace WebView.Controllers
         private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
         private ICustomerStockMutationService _customerStockMutationService;
         private ICustomerItemService _customerItemService;
+        private ICurrencyService _currencyService;
+        private IExchangeRateService _exchangeRateService;
 
         public DeliveryOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -60,6 +64,8 @@ namespace WebView.Controllers
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
             _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
             _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -83,9 +89,11 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
+                             NomorSuratSO = model.SalesOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
                              model.DeliveryDate,
@@ -126,6 +134,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,
@@ -158,6 +167,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
@@ -214,6 +224,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,
@@ -329,6 +340,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.SalesOrderDetail.PendingDeliveryQuantity,
                              Price = model.SalesOrderDetail.Price,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -369,6 +381,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.PendingDeliveryQuantity,
                             model.Price,
                       }
                     }).ToArray()
@@ -567,8 +580,8 @@ namespace WebView.Controllers
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                        _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                        _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                        _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {
@@ -590,7 +603,7 @@ namespace WebView.Controllers
 
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.UnconfirmObject(data, _deliveryOrderDetailService, _salesInvoiceService, _salesInvoiceDetailService,
-                        _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+                        _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                         _accountService, _generalLedgerJournalService, _closingService, _customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)

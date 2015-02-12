@@ -76,9 +76,10 @@ namespace Validation.Validation
         public CoreBuilder VHasCoreBuilderTypeCase(CoreBuilder coreBuilder)
         {
             if (coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.Hollow &&
-                coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.Shaft)
+                coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.Shaft &&
+                coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.None)
             {
-                coreBuilder.Errors.Add("CoreBuilderTypeCase", "Hanya boleh Hollow atau Shaft");
+                coreBuilder.Errors.Add("CoreBuilderTypeCase", "Hanya boleh Hollow atau Shaft atau None");
             }
             return coreBuilder;
         }

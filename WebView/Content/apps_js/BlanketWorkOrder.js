@@ -1,24 +1,26 @@
 ﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
-		vCode;
-
+		vCode,
+        currentpage = 'last',
+		currentpagedetail = 'first' ;
 
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
-    function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+    function ReloadGrid(setpage) {
+        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetList', postData: { filters: null }, page: setpage }).trigger("reloadGrid");
     }
 
-    function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'BlanketWorkOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+    function ReloadGridDetail(setpagedetail) {
+        $("#listdetail").setGridParam({ url: base_url + 'BlanketWorkOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: setpagedetail }).trigger("reloadGrid");
     }
 
     function ClearData() {
         $('#form_btn_save').data('kode', '');
         $('#item_btn_submit').data('kode', '');
+        $('#copy_btn_submit').data('kode', '');
         ClearErrorMessage();
     }
 
@@ -48,6 +50,7 @@
     $("#delete_confirm_div").dialog('close');
     $("#rejected_div").dialog('close');
     $("#finished_div").dialog('close');
+    $("#copy_div").dialog('close');
     $("#ContactId").hide();
     $("#WarehouseId").hide();
     $("#BlanketSku").hide();
@@ -59,13 +62,14 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
+        colNames: ['ID', 'Order No.', 'Production No', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
                     'QTY Rejected', 'Due Date', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 50 },
-	              { name: 'contactname', index: 'contactname', width: 130 },
+                  { name: 'code', index: 'code', width: 75 },
+                  { name: 'productionno', index: 'productionno', width: 75 },
+	              { name: 'contact', index: 'contact', width: 200 },
                   { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -73,9 +77,9 @@
                   { name: 'duedate', index: 'duedate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-        page: '1',
+        page: currentpage,
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
@@ -83,7 +87,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "DESC",
+        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -102,12 +106,12 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
-        ReloadGrid();
+        ReloadGrid('first');
     });
 
     $('#btn_print').click(function () {
@@ -117,12 +121,14 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#HasDueDate').removeAttr('disabled');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDateDiv').hide();
         $('#DueDateDiv2').show();
         $('#btnContact').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
+        $('#ProductionNo').removeAttr('disabled');
         $('#QuantityReceived').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#form_btn_save').show();
@@ -157,11 +163,12 @@
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
-                            $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
                             $('#Code').attr('disabled', true);
+                            $('#ProductionNo').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#HasDueDate').attr('disabled', true);
@@ -170,7 +177,7 @@
                             $('#DueDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#tabledetail_div').show();
-                            ReloadGridDetail();
+                            ReloadGridDetail('first');
                             $('#form_div').dialog('open');
                         }
                     }
@@ -205,11 +212,15 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#ProductionNo').val(result.ProductionNo);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
-                            $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
+                            $('#Code').removeAttr('disabled');
+                            $('#ProductionNo').removeAttr('disabled');
+                            $('#HasDueDate').removeAttr('disabled');
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
@@ -221,13 +232,19 @@
                                 $('#DueDateDiv').hide();
                                 $('#DueDateDiv2').show();
                             }
-                            $('#btnContact').removeAttr('disabled');
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#Code').removeAttr('disabled');
-                            $('#QuantityReceived').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
+                            if (result.IsConfirmed) {
+                                $('#btnContact').attr('disabled', true);
+                                $('#btnWarehouse').attr('disabled', true);
+                                $('#QuantityReceived').attr('disabled', true);
+                            }
+                            else {
+                                $('#btnContact').removeAttr('disabled');
+                                $('#btnWarehouse').removeAttr('disabled');
+                                $('#QuantityReceived').removeAttr('disabled');
+                            }
                         }
                     }
                 }
@@ -285,7 +302,7 @@
                                 }
                             }
                             else {
-                                ReloadGrid();
+                                ReloadGrid($('#list').getGridParam('page'));
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -299,6 +316,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "BlanketWorkOrder/Confirm",
             type: "POST",
@@ -307,6 +325,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -319,7 +338,7 @@
                     }
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid($('#list').getGridParam('page'));
                     $("#confirm_div").dialog('close');
                 }
             }
@@ -349,7 +368,6 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
-
         $.ajax({
             url: base_url + "BlanketWorkOrder/Delete",
             type: "POST",
@@ -371,7 +389,7 @@
                     $("#delete_confirm_div").dialog('close');
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid($('#list').getGridParam('page'));
                     $("#delete_confirm_div").dialog('close');
                 }
             }
@@ -389,13 +407,16 @@
 
         var submitURL = '';
         var id = $("#id").val();
+
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'BlanketWorkOrder/Update';
+            currentpage = $('#list').getGridParam('page');
         }
             // Insert
         else {
             submitURL = base_url + 'BlanketWorkOrder/Insert';
+            currentpage = 'first';
         }
 
         var duedate = (document.getElementById("HasDueDate").checked) ? $('#DueDate').datebox('getValue') : null;
@@ -407,15 +428,9 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                ProductionNo: $("#ProductionNo").val(), QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
                 DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -429,7 +444,7 @@
                     }
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid(currentpage);
                     $("#form_div").dialog('close')
                 }
             }
@@ -440,25 +455,26 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Sku', 'Name', 'Sku', 'Nama',
+        colNames: ['Id', 'Sku', 'Name', 'Sku', 'Nama',
                    'Sku', 'Name', 'Sku', 'Nama',
                    'Rejected Date' ,'Finished Date' 
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'blanketsku', align: 'right', index: 'blanketsku', width: 50, sortable: false },
-                  { name: 'blanketname', index: 'blanketname', width: 70, sortable: false },
+                  { name: 'blanketname', index: 'blanketname', width: 300, sortable: false },
                   { name: 'rollBlanketsku', align:'right', index: 'rollBlanketsku', width: 50, sortable: false },
-                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 70, sortable: false },
+                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 200, sortable: false },
                   { name: 'leftbarsku', align: 'right', index: 'leftbarsku', width: 50, sortable: false },
-                  { name: 'leftbarname', index: 'leftbarname', width: 70, sortable: false },
+                  { name: 'leftbarname', index: 'leftbarname', width: 200, sortable: false },
                   { name: 'rightbarsku', align: 'right', index: 'rightbarsku', width: 50, sortable: false },
-                  { name: 'rightbarname', index: 'rightbarname', width: 70, sortable: false },
+                  { name: 'rightbarname', index: 'rightbarname', width: 200, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: currentpagedetail,
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -472,7 +488,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
     jQuery("#listdetail").jqGrid('setGroupHeaders', {
         useColSpanStyle: false,
@@ -558,7 +574,7 @@
                                 }
                             }
                             else {
-                                ReloadGridDetail();
+                                ReloadGridDetail('first');
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -568,6 +584,81 @@
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
+    });
+
+    $('#btn_copy_detail').click(function () {
+        ClearData();
+        clearForm("#copy_div");
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "BlanketWorkOrder/GetInfoDetail?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#copy_btn_submit").data('kode', result.BlanketOrderId);
+                            $("#skucopy").val(result.BlanketSku);
+                            $('#BlanketSku').val(result.BlanketSku).data('kode', result.BlanketId);
+                            $('#Blanket').val(result.Blanket);
+                            $('#RollBlanketSku').val(result.RollBlanketSku);
+                            $('#RollBlanket').val(result.RollBlanket);
+                            $('#BlanketLeftBarSku').val(result.BlanketLeftBarSku);
+                            $('#BlanketLeftBar').val(result.BlanketLeftBar);
+                            $('#BlanketRightBarSku').val(result.BlanketRightBarSku);
+                            $('#BlanketRightBar').val(result.BlanketRightBar);
+                            $('#copy_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#copy_btn_cancel').click(function () {
+        $('#copy_btn_cancel').val('');
+        $("#copy_div").dialog('close');
+    });
+
+    $('#copy_btn_submit').click(function () {
+        $.ajax({
+            url: base_url + "BlanketWorkOrder/CopyDetail",
+            contentType: "application/json",
+            type: 'POST',
+            data: JSON.stringify({
+                BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#copy_btn_submit").data('kode'),
+                TotalCopy: $("#TotalCopy").numberbox('getValue')
+            }),
+            success: function (result) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGridDetail('last');
+                    $("#copy_div").dialog('close')
+                }
+            }
+        });
     });
 
     //--------------------------------------------------------Dialog Item-------------------------------------------------------------
@@ -583,10 +674,12 @@
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'BlanketWorkOrder/UpdateDetail';
+            currentpagedetail = $('#listdetail').getGridParam('page');
         }
             // Insert
         else {
             submitURL = base_url + 'BlanketWorkOrder/InsertDetail';
+            currentpagedetail = 'first';
         }
 
         $.ajax({
@@ -596,12 +689,6 @@
             data: JSON.stringify({
                 Id: id, BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#id").val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -615,7 +702,7 @@
                     }
                 }
                 else {
-                    ReloadGridDetail();
+                    ReloadGridDetail(currentpagedetail);
                     $("#item_div").dialog('close')
                 }
             }
@@ -690,7 +777,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListCustomer';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -705,7 +792,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
@@ -764,13 +851,13 @@
         colModel: [
                   { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 50 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 400 },
                   { name: 'rollBlanketsku', index: 'rollBlanketsku', width: 50 },
-				  { name: 'rollBlanketname', index: 'rollBlanketname', width: 100 },
+				  { name: 'rollBlanketname', index: 'rollBlanketname', width: 300 },
                   { name: 'leftbarsku', index: 'leftbarsku', width: 50 },
-				  { name: 'leftbarname', index: 'leftbarname', width: 100 },
+				  { name: 'leftbarname', index: 'leftbarname', width: 200 },
                   { name: 'rightbarsku', index: 'rightbarsku', width: 50 },
-				  { name: 'rightbarname', index: 'rightbarname', width: 100 },
+				  { name: 'rightbarname', index: 'rightbarname', width: 200 },
 
         ],
         page: '1',
@@ -785,8 +872,8 @@
         width: $("#lookup_div_blanket").width() - 10,
         height: $("#lookup_div_blanket").height() - 110,
     });
-    $("#lookup_table_blanket").jqGrid('navGrid', '#lookup_toolbar_blanket', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_blanket").jqGrid('navGrid', '#lookup_toolbar_blanket', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_blanket').click(function () {

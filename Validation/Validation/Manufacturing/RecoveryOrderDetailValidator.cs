@@ -389,7 +389,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VUpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {
-            VHasNotBeenDisassembled(recoveryOrderDetail);
+            VHasNotBeenFinished(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -400,7 +400,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            VHasNotBeenDisassembled(recoveryOrderDetail);
+            VHasNotBeenFinished(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }

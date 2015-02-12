@@ -47,29 +47,30 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkProcess/GetList',
         datatype: "json",
-        colNames: ['ID','Blanket Order ID', 'Code', 'Blanket Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
-                   'Sku', 'Name','C', 'SS', 'BP',
-                   'ATA','Adhesive QTY', 'BM', 'BHP', 'BPOT',
+        colNames: ['ID','Blanket Order ID', 'Code', 'Production No', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
+                   'Sku', 'Bar 2 Name','C', 'SS', 'BP',
+                   'ATA','Roll Blanket QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 50, align: "center" },
     			  { name: 'blanketorderid', index: 'blanketorderid', width: 80, align: 'center', hidden: true },
-                  { name: 'blanketordercode', index: 'blanketorderid', width: 50, align: 'center'},
+                  { name: 'blanketordercode', index: 'blanketordercode', width: 50, align: 'center', hidden: true },
+                  { name: 'blanketorderproductionno', index: 'blanketorderproductionno', width: 80, align: 'center' },
                   { name: 'blanketid', index: 'blanketid', width: 100, sortable: false, hidden: true },
                   { name: 'sku', index: 'sku', width: 50, sortable: false, align: 'right' },
-                  { name: 'blanketname', index: 'blanketname', width: 100, sortable: false },
+                  { name: 'blanketname', index: 'blanketname', width: 400, sortable: false },
                   { name: 'rollBlanketsku', index: 'rollBlanketsku', width: 50, align: 'right', sortable: false },
-                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 100, sortable: false },
+                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 200, sortable: false },
                   { name: 'leftbarsku', index: 'leftbarsku', width: 50, align: 'right', sortable: false },
-                  { name: 'lefbarname', index: 'lefbarname', width: 100, sortable: false },
+                  { name: 'lefbarname', index: 'lefbarname', width: 200, sortable: false },
                   { name: 'rightbarsku', index: 'rightbarsku', width: 50, align: 'right', sortable: false },
-                  { name: 'rightbarname', index: 'rightbarname', width: 100, sortable: false },
+                  { name: 'rightbarname', index: 'rightbarname', width: 200, sortable: false },
                   { name: 'iscut', index: 'iscut', width: 30, sortable: false },
                   { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
                   { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
-                  { name: 'adhesiveusage', index: 'adhesiveusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'rollblanketusage', index: 'rollblanketusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
                   { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
                   { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
@@ -188,8 +189,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -232,7 +233,7 @@
                             $('#LeftBar').val(result.LeftBar);
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
-                            $('#AdhesiveUsage').val(result.AdhesiveUsage);
+                            $('#ViewRollBlanketUsage').val(result.RollBlanketUsage);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -242,22 +243,6 @@
                             document.getElementById("isbarpullofftested").checked = result.IsBarPullOffTested;
                             document.getElementById("isqcandmarked").checked = result.IsQCAndMarked;
                             document.getElementById("ispackaged").checked = result.IsPackaged;
-                            if (result.IsCut) { $('#iscut').attr('disabled', true); } else { $('#iscut').removeAttr('disabled'); }
-                            if (result.IsSideSealed) { $('#issidesealed').attr('disabled', true); } else { $('#issidesealed').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
-                            if (result.IsAdhesiveTapeApplied) {
-                                $('#isadhesivetapeapplied').attr('disabled', true);
-                                $('#AdhesiveUsage').attr('disabled', true);
-                            } else {
-                                $('#isadhesivetapeapplied').removeAttr('disabled');
-                                $('#AdhesiveUsage').removeAttr('disabled');
-                            }
-                            if (!result.HasBar || result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarPullOffTested) { $('#isbarpullofftested').attr('disabled', true); } else { $('#isbarpullofftested').removeAttr('disabled'); }
-                            if (result.IsQCAndMarked) { $('#isqcandmarked').attr('disabled', true); } else { $('#isqcandmarked').removeAttr('disabled'); }
-                            if (result.IsPackaged) { $('#ispackaged').attr('disabled', true); } else { $('#ispackaged').removeAttr('disabled'); }
-                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -268,59 +253,10 @@
         }
     });
 
- 
-
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
     });
-
-    $("#form_btn_save").click(function () {
-
-        ClearErrorMessage();
-
-        var submitURL = '';
-        var id = $("#id").val();
-        submitURL = base_url + 'BlanketWorkProcess/ProgressDetail';
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: submitURL,
-            data: JSON.stringify({
-                Id: id, AdhesiveUsage: $('#AdhesiveUsage').numberbox('getValue'),
-                IsCut: document.getElementById("iscut").checked, IsSideSealed: document.getElementById("issidesealed").checked,
-                IsBarPrepared: document.getElementById("isbarprepared").checked, IsAdhesiveTapeApplied: document.getElementById("isadhesivetapeapplied").checked,
-                IsBarMounted: document.getElementById("isbarmounted").checked, IsBarHeatPressed: document.getElementById("isbarheatpressed").checked,
-                IsBarPullOffTested: document.getElementById("isbarpullofftested").checked, IsQCAndMarked: document.getElementById("isqcandmarked").checked,
-                IsPackaged: document.getElementById("ispackaged").checked
-            }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGrid();
-                    $("#form_div").dialog('close')
-                }
-            }
-        });
-    });
-
 
     $('#btn_finish').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
@@ -373,14 +309,16 @@
 
     $('#finished_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#finished_btn_submit"), false);
         $.ajax({
             url: base_url + "BlanketWorkProcess/Finish",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'),
+                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageFinish').numberbox('getValue')
             }),
             success: function (result) {
+                ClickableButton($("#finished_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -460,7 +398,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#rejectedDate').datebox('getValue'),
+                Id: $('#idrejected').val(), RejectedDate: $('#rejectedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageReject').numberbox('getValue')
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
@@ -520,12 +458,6 @@
                 Id: id, BlanketId: $("#BlanketId").val(), IsBarRequired: isbar, HasLeftBar: hasleft,
                 HasRightBar: hasright, BlanketOrderId: $("#id").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

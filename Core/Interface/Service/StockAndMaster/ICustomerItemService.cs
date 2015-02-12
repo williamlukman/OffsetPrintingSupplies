@@ -24,7 +24,7 @@ namespace Core.Interface.Service
         CustomerItem CreateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService);
         CustomerItem UpdateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService);
         CustomerItem SoftDeleteObject(CustomerItem customerItem);
-        CustomerItem AdjustQuantity(CustomerItem customerItem, int quantity);
+        CustomerItem AdjustQuantity(CustomerItem customerItem, decimal quantity);
         bool DeleteObject(int Id);
     }
 }

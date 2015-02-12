@@ -45,21 +45,23 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Down Payment Date',
                    'Due Date', 'Total Amount',
-                   'Is Confirmed', 'Confirmation Date', 'Payable Id', 'Receivable Id', 'Created At', 'Updated At'],
+                   'Is Confirmed', 'Currency', 'Rate', 'Confirmation Date', 'Payable Id', 'Receivable Id', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'Contact', index: 'Contact', width: 150 },
                   { name: 'downpaymentdate', index: 'downpaymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
+    			  { name: 'Currency', index: 'Currency', width: 100 },
+                  { name: 'ExchangeRateAmount', index: 'ExchangeRateAmount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-    			  { name: 'payableid', index: 'payableid', width: 50 },
-    			  { name: 'receivableid', index: 'receivableid', width: 50 },
+    			  { name: 'payableid', index: 'payableid', width: 100 },
+    			  { name: 'receivableid', index: 'receivableid', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -88,8 +90,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -143,9 +145,10 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
                             $('#PayableId').val(result.PayableId);
                             $('#ReceivableId').val(result.ReceivableId);
+                            $('#CurrencyId').val(result.CurrencyId);
                             $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
                             $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -220,6 +223,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseDownPayment/Confirm",
             type: "POST",
@@ -228,6 +232,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -321,7 +326,8 @@
         else {
             submitURL = base_url + 'PurchaseDownPayment/Insert';
         }
-
+        var g = document.getElementById("CurrencyId");
+        var currency = g.options[g.selectedIndex].value;
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -329,6 +335,8 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), TotalAmount: $("#TotalAmount").numberbox('getValue'),
                 DownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                CurrencyId: currency
+
             }),
             async: false,
             cache: false,
@@ -358,7 +366,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListSupplier';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -388,8 +396,8 @@
         width: $("#lookup_div_contact").width() - 10,
         height: $("#lookup_div_contact").height() - 110,
     });
-    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {
@@ -403,7 +411,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

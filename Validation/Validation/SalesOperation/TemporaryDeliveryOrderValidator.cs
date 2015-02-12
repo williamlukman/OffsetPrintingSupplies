@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public TemporaryDeliveryOrder VHasUniqueNomorSurat(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
         {
-            IList<TemporaryDeliveryOrder> duplicates = _temporaryDeliveryOrderService.GetQueryable().Where(x => x.NomorSurat == temporaryDeliveryOrder.NomorSurat && x.Id != temporaryDeliveryOrder.Id).ToList();
+            IList<TemporaryDeliveryOrder> duplicates = _temporaryDeliveryOrderService.GetQueryable().Where(x => x.NomorSurat == temporaryDeliveryOrder.NomorSurat && x.Id != temporaryDeliveryOrder.Id && !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 temporaryDeliveryOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
@@ -115,7 +115,8 @@ namespace Validation.Validation
         public TemporaryDeliveryOrder VVirtualOrderHasBeenConfirmed(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService)
         {
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrder virtualOrder = _virtualOrderService.GetObjectById((int)temporaryDeliveryOrder.VirtualOrderId);
                 if (!virtualOrder.IsConfirmed)

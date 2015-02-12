@@ -12,10 +12,10 @@ namespace Core.DomainModel
         public int ItemId { get; set; }
         //public int CustomerItemId { get; set; }
 
-        public int Quantity { get; set; } // Company's Item Quantity (excluding customer's)
-        public int PendingDelivery { get; set; }
-        public int PendingReceival { get; set; }
-        public int CustomerQuantity { get; set; } // Customer's Item Quantity
+        public decimal Quantity { get; set; } // Company's Item Quantity (excluding customer's)
+        public decimal PendingDelivery { get; set; }
+        public decimal PendingReceival { get; set; }
+        public decimal CustomerQuantity { get; set; } // Customer's Item Quantity
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

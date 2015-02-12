@@ -30,6 +30,8 @@ namespace NSpec
         IContactService contactService;
         IPurchaseOrderService poService;
         IPurchaseOrderDetailService poDetailService;
+        IPurchaseReceivalService _purchaseReceivalService;
+        IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         IStockMutationService stockMutationService;
         IUoMService _uomService;
         IBlanketService _blanketService;
@@ -49,8 +51,8 @@ namespace NSpec
 
         public Currency currencyIDR;
 
-        int Quantity1;
-        int Quantity2;
+        decimal Quantity1;
+        decimal Quantity2;
 
         void before_each()
         {
@@ -80,8 +82,6 @@ namespace NSpec
                 _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
 
-                if (!_accountService.GetLegacyObjects().Any())
-                {
                     Account AKTIVA1 = _accountService.CreateObject(new Account() { Code = "1", Name = "AKTIVA", Group = 1, Level = 1, ParentId = null, IsLegacy = true, IsLeaf = false, LegacyCode = "A1" }, _accountService);
                     Account AKTIVALANCAR2 = _accountService.CreateObject(new Account() { Code = "11", Name = "AKTIVA LANCAR ", Group = 1, Level = 2, ParentId = AKTIVA1.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A11" }, _accountService);
                     Account KASDANSETARAKAS3 = _accountService.CreateObject(new Account() { Code = "1101", Name = "KAS DAN SETARA KAS ", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A1101" }, _accountService);
@@ -115,7 +115,7 @@ namespace NSpec
                     Account PPHPS225 = _accountService.CreateObject(new Account() { Code = "11070001", Name = "PPH PS 22", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account PPHPS235 = _accountService.CreateObject(new Account() { Code = "11070002", Name = "PPH PS 23", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account PPHPS255 = _accountService.CreateObject(new Account() { Code = "11070003", Name = "PPH PS 25", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-                    Account PPNMASUKAN5 = _accountService.CreateObject(new Account() { Code = "11070004", Name = "PPN MASUKAN", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
+                    Account PPNMASUKAN5 = _accountService.CreateObject(new Account() { Code = "11070004", Name = "PPN MASUKAN", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "A1107" }, _accountService);
                     Account PPHPS245 = _accountService.CreateObject(new Account() { Code = "11070005", Name = "PPH PS 24", Group = 1, Level = 5, ParentId = PAJAKDIBAYARDIMUKA4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account BIAYADIBAYARDIMUKA3 = _accountService.CreateObject(new Account() { Code = "1108", Name = "BIAYA DIBAYAR DIMUKA", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                     Account BIAYADIBAYARDIMUKA4 = _accountService.CreateObject(new Account() { Code = "110801", Name = "BIAYA DIBAYAR DIMUKA", Group = 1, Level = 4, ParentId = BIAYADIBAYARDIMUKA3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
@@ -368,7 +368,6 @@ namespace NSpec
                     Account PENDAPATANNONOPERASIONAL4 = _accountService.CreateObject(new Account() { Code = "710301", Name = "PENDAPATAN NON OPERASIONAL (POP)", Group = 5, Level = 4, ParentId = PENDAPATANNONOPERASIONAL3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                     Account LABAPENJUALANAKTIVATETAP5POP = _accountService.CreateObject(new Account() { Code = "71030001", Name = "LABA PENJUALAN AKTIVA TETAP (POP)", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                     Account LABASALELEASEBACK5 = _accountService.CreateObject(new Account() { Code = "71030002", Name = "LABA SALE & LEASE BACK", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-                }
 
                 if (!_currencyService.GetAll().Any())
                 {
@@ -395,7 +394,7 @@ namespace NSpec
                 };
                 contact = contactService.CreateObject(contact);
 
-                type = _itemTypeService.CreateObject("Item", "Item");
+                type = _itemTypeService.CreateObject("Item", "Item", false, BAHANBAKUOTHER5, _accountService);
 
                 warehouse = new Warehouse()
                 {
@@ -444,7 +443,7 @@ namespace NSpec
                 _stockAdjustmentDetailService.CreateObject(sadItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _blanketService, _warehouseItemService, _accountService , _generalLedgerJournalService, _closingService);
+                                                      _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
 
             }
         }
@@ -570,7 +569,7 @@ namespace NSpec
                             it["should not be valid when updating PO Detail 2 item to the same item as POD1"] = () =>
                             {
                                 poDetail2.ItemId = item1.Id;
-                                poDetailService.UpdateObject(poDetail2, poService, itemService);
+                                poDetailService.UpdateObject(poDetail2, poService, itemService, _purchaseReceivalService, _purchaseReceivalDetailService);
                                 poDetail2.Errors.Count().should_not_be(0);
                             };
                         };
@@ -627,10 +626,10 @@ namespace NSpec
 
                     it["should increase pending receival in item"] = () =>
                     {
-                        int diff_1 = item1.PendingReceival - Quantity1;
+                        decimal diff_1 = item1.PendingReceival - Quantity1;
                         diff_1.should_be(poDetail1.Quantity);
 
-                        int diff_2 = item2.PendingReceival - Quantity2;
+                        decimal diff_2 = item2.PendingReceival - Quantity2;
                         diff_2.should_be(poDetail2.Quantity);
                     };
 

@@ -12,7 +12,7 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     { 
-        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingTestClosing")
+        public OffsetPrintingSuppliesEntities() : base("eZengra")
         {
            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
@@ -25,8 +25,9 @@ namespace Data.Context
 
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
-            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal",
-                                        "Account" };
+            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", 
+                                           "PaymentRequest", "ReceiptRequestDetail", "ReceiptRequest", "MemorialDetail", "Memorial", 
+                                           "ValidCombIncomeStatement", "ValidComb", "Closing", "GeneralLedgerJournal" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -45,22 +46,21 @@ namespace Data.Context
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderClearanceDetail", "TemporaryDeliveryOrderClearance", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
                                           "SalesOrderDetail", "SalesOrder", "SalesQuotationDetail", "SalesQuotation", 
                                           "VirtualOrderDetail", "VirtualOrder"};
-            IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
-                                          "ServiceCost", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
+                                          "ServiceCost", "Repacking", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
-                                          "Item", "ItemType", "UoM", "Contact",
-                                          "RollerType", "Machine", "Company" };
+                                          "Item", "SubType", "ItemType", "UoM", "ContactDetail", "Employee", "Contact", "ContactGroup", "RollerType", "Machine", "Company" };
+            IList<String> financeNames = new List<String>() {
+                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
-            financeNames.ToList().ForEach(x => tableNames.Add(x));
             stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
+            financeNames.ToList().ForEach(x => tableNames.Add(x));
 
             foreach (var tableName in tableNames)
             {
@@ -88,6 +88,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CompanyMapping());
             modelBuilder.Configurations.Add(new CompoundMapping());
             modelBuilder.Configurations.Add(new ContactMapping());
+            modelBuilder.Configurations.Add(new ContactGroupMapping());
+            modelBuilder.Configurations.Add(new ContactDetailMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreAccessoryDetailMapping());
@@ -98,6 +100,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CustomerStockMutationMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
+            modelBuilder.Configurations.Add(new EmployeeMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
@@ -117,16 +120,20 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new PriceMutationMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceMapping());
+            modelBuilder.Configurations.Add(new PurchaseInvoiceMigrationMapping());
             modelBuilder.Configurations.Add(new PurchaseOrderMapping());
             modelBuilder.Configurations.Add(new PurchaseOrderDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseReceivalMapping());
             modelBuilder.Configurations.Add(new PurchaseReceivalDetailMapping());
             modelBuilder.Configurations.Add(new ReceivableMapping());
+            modelBuilder.Configurations.Add(new ReceiptRequestMapping());
+            modelBuilder.Configurations.Add(new ReceiptRequestDetailMapping());
             modelBuilder.Configurations.Add(new ReceiptVoucherDetailMapping());
             modelBuilder.Configurations.Add(new ReceiptVoucherMapping());
             modelBuilder.Configurations.Add(new RecoveryAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
+            modelBuilder.Configurations.Add(new RepackingMapping());
             modelBuilder.Configurations.Add(new RetailPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new RetailPurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new RetailSalesInvoiceMapping());
@@ -142,6 +149,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new SalesAllowanceMapping());
             modelBuilder.Configurations.Add(new SalesInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new SalesInvoiceMapping());
+            modelBuilder.Configurations.Add(new SalesInvoiceMigrationMapping());
             modelBuilder.Configurations.Add(new SalesOrderMapping());
             modelBuilder.Configurations.Add(new SalesOrderDetailMapping());
             modelBuilder.Configurations.Add(new SalesQuotationDetailMapping());
@@ -150,6 +158,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
+            modelBuilder.Configurations.Add(new SubTypeMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderClearanceMapping());
@@ -159,6 +168,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new UserMenuMapping());
             modelBuilder.Configurations.Add(new UserAccessMapping());
             modelBuilder.Configurations.Add(new ValidCombMapping());
+            modelBuilder.Configurations.Add(new ValidCombIncomeStatementMapping());
             modelBuilder.Configurations.Add(new VirtualOrderMapping());
             modelBuilder.Configurations.Add(new VirtualOrderDetailMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
@@ -169,6 +179,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new ExchangeRateMapping());
             modelBuilder.Configurations.Add(new VCNonBaseCurrencyMapping());
             modelBuilder.Configurations.Add(new GLNonBaseCurrencyMapping());
+
+            modelBuilder.Entity<ReceiptVoucherDetail>().Property(x => x.Rate).HasPrecision(18, 11);
+            modelBuilder.Entity<PaymentVoucherDetail>().Property(x => x.Rate).HasPrecision(18, 11);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -187,6 +200,8 @@ namespace Data.Context
         public DbSet<Company> Companies { get; set; }
         public DbSet<Compound> Compounds { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ContactGroup> ContactGroups { get; set; }
+        public DbSet<ContactDetail> ContactDetails { get; set; }
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
@@ -197,6 +212,7 @@ namespace Data.Context
         public DbSet<CustomerStockMutation> CustomerStockMutations { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
@@ -205,6 +221,7 @@ namespace Data.Context
         public DbSet<MemorialDetail> MemorialDetails { get; set; }
         public DbSet<Payable> Payables { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
+        public DbSet<PaymentRequestDetail> PaymentRequestDetails { get; set; }
         public DbSet<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
         public DbSet<PaymentVoucher> PaymentVouchers { get; set; }
         public DbSet<PurchaseDownPaymentAllocationDetail> PurchaseDownPaymentAllocationDetails { get; set; }
@@ -214,16 +231,20 @@ namespace Data.Context
         public DbSet<PurchaseAllowance> PurchaseAllowances { get; set; }
         public DbSet<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; }
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public DbSet<PurchaseInvoiceMigration> PurchaseInvoiceMigrations { get; set; }
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
         public DbSet<PurchaseReceival> PurchaseReceivals { get; set; }
         public DbSet<Receivable> Receivables { get; set; }
+        public DbSet<ReceiptRequest> ReceiptRequests { get; set; }
+        public DbSet<ReceiptRequestDetail> ReceiptRequestDetails { get; set; }
         public DbSet<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
         public DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
         public DbSet<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public DbSet<RecoveryOrder> RecoveryOrders { get; set; }
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
+        public DbSet<Repacking> Repackings { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
         public DbSet<RollerWarehouseMutationDetail> RollerWarehouseMutationDetails { get; set; }
@@ -235,6 +256,7 @@ namespace Data.Context
         public DbSet<SalesAllowance> SalesAllowances { get; set; }
         public DbSet<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
+        public DbSet<SalesInvoiceMigration> SalesInvoiceMigrations { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesQuotationDetail> SalesQuotationDetails { get; set; }
@@ -243,6 +265,7 @@ namespace Data.Context
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
+        public DbSet<SubType> SubTypes { get; set; }
         public DbSet<TemporaryDeliveryOrder> TemporaryDeliveryOrders { get; set; }
         public DbSet<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
         public DbSet<TemporaryDeliveryOrderClearance> TemporaryDeliveryOrderClearances { get; set; }
@@ -252,6 +275,7 @@ namespace Data.Context
         public DbSet<UserMenu> UserMenus { get; set; }
         public DbSet<UserAccess> UserAccesses { get; set; }
         public DbSet<ValidComb> ValidCombs { get; set; }
+        public DbSet<ValidCombIncomeStatement> ValidCombIncomeStatements { get; set; }
         public DbSet<VirtualOrder> VirtualOrders { get; set; }
         public DbSet<VirtualOrderDetail> VirtualOrderDetails { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }

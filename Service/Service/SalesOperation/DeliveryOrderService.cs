@@ -73,16 +73,39 @@ namespace Service.Service
 
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                           IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                           IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                           IServiceCostService _serviceCostService,
-                                           ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
-                                           ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
+                                           IServiceCostService _serviceCostService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                           ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ICustomerStockMutationService _customerStockMutationService, 
+                                           ICustomerItemService _customerItemService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, this, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
             {
+                IList<DeliveryOrderDetail> deliveryOrderDetailValidations = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+                foreach (var detail in deliveryOrderDetailValidations)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    detail.ConfirmationDate = ConfirmationDate;
+                    if (!(_deliveryOrderDetailService.GetValidator().ValidConfirmObject(detail, this, _deliveryOrderDetailService, _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService, _customerItemService)))
+                    {
+                        deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);
+                        return deliveryOrder;
+                    }
+                }
                 decimal TotalCOGS = 0;
+                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                Currency currency = _currencyService.GetObjectById(salesOrder.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    deliveryOrder.ExchangeRateId = _exchangeRateService.GetLatestRate(deliveryOrder.ConfirmationDate.Value, currency).Id;
+                    deliveryOrder.ExchangeRateAmount = _exchangeRateService.GetObjectById(deliveryOrder.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    deliveryOrder.ExchangeRateAmount = 1;
+                }
+                
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
@@ -92,6 +115,7 @@ namespace Service.Service
                                                               _blanketService, _warehouseItemService, _serviceCostService, _customerStockMutationService, _customerItemService);
                     if (detail.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                        detail.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder)
                     {
                         TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectByCode(detail.OrderCode);
@@ -100,12 +124,15 @@ namespace Service.Service
                             _temporaryDeliveryOrderDetailService.CompleteObject(temporaryDeliveryOrderDetail);
                         }
                     }
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    Currency itemCurrency = item.CurrencyId == null ? _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
                     TotalCOGS += detail.COGS;
+                    _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrderDetail(deliveryOrder, itemType.AccountId.GetValueOrDefault(), detail.COGS, _accountService);
                 }
                 deliveryOrder.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(deliveryOrder);
                 _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
-                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 _salesOrderService.CheckAndSetDeliveryComplete(salesOrder, _salesOrderDetailService);
                 IList<TemporaryDeliveryOrder> temporaryDeliveryOrders = _temporaryDeliveryOrderService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var temporaryDeliveryOrder in temporaryDeliveryOrders)
@@ -118,17 +145,30 @@ namespace Service.Service
 
         public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
                                              ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                             IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
+                                             IStockMutationService _stockMutationService, IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService,
                                              IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
                                              IClosingService _closingService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
             {
+                IList<DeliveryOrderDetail> deliveryOrderDetailValidations = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+                foreach (var detail in deliveryOrderDetailValidations)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    if (!(_deliveryOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _salesInvoiceDetailService)))
+                    {
+                        deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);
+                        return deliveryOrder;
+                    }
+                }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrderDetail(deliveryOrder, itemType.AccountId.GetValueOrDefault(), detail.COGS, _accountService);
                     _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
                                                                 _salesInvoiceDetailService, _stockMutationService,
                                                                 _itemService, _blanketService, _warehouseItemService, _customerStockMutationService, _customerItemService);

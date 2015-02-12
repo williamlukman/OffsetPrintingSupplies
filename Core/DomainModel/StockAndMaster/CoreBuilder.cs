@@ -19,7 +19,9 @@ namespace Core.DomainModel
 
         public string Name { get; set; }
         public string Description { get; set; }
-        
+        public decimal CD { get; set; }
+        public decimal TL { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

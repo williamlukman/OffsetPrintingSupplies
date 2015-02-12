@@ -147,7 +147,7 @@ namespace Validation.Validation
                 VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                 IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByVirtualOrderDetailId((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
 
-                int totalDeliveryQuantity = 0;
+                decimal totalDeliveryQuantity = 0;
                 foreach (var detail in details)
                 {
                     if (!detail.IsConfirmed)
@@ -158,7 +158,7 @@ namespace Validation.Validation
                 if (CaseCreate) { totalDeliveryQuantity += temporaryDeliveryOrderDetail.Quantity; }
                 if (totalDeliveryQuantity > virtualOrderDetail.PendingDeliveryQuantity)
                 {
-                    int maxquantity = virtualOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + temporaryDeliveryOrderDetail.Quantity;
+                    decimal maxquantity = virtualOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + temporaryDeliveryOrderDetail.Quantity;
                     temporaryDeliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
                 }
             }
@@ -167,7 +167,7 @@ namespace Validation.Validation
                 SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.SalesOrderDetailId);
                 IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsBySalesOrderDetailId((int)temporaryDeliveryOrderDetail.SalesOrderDetailId);
 
-                int totalDeliveryQuantity = 0;
+                decimal totalDeliveryQuantity = 0;
                 foreach (var detail in details)
                 {
                     if (!detail.IsConfirmed)
@@ -178,7 +178,7 @@ namespace Validation.Validation
                 if (CaseCreate) { totalDeliveryQuantity += temporaryDeliveryOrderDetail.Quantity; }
                 if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
                 {
-                    int maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + temporaryDeliveryOrderDetail.Quantity;
+                    decimal maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + temporaryDeliveryOrderDetail.Quantity;
                     temporaryDeliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
                 }
             }

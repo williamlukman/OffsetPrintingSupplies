@@ -17,7 +17,8 @@ namespace Core.Interface.Service
         IList<PurchaseOrderDetail> GetObjectsByItemId(int itemId);
         PurchaseOrderDetail GetObjectById(int Id);
         PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
-        PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
+        PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                                         IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         bool DeleteObject(int Id);
         PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
@@ -25,7 +26,7 @@ namespace Core.Interface.Service
         PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                            IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                            IWarehouseItemService _warehouseItemService);
-        PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity);
-        PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity, IPurchaseOrderService _purchaseOrderService);
+        PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, decimal Quantity);
+        PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, decimal Quantity, IPurchaseOrderService _purchaseOrderService);
    }
 }

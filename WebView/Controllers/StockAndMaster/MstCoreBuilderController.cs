@@ -93,6 +93,8 @@ namespace WebView.Controllers
                              model.SkuNewCore,
                              NewCoreItemQuantity = model.NewCoreItem.Quantity,
                              UoM = model.UoM.Name,
+                             model.CD,
+                             model.TL,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -138,6 +140,8 @@ namespace WebView.Controllers
                             model.SkuNewCore,
                             model.NewCoreItemQuantity,
                             model.UoM,
+                            model.CD,
+                            model.TL,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -174,6 +178,8 @@ namespace WebView.Controllers
                 model.SkuNewCore,
                 UsedCoreQuantity = _itemService.GetObjectById(model.UsedCoreItemId).Quantity,
                 NewCoreQuantity = _itemService.GetObjectById(model.NewCoreItemId).Quantity,
+                model.CD,
+                model.TL,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -212,6 +218,8 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.CoreBuilderTypeCase = model.CoreBuilderTypeCase;
+                data.CD = model.CD;
+                data.TL = model.TL;
                 model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService,_warehouseItemService
                     ,_warehouseService,_blanketService,_contactService,_machineService,_priceMutationService);
             }

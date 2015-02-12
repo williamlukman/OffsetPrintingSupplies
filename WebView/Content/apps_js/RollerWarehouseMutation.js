@@ -76,7 +76,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -105,8 +105,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -292,6 +292,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "RollerWarehouseMutation/Confirm",
             type: "POST",
@@ -300,6 +301,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -629,8 +631,8 @@
         width: $("#lookup_div_warehouseto").width() - 10,
         height: $("#lookup_div_warehouseto").height() - 110,
     });
-    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouseto').click(function () {
@@ -687,8 +689,8 @@
         width: $("#lookup_div_warehousefrom").width() - 10,
         height: $("#lookup_div_warehousefrom").height() - 110,
     });
-    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehousefrom').click(function () {
@@ -744,8 +746,8 @@
         width: $("#lookup_div_recoveryworkorder").width() - 10,
         height: $("#lookup_div_recoveryworkorder").height() - 110,
     });
-    $("#lookup_table_recoveryworkorder").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorder', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_recoveryworkorder").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorder', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_recoveryworkorder').click(function () {
@@ -791,8 +793,8 @@
                   { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 80, sortable: false, hidden: true },
-                  { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
+                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
+                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 100, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_recoveryworkorderdetail'),
@@ -806,8 +808,8 @@
         width: $("#lookup_div_recoveryworkorderdetail").width() - 10,
         height: $("#lookup_div_recoveryworkorderdetail").height() - 110,
     });
-    $("#lookup_table_recoveryworkorderdetail").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorderdetail', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_recoveryworkorderdetail").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorderdetail', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_recoveryworkorderdetail').click(function () {

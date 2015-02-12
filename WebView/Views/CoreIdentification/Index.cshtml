@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Roller Identification";
+    ViewBag.Title = "Roller Identification Form";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -21,6 +21,7 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
     <div id="table_div">
@@ -56,6 +57,14 @@
                                <input id="Code" name="Code" type="text" size="10" />
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                             <label>No. Diss</label>
+                            </td>
+                            <td colspan="5" >
+                               <input id="NomorDisassembly" name="NomorDisassembly" type="text" size="25" />
+                            </td>
+                        </tr>
                          <tr>
                             <td>
                                 <label>Warehouse</label></td>
@@ -66,6 +75,13 @@
                         
                             </tr>
                         <tr>
+                            <td>Incoming Roll Date</td>
+                            <td colspan="5">
+                                <div id="IncomingRollDiv"><input id="IncomingRoll" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
+                                <div id="IncomingRollDiv2"><input id="IncomingRoll2" type="text" size="10" disabled="disabled"/></div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>IdentifiedDate</td>
                             <td colspan="5">
                                 <div id="IdentifiedDateDiv"><input id="IdentifiedDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
@@ -73,7 +89,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>IsInHouse</td>
+                            <td>InHouseStock</td>
                             <td>
                                 <select id="IsInHouse">
                                   <option value="True">Yes</option>
@@ -109,7 +125,7 @@
 <!-- End Dialog Box -->
 
  <!-- Dialog Box  Item-->
-    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
+    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px; top: 10px"
         data-options="modal:true" title=".: Input Detail :.">
 
         <div id="item_toolbar" class="form_toolbar">
@@ -120,18 +136,26 @@
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td>
-                      <label>RIF Id</label>
+                          <label>RIF Id</label>
                       </td>
                       <td>
-                      <input id="DetailId" name = "DetailId"  type ="text" size="10" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                          <input id="DetailId" name = "DetailId"  type ="text" size="10" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <label>Roller No.</label>
+                      </td>
+                      <td>
+                            <input id="RollerNo" name = "RollerNo"  type ="text" size="20" maxlength="30" align="left"/>
                       </td>
                   </tr>
                    <tr class="hide-row">
                       <td>
-                      <label>CoreIdentification</label>
+                        <label>CoreIdentification</label>
                       </td>
                       <td>
-                      <input id="CoreIdentificationId" type="text" size="10" disabled ="disabled"/>
+                        <input id="CoreIdentificationId" type="text" size="10" disabled ="disabled"/>
                       </td>
                   </tr>
                   <tr>
@@ -149,6 +173,12 @@
                             <select id="RepairRequestCase">
                                 <option value="1">BearingSeat</option>
                                 <option value="2">CentreDrill</option>
+                                <option value="3">None</option>
+                                <option value="4">Bearing Seat & Centre Drill</option>
+                                <option value="5">Repair Corosive</option>
+                                <option value="6">Bearing Seat & Repair Corosive</option>
+                                <option value="7">Centre Drill & Repair Corosive</option>
+                                <option value="8">Bearing Seat & Centre Drill & Repair Corosive</option>
                             </select>
                         </td>
                   </tr>
@@ -188,7 +218,7 @@
                             RD
                         </td>
                         <td>
-                               <input id="RD" name="RD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="RD" name="RD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
                      <tr>
@@ -196,7 +226,7 @@
                             CD
                         </td>
                         <td>
-                               <input id="CD" name="CD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="CD" name="CD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
                      <tr>
@@ -204,7 +234,7 @@
                             RL
                         </td>
                         <td>
-                               <input id="RL" name="RL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="RL" name="RL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
                      <tr>
@@ -212,7 +242,7 @@
                             WL
                         </td>
                         <td>
-                               <input id="WL" name="WL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="WL" name="WL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
                      <tr>
@@ -220,12 +250,46 @@
                             TL
                         </td>
                         <td>
-                               <input id="TL" name="TL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="TL" name="TL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
-               
+                     <tr>
+                        <td>
+                            GL
+                        </td>
+                        <td>
+                               <input id="GL" name="GL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            Groove Length
+                        </td>
+                        <td>
+                               <input id="GrooveLength" name="GrooveLength" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            Qty of Grooves
+                        </td>
+                        <td>
+                               <input id="GrooveQTY" name="GrooveQTY" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Core Type
+                        </td>
+                        <td>
+                            <select id="CoreTypeCase" name="CoreTypeCase" disabled="disabled">
+                                <option value="R">R</option>
+                                <option value="Z">Z</option>
+                                <option value="N">-</option>
+                            </select>
+                        </td>
+                    </tr>               
               </table>
-          
         </div>
     </div>
 <!-- End Dialog Box Item-->

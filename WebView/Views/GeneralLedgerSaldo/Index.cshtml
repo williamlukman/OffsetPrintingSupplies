@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "General Ledger (Saldo) ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/generalledgerjournalsaldo.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: General Ledger Journal (Saldo):.">
+    <div id="toolbar">
+        <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+            <tr>
+                <td style="width: 10%">Account</td>
+                <td style="width: 40%">
+                    <label>
+                        <input name="AccountId" type="text" id="AccountId" size="5" maxlength="5" disabled="disabled" />
+                        <input name="AccountCode" type="text" id="AccountCode" size="5" maxlength="5" disabled="disabled" />
+                        <input type="button" name="btncoa" id="btncoa" style="cursor: pointer;" 
+                            class="ui-corner-all ui-state-default" value="..." />
+                        <input name="AccountName" type="text" id="AccountName" size="40" maxlength="70" disabled="disabled"/>
+                    </label>
+                </td>
+                <td style="width: 8%">
+                    Start Date:
+                </td>
+                <td style="width: 10%">
+                    <input id="StartDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="5" value="@DateTime.Today.ToShortDateString()"/>
+                    <input name="StartDate" type="text" size="1" hidden="hidden"/>
+                </td>
+                <td style="width: 8%">
+                    End Date:
+                </td>
+                <td style="width: 10%">
+                    <input id="EndDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="5" value="@DateTime.Today.ToShortDateString()"/>
+                    <input name="EndDate" type="text" size="1" hidden="hidden"/>
+                </td>
+                <td style="width: 5%">
+                    <a id="search_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Find</a>
+                </td>
+                <td style="width: 10%">
+                    <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Show All</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Saldo -->
+    <div id="saldo_div">
+        <table class="input_form_tbl">
+            <tr>
+                <td>
+                    Saldo Awal
+                </td>
+                <td>
+                    <input id="SaldoAwal" name="SaldoAwal" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled="disabled"/>
+                </td>
+                <td>
+                    Saldo Akhir
+                </td>
+                <td>
+                    <input id="SaldoAkhir" name="SaldoAkhir" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled="disabled"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="table_div">
+        <table id="list"></table>
+        <div id="pager" class="scroll" style="text-align: center;"></div>
+    </div>
+  </div>
+
+  <!-- Look Up coa -->
+  <div id="lookup_div_coa" class="easyui-dialog" title="List COA" style="padding: 0px 5px; height: 490px; width: 480px;"
+       data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_coa" class="grid_toolbar">
+            <a id="lookup_btn_add_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_coa" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_coa" class="scroll" style="text-align: center;"></div>
+  </div>
+  <!-- END Look Up coa -->

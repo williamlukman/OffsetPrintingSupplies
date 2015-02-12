@@ -11,6 +11,9 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using System.Web.Script.Serialization;
+using System.Data.Objects;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -19,6 +22,7 @@ namespace WebView.Controllers
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemController");
         private IItemService _itemService;
         private IItemTypeService _itemTypeService;
+        private ISubTypeService _subTypeService;
         private IUoMService _uoMService;
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
@@ -30,11 +34,13 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IMachineService _machineService;
+        public ICurrencyService _currencyService;
 
         public MstItemController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
+            _subTypeService = new SubTypeService(new SubTypeRepository(), new SubTypeValidator());
             _uoMService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
@@ -46,11 +52,12 @@ namespace WebView.Controllers
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
             _machineService = new MachineService(new MachineRepository(),new MachineValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -62,7 +69,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM");
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM").Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -79,11 +86,16 @@ namespace WebView.Controllers
                              model.UoMId,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
+                             model.CurrencyId,
+                             Currency = model.Currency.Name,
+                             model.PriceList,
                              model.AvgPrice,
                              model.CustomerAvgPrice,
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -129,10 +141,14 @@ namespace WebView.Controllers
                             model.CustomerQuantity,
                             model.UoM,
                             model.SellingPrice,
+                            model.CurrencyId,
+                            model.Currency,
+                            model.PriceList,
                             model.AvgPrice,
                             model.CustomerAvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -167,11 +183,16 @@ namespace WebView.Controllers
                              model.UoMId,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
+                             model.CurrencyId,
+                             Currency = model.Currency.Name,
+                             model.PriceList,
                              model.AvgPrice,
                              model.CustomerAvgPrice,
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -217,10 +238,14 @@ namespace WebView.Controllers
                             model.CustomerQuantity,
                             model.UoM,
                             model.SellingPrice,
+                            model.CurrencyId,
+                            model.Currency,
+                            model.PriceList,
                             model.AvgPrice,
                             model.CustomerAvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -254,10 +279,15 @@ namespace WebView.Controllers
                              model.UoMId,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
+                             model.CurrencyId,
+                             Currency = model.Currency.Name,
+                             model.PriceList,
                              model.AvgPrice,
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -302,9 +332,13 @@ namespace WebView.Controllers
                             model.Virtual,
                             model.UoM,
                             model.SellingPrice,
+                            model.CurrencyId,
+                            model.Currency,
+                            model.PriceList,
                             model.AvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -409,9 +443,13 @@ namespace WebView.Controllers
                              model.Virtual,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
+                             model.CurrencyId,
+                             Currency = model.Currency.Name,
+                             model.PriceList,
                              model.AvgPrice,
                              model.Description,
                              ItemType = model.ItemType.Name,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -454,9 +492,13 @@ namespace WebView.Controllers
                             model.MinimumQuantity,
                             model.UoM,
                             model.SellingPrice,
+                            model.CurrencyId,
+                            model.Currency,
+                            model.PriceList,
                             model.AvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -487,8 +529,13 @@ namespace WebView.Controllers
                 UoM = _uoMService.GetObjectById(model.UoMId).Name,
                 model.ItemTypeId,
                 ItemType = _itemTypeService.GetObjectById(model.ItemTypeId).Name,
+                model.SubTypeId,
+                SubType = model.SubTypeId != null ? _subTypeService.GetObjectById(model.SubTypeId.GetValueOrDefault()).Name : "",
                 model.Quantity,
                 model.SellingPrice,
+                model.CurrencyId,
+                Currency = model.CurrencyId == null ? "" : model.Currency.Name,
+                model.PriceList,
                 model.PendingDelivery,
                 model.PendingReceival,
                 model.MinimumQuantity,
@@ -529,7 +576,10 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
+                data.SubTypeId = model.SubTypeId;
                 data.SellingPrice = model.SellingPrice;
+                data.CurrencyId = model.CurrencyId;
+                data.PriceList = model.PriceList;
                 data.MinimumQuantity = model.MinimumQuantity;
                 data.IsTradeable = model.IsTradeable;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService);
@@ -552,8 +602,10 @@ namespace WebView.Controllers
             {
                 var data = _itemService.GetObjectById(model.Id);
                 data.SellingPrice = model.SellingPrice;
+                data.PriceList = model.PriceList;
                 data.MinimumQuantity = model.MinimumQuantity;
-                model = _itemService.UpdateObject(data, _uoMService, _itemTypeService, _priceMutationService);
+                data.CurrencyId = model.CurrencyId;
+                model = _itemService.UpdateLegacyObject(data, _uoMService, _itemTypeService, _warehouseItemService, _warehouseService, _blanketService, _contactService, _machineService, _priceMutationService);
             }
             catch (Exception ex)
             {

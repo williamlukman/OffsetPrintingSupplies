@@ -58,6 +58,11 @@ namespace Service.Service
             return _repository.GetObjectsByItemTypeId(ItemTypeId);
         }
 
+        public IList<Item> GetObjectsBySubTypeId(int SubTypeId)
+        {
+            return _repository.GetObjectsBySubTypeId(SubTypeId);
+        }
+
         public IList<Item> GetObjectsByUoMId(int UoMId)
         {
             return _repository.GetObjectsByUoMId(UoMId);
@@ -130,7 +135,6 @@ namespace Service.Service
             {
                 _blanketService.UpdateObject(blanket, _blanketService, _uomService, this, _itemTypeService, _contactService,
                                              _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
-                return blanket;
             }
 
             if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
@@ -145,6 +149,11 @@ namespace Service.Service
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }
                 item = _repository.UpdateObject(item);
+            }
+
+            if (blanket != null)
+            {
+                return blanket;
             }
             return item;
         }
@@ -190,7 +199,6 @@ namespace Service.Service
                 _blanketService.SoftDeleteObject(blanket, _itemTypeService, _warehouseItemService, _priceMutationService,
                                                  _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService,
                                                  _stockMutationService, _blanketOrderDetailService);
-                return blanket;
             }
 
             if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
@@ -216,12 +224,16 @@ namespace Service.Service
                     _priceMutationService.DeactivateObject(priceMutation, item.DeletedAt);
                 }
             }
+            if (blanket != null)
+            {
+                return blanket;
+            }
             return item;
         }
 
-        public Item AdjustCustomerQuantity(Item item, int quantity)
+        public Item AdjustCustomerQuantity(Item item, decimal quantity)
         {
-            item.CustomerQuantity += quantity;
+            item.CustomerQuantity += (int) quantity;
             return (item = _validator.ValidAdjustCustomerQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
@@ -231,58 +243,58 @@ namespace Service.Service
         //    return (item = _validator.ValidAdjustCustomerVirtual(item) ? _repository.UpdateObject(item) : item);
         //}
 
-        public Item AdjustQuantity(Item item, int quantity)
+        public Item AdjustQuantity(Item item, decimal quantity)
         {
             item.Quantity += quantity;
             return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustPendingReceival(Item item, int quantity)
+        public Item AdjustPendingReceival(Item item, decimal quantity)
         {
             item.PendingReceival += quantity;
             return (item = _validator.ValidAdjustPendingReceival(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustPendingDelivery(Item item, int quantity)
+        public Item AdjustPendingDelivery(Item item, decimal quantity)
         {
             item.PendingDelivery += quantity;
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustVirtual(Item item, int quantity)
+        public Item AdjustVirtual(Item item, decimal quantity)
         {
             item.Virtual += quantity;
             return (item = _validator.ValidAdjustVirtual(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             // Use this function to calculate averagePrice
-            int originalQuantity = item.Quantity + item.Virtual;
+            decimal originalQuantity = item.Quantity + item.Virtual;
             decimal originalAvgPrice = item.AvgPrice;
             decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
             return avgPrice;
         }
 
-        public decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAndUpdateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);
             return item.AvgPrice;
         }
 
-        public decimal CalculateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             // Use this function to calculate averagePrice
-            int originalQuantity = item.CustomerQuantity + item.CustomerVirtual;
+            decimal originalQuantity = item.CustomerQuantity + item.CustomerVirtual;
             decimal originalAvgPrice = item.CustomerAvgPrice;
             decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
             return avgPrice;
         }
 
-        public decimal CalculateAndUpdateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAndUpdateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             item.CustomerAvgPrice = CalculateCustomerAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);

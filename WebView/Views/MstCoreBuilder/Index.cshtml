@@ -47,43 +47,49 @@
                             <td>
                                 <label>Base Sku</label></td>
                             <td >
-                                <input id="BaseSku" name ="BaseSKU" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="BaseSku" name ="BaseSku" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
-                          <tr>
+                        <tr>
                             <td>
                                 <label>Used Sku</label></td>
                             <td >
-                                <input id="SkuUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="SkuUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/>
+                            </td>
                         </tr>
-                          <tr>
+                        <tr>
                             <td>
                                 <label>New Sku</label></td>
                             <td >
-                                <input id="SkuNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="SkuNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="60" maxlength="200" align="left" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Description" name="Description" type="text" size="60" maxlength="200" align="left" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Used Quantity</label></td>
                             <td colspan="3">
-                        <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
                                 <label>New Quantity</label></td>
                             <td colspan="3">
-                        <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
@@ -92,6 +98,7 @@
                                 <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="UoMName" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
@@ -100,6 +107,7 @@
                                 <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Machine" name="MachineId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -110,6 +118,15 @@
                                   <option value="Hollow">Hollow</option>
                                   <option value="Shaft">Shaft</option>
                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>CD</label></td>
+                            <td>
+                                <input id="CD" name="CD" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
+                                <label style="margin-left: 0.3in; margin-right: 0.2in">TL</label>
+                                <input id="TL" name="TL" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
                             </td>
                         </tr>
                     </table>

@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
+        public string NoBukti { get; set; }
         public int CurrencyId { get; set; }
         public int AccountPayableId { get; set; }
          

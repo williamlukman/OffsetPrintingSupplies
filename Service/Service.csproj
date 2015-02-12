@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Accounting\AccountService.cs" />
     <Compile Include="Service\Accounting\ClosingService.cs" />
+    <Compile Include="Service\Accounting\ValidCombIncomeStatementService.cs" />
     <Compile Include="Service\Accounting\GLNonBaseCurrencyService.cs" />
     <Compile Include="Service\Accounting\VCNonBaseCurrencyService.cs" />
     <Compile Include="Service\Accounting\ExchangeRateClosingService.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Service\Finance\CashMutationService.cs" />
     <Compile Include="Service\Finance\CashBankAdjustmentService.cs" />
     <Compile Include="Service\Finance\CashBankMutationService.cs" />
+    <Compile Include="Service\Finance\ReceiptRequestDetailService.cs" />
+    <Compile Include="Service\Finance\ReceiptRequestService.cs" />
     <Compile Include="Service\Finance\ExchangeRateService.cs" />
     <Compile Include="Service\Finance\CurrencyService.cs" />
     <Compile Include="Service\Finance\SalesDownPaymentAllocationDetailService.cs" />
@@ -78,15 +81,18 @@
     <Compile Include="Service\Manufacturing\BlanketOrderDetailService.cs" />
     <Compile Include="Service\Manufacturing\BlanketOrderService.cs" />
     <Compile Include="Service\Manufacturing\BlendingWorkOrderService.cs" />
+    <Compile Include="Service\Manufacturing\RepackingService.cs" />
     <Compile Include="Service\Manufacturing\CoreAccessoryDetailService.cs" />
     <Compile Include="Service\Finance\PayableService.cs" />
     <Compile Include="Service\Finance\PaymentRequestService.cs" />
     <Compile Include="Service\Finance\PaymentVoucherDetailService.cs" />
     <Compile Include="Service\Finance\PaymentVoucherService.cs" />
+    <Compile Include="Service\PurchaseOperation\PurchaseInvoiceMigrationService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\SalesInvoiceMigrationService.cs" />
     <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceDetailService.cs" />
     <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceService.cs" />
     <Compile Include="Service\SalesOperation\SalesQuotationDetailService.cs" />
@@ -101,6 +107,10 @@
     <Compile Include="Service\StockAndMaster\CompoundService.cs" />
     <Compile Include="Service\StockAndMaster\BlendingRecipeService.cs" />
     <Compile Include="Service\StockAndMaster\BlendingRecipeDetailService.cs" />
+    <Compile Include="Service\StockAndMaster\ContactDetailService.cs" />
+    <Compile Include="Service\StockAndMaster\ContactGroupService.cs" />
+    <Compile Include="Service\StockAndMaster\SubTypeService.cs" />
+    <Compile Include="Service\StockAndMaster\EmployeeService.cs" />
     <Compile Include="Service\StockAndMaster\CustomerStockAdjustmentService.cs" />
     <Compile Include="Service\StockAndMaster\CustomerStockAdjustmentDetailService.cs" />
     <Compile Include="Service\StockAndMaster\CustomerStockMutationService.cs" />

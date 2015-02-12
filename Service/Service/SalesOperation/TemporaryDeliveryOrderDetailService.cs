@@ -154,10 +154,10 @@ namespace Service.Service
                     //item.Quantity += temporaryDeliveryOrderDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
-                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment)
                 {
                     VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                     _virtualOrderDetailService.UnsetDeliveryComplete(virtualOrderDetail, temporaryDeliveryOrderDetail.Quantity, _virtualOrderService);
@@ -225,7 +225,7 @@ namespace Service.Service
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
                 if (temporaryDeliveryOrderDetail.WasteQuantity > 0)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
@@ -233,7 +233,7 @@ namespace Service.Service
                 }
                 if (temporaryDeliveryOrderDetail.RestockQuantity > 0)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

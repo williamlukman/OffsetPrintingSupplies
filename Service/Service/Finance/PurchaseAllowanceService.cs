@@ -112,13 +112,13 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(purchaseAllowance, _closingService))
             {
+                DateTime ConfirmationDate = purchaseAllowance.ConfirmationDate.GetValueOrDefault();
                 IList<PurchaseAllowanceDetail> details = _purchaseAllowanceDetailService.GetObjectsByPurchaseAllowanceId(purchaseAllowance.Id);
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseAllowanceDetailService.UnconfirmObject(detail, this, _payableService);
                 }
-                _repository.UnconfirmObject(purchaseAllowance);
 
                 if (!purchaseAllowance.IsGBCH)
                 {
@@ -130,6 +130,7 @@ namespace Service.Service
                     }
                     _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseAllowance(purchaseAllowance, cashBank, _accountService);
                 }
+                _repository.UnconfirmObject(purchaseAllowance);
             }
             return purchaseAllowance;
         }

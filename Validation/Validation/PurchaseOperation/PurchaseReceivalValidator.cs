@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public PurchaseReceival VHasUniqueNomorSurat(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService)
         {
-            IList<PurchaseReceival> duplicates = _purchaseReceivalService.GetQueryable().Where(x => x.NomorSurat == purchaseReceival.NomorSurat && x.Id != purchaseReceival.Id).ToList();
+            IList<PurchaseReceival> duplicates = _purchaseReceivalService.GetQueryable().Where(x => x.NomorSurat == purchaseReceival.NomorSurat && x.Id != purchaseReceival.Id && !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 purchaseReceival.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");

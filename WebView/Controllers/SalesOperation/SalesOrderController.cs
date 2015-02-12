@@ -55,7 +55,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesOrderService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
+            var q = _salesOrderService.GetQueryable().Include("Employee").Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -65,6 +65,8 @@ namespace WebView.Controllers
                              model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
+                             model.EmployeeId,
+                             Employee = model.Employee.Name,
                              currency = model.Currency.Name,
                              model.SalesDate,
                              model.IsConfirmed,
@@ -107,6 +109,8 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.ContactId,
                             model.Contact,
+                            model.EmployeeId,
+                            model.Employee,
                             model.currency,
                             model.SalesDate,
                             model.IsConfirmed,
@@ -138,6 +142,8 @@ namespace WebView.Controllers
                              model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
+                             model.EmployeeId,
+                             Employee = model.Employee.Name,
                              model.SalesDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
@@ -179,6 +185,8 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.ContactId,
                             model.Contact,
+                            model.EmployeeId,
+                            model.Employee,
                             model.SalesDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -279,6 +287,8 @@ namespace WebView.Controllers
                 model.NomorSurat,
                 model.ContactId,
                 Contact = model.Contact.Name,
+                model.EmployeeId,
+                Employee = model.Employee.Name,
                 model.SalesDate,
                 ConfirmationDate = model.ConfirmationDate,
                 Currency = model.Currency.Name,
@@ -309,6 +319,7 @@ namespace WebView.Controllers
                 model.IsService,
                 model.Quantity,
                 model.Price,
+                UoM = model.Item.UoM.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -358,6 +369,7 @@ namespace WebView.Controllers
             {
                 var data = _salesOrderService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
+                data.EmployeeId = model.EmployeeId;
                 data.SalesDate = model.SalesDate;
                 data.NomorSurat = model.NomorSurat;
                 data.CurrencyId = model.CurrencyId;

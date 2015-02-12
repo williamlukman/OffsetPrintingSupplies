@@ -99,7 +99,7 @@ namespace Service.Service
             {
                 virtualOrderDetail = _repository.UnconfirmObject(virtualOrderDetail);
                 Item item = _itemService.GetObjectById(virtualOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForVirtualOrder(virtualOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForVirtualOrder(virtualOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
@@ -109,7 +109,7 @@ namespace Service.Service
             return virtualOrderDetail;
         }
 
-        public VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity)
+        public VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity)
         {
             virtualOrderDetail.PendingDeliveryQuantity -= Quantity;
             if (virtualOrderDetail.PendingDeliveryQuantity == 0) { virtualOrderDetail.IsAllDelivered = true; }
@@ -117,7 +117,7 @@ namespace Service.Service
             return virtualOrderDetail;
         }
 
-        public VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity, IVirtualOrderService _virtualOrderService)
+        public VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity, IVirtualOrderService _virtualOrderService)
         {
             VirtualOrder virtualOrder = _virtualOrderService.GetObjectById(virtualOrderDetail.VirtualOrderId);
             _virtualOrderService.UnsetDeliveryComplete(virtualOrder);

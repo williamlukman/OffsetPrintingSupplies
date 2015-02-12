@@ -61,6 +61,11 @@ namespace Service.Service
             return (blanketOrder = _validator.ValidUpdateObject(blanketOrder, _blanketOrderDetailService, this) ? _repository.UpdateObject(blanketOrder) : blanketOrder);
         }
 
+        public BlanketOrder UpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
+        {
+            return (blanketOrder = _validator.ValidUpdateAfterConfirmObject(blanketOrder, _blanketOrderDetailService, this) ? _repository.UpdateObject(blanketOrder) : blanketOrder);
+        }
+
         public BlanketOrder SoftDeleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
         {
             if (_validator.ValidDeleteObject(blanketOrder, _blanketOrderDetailService))
@@ -101,6 +106,15 @@ namespace Service.Service
             if (_validator.ValidCompleteObject(blanketOrder, _blanketOrderDetailService))
             {
                 _repository.CompleteObject(blanketOrder);
+            }
+            return blanketOrder;
+        }
+
+        public BlanketOrder UndoCompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        {
+            if (_validator.ValidUndoCompleteObject(blanketOrder, _blanketOrderDetailService))
+            {
+                _repository.UndoCompleteObject(blanketOrder);
             }
             return blanketOrder;
         }

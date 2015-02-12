@@ -9,6 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public int ParseCode { get; set; }
         public string Name { get; set; }
 
         public int Group { get; set; }
@@ -17,6 +18,7 @@ namespace Core.DomainModel
         public bool IsLegacy { get; set; }
         public bool IsLeaf { get; set; }
         public bool IsCashBankAccount { get; set; }
+        public bool IsPayableReceivable { get; set; }
 
         public string LegacyCode { get; set; }
 

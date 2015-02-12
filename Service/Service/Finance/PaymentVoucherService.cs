@@ -6,6 +6,8 @@ using Core.Interface.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 using System.Text;
 
 namespace Service.Service
@@ -57,10 +59,18 @@ namespace Service.Service
         {
             paymentVoucher.Errors = new Dictionary<String, String>();
             CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
-            Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
-            if (currency.IsBase == true)
+            if (cashBank == null)
             {
-                paymentVoucher.RateToIDR = 1;
+                paymentVoucher.Errors.Add("CashBankId", "Harus diisi");
+                return paymentVoucher;
+            }
+            else
+            {
+                Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
+                if (currency.IsBase == true)
+                {
+                    paymentVoucher.RateToIDR = 1;
+                }
             }
             return (_validator.ValidCreateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ?
                     _repository.CreateObject(paymentVoucher) : paymentVoucher);
@@ -68,6 +78,10 @@ namespace Service.Service
 
         public PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            if (_cashBankService.GetQueryable().Where(x => x.Id == paymentVoucher.CashBankId).Include(x => x.Currency).FirstOrDefault().Currency.IsBase == true)
+            {
+                paymentVoucher.RateToIDR = 1;
+            }
             return (_validator.ValidUpdateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ? _repository.UpdateObject(paymentVoucher) : paymentVoucher);
         }
 
@@ -90,11 +104,17 @@ namespace Service.Service
         {
             IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
             decimal total = 0;
+            decimal totalPPH23 = 0;
+            decimal totalPPH21 = 0;
             foreach (PaymentVoucherDetail detail in paymentVoucherDetails)
             {
                 total += detail.AmountPaid;
+                totalPPH23 += detail.PPH23;
+                totalPPH21 += detail.PPH21;
             }
-            paymentVoucher.TotalAmount = total;
+            paymentVoucher.TotalPPH21 = totalPPH21;
+            paymentVoucher.TotalPPH23 = totalPPH23;
+            paymentVoucher.TotalAmount = total; // + paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan);
             paymentVoucher = _repository.UpdateObject(paymentVoucher);
             return paymentVoucher;
         }

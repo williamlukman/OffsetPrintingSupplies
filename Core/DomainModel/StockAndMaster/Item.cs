@@ -14,6 +14,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemTypeId { get; set; }
+        public Nullable<int> SubTypeId { get; set; }
         public string Sku { get; set; }
 
         public string Name { get; set; }
@@ -21,22 +22,25 @@ namespace Core.DomainModel
         public bool IsTradeable { get; set; }
 
         public int UoMId { get; set; }
-        public int Quantity { get; set; }
-        public int PendingDelivery { get; set; }
-        public int PendingReceival { get; set; }
-        public int Virtual { get; set; }
-        public int MinimumQuantity { get; set; }
-        //public int OnTrial { get; set; }
-        public int CustomerQuantity { get; set; }
-        public int CustomerVirtual { get; set; } // unused ?
+        public decimal Quantity { get; set; }
+        public decimal PendingDelivery { get; set; }
+        public decimal PendingReceival { get; set; }
+        public decimal Virtual { get; set; }
+        public decimal MinimumQuantity { get; set; }
+
+        public decimal CustomerQuantity { get; set; }
+        public decimal CustomerVirtual { get; set; } // unused ?
 
         public decimal SellingPrice { get; set; }
+        public decimal PriceList { get; set; }
+        public Nullable<int> CurrencyId { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }
         public decimal CustomerAvgPrice { get; set; }
+
         public virtual ICollection<StockMutation> StockMutations { get; set; }
         public virtual ICollection<PriceMutation> PriceMutations { get; set; }
-        //public virtual ICollection<CustomerStockMutation> CustomerStockMutations { get; set; }
+        public virtual Currency Currency { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -45,6 +49,7 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual UoM UoM { get; set; }
         public virtual ItemType ItemType { get; set; }
+        public virtual SubType SubType { get; set; }
         public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public virtual ICollection<WarehouseItem> WarehouseItems { get; set; }
         //public virtual ICollection<CustomerItem> CustomerItems { get; set; }

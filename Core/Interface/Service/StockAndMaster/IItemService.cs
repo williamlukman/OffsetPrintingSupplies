@@ -3,6 +3,7 @@ using Core.Interface.Repository;
 using Core.Interface.Validation;
 using System;
 using System.Collections.Generic;
+using System.Data.Objects;
 using System.Linq;
 using System.Text;
 
@@ -17,6 +18,7 @@ namespace Core.Interface.Service
         IList<Item> GetAll();
         IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        IList<Item> GetObjectsBySubTypeId(int SubTypeId);
         IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
@@ -35,18 +37,16 @@ namespace Core.Interface.Service
                                     IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
                                     IPriceMutationService _priceMutationService, IBlanketOrderDetailService _blanketOrderDetailService);
-        Item AdjustCustomerQuantity(Item item, int quantity);
+        Item AdjustCustomerQuantity(Item item, decimal quantity);
         //Item AdjustCustomerVirtual(Item item, int quantity);
-        Item AdjustQuantity(Item item, int quantity);
-        Item AdjustPendingReceival(Item item, int quantity);
-        Item AdjustPendingDelivery(Item item, int quantity);
-        Item AdjustVirtual(Item item, int quantity);
-        //Item OnTrial(Item item, int quantity);
-        //Item ReturnTrial(Item item, int quantity);
-        decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
-        decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
-        decimal CalculateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
-        decimal CalculateAndUpdateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
+        Item AdjustQuantity(Item item, decimal quantity);
+        Item AdjustPendingReceival(Item item, decimal quantity);
+        Item AdjustPendingDelivery(Item item, decimal quantity);
+        Item AdjustVirtual(Item item, decimal quantity);
+        decimal CalculateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
+        decimal CalculateAndUpdateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
+        decimal CalculateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
+        decimal CalculateAndUpdateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);
     }

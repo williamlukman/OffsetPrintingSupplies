@@ -76,7 +76,7 @@
                             <td>
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="WarehouseId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                                <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -112,6 +112,13 @@
                                 <input id="PercentageSaved" name="PercentageSaved" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
                             </td>
                         </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Catatan : </label></td>
+                            <td colspan="3"><label>
+                              <textarea name="Catatan" id="Catatan" cols="60" rows="3"></textarea>
+                            </label></td>
+                        </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -127,6 +134,67 @@
         </div>
     </div>
     <!-- End Dialog Box -->
+
+    <!-- Print Box -->
+    <div id="print_form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+        title=".:  @ViewBag.Title :.">
+
+        <div id="print_form_toolbar" class="form_toolbar">
+            <a id="print_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Submit</a>
+            <a id="print_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>  
+
+        <div style="overflow: auto">
+            <form id="print_frm">
+               @* <fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                       
+                    <table id = "print_tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                        <tr nowrap>
+                            <td width="139" nowrap style="width: 100px">
+                                <label>ID</label>
+                            </td>
+                            <td width="550">
+                                <input id="print_id" type="text" size="5" disabled="disabled"/>
+                                <input id="print_Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>No. Surat:</label>
+                            </td>
+                            <td>
+                                <input id="print_NomorSurat" name="NomorSurat" type="text" size="25" disabled/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                             <label>No. Versi</label>
+                            </td>
+                            <td>
+                               <input id="print_VersionNo" name="VersionNo" type="text" size="10" disabled/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Send BY </label>
+                            </td>
+                            <td>
+                                <input id="print_by" name="by" type="text" size="25" value ="EMAIL"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Contact Person : </label></td>
+                            <td colspan="3"><label>
+                              <textarea id="print_contactperson" name="contactperson" cols="60" rows="3"></textarea>
+                            </label></td>
+                        </tr>
+                    </table>
+               @* </fieldset>*@
+            </form>
+        </div>
+    </div>
+    <!-- End Print Box -->
 
     <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"

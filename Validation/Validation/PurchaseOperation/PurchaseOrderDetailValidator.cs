@@ -31,6 +31,21 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
+        public PurchaseOrderDetail VPurchaseReceivalHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        {
+            IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetQueryable().Where(x => x.PurchaseOrderDetailId == purchaseOrderDetail.Id).ToList();
+            foreach (var purchaseReceivalDetail in purchaseReceivalDetails)
+            {
+                if (purchaseReceivalDetail.IsConfirmed)
+                {
+                    PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+                    purchaseOrderDetail.Errors.Add("Generic", "Purchase Receival " + purchaseReceival.NomorSurat + " sudah terkonfirmasi");
+                    return purchaseOrderDetail;
+                }
+            }
+            return purchaseOrderDetail;
+        }
+
         public PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
@@ -52,9 +67,9 @@ namespace Validation.Validation
 
         public PurchaseOrderDetail VNonNegativePrice(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (purchaseOrderDetail.Price <= 0)
+            if (purchaseOrderDetail.Price < 0)
             {
-                purchaseOrderDetail.Errors.Add("Price", "Tidak boleh kurang dari atau sama dengan 0");
+                purchaseOrderDetail.Errors.Add("Price", "Tidak boleh kurang dari 0");
             }
             return purchaseOrderDetail;
         }
@@ -136,11 +151,21 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService,
+                                                 IItemService _itemService, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            VCreateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+            VHasPurchaseOrder(purchaseOrderDetail, _purchaseOrderService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VHasNotBeenConfirmed(purchaseOrderDetail);
+            VHasItem(purchaseOrderDetail, _itemService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VNonZeroNorNegativeQuantity(purchaseOrderDetail);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VNonNegativePrice(purchaseOrderDetail);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetailService, _itemService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            //User is allowed to edit price so long the Purchase Receival is not yet confirmed
+            VPurchaseReceivalHasNotBeenConfirmed(purchaseOrderDetail, _purchaseReceivalService, _purchaseReceivalDetailService);
             return purchaseOrderDetail;
         }
 
@@ -174,10 +199,11 @@ namespace Validation.Validation
             return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail,  IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail,  IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                                      IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
             purchaseOrderDetail.Errors.Clear();
-            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _purchaseReceivalService, _purchaseReceivalDetailService);
             return isValid(purchaseOrderDetail);
         }
 

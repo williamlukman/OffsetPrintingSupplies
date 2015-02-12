@@ -25,10 +25,12 @@ namespace Validation.Validation
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseAllowance) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseReceival) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoiceMigration) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.DeliveryOrder) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoiceMigration) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPayment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPaymentAllocation) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesAllowance) &&
@@ -36,6 +38,7 @@ namespace Validation.Validation
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryAccessoryDetail) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlanketOrderDetail) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlendingWorkOrder) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Repacking) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CustomerStockAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Closing))
             {

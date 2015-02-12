@@ -158,42 +158,42 @@ namespace TestValidation
 
                     it["validates_finishblanketorder"] = () =>
                     {
-                        int rollBlanket1quantity = d.rollBlanket1.Quantity;
-                        int rollBlanket2quantity = d.rollBlanket2.Quantity;
-                        int bargenericquantity = d.bargeneric.Quantity;
-                        int barleft1quantity = d.barleft1.Quantity;
-                        int barright1quantity = d.barright1.Quantity;
-                        int blanket1quantity = d.blanket1.Quantity;
-                        int blanket2quantity = d.blanket2.Quantity;
-                        int blanket1warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket1.Id).Quantity;
-                        int blanket2warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket2.Id).Quantity;
+                        decimal rollBlanket1quantity = d.rollBlanket1.Quantity;
+                        decimal rollBlanket2quantity = d.rollBlanket2.Quantity;
+                        decimal bargenericquantity = d.bargeneric.Quantity;
+                        decimal barleft1quantity = d.barleft1.Quantity;
+                        decimal barright1quantity = d.barright1.Quantity;
+                        decimal blanket1quantity = d.blanket1.Quantity;
+                        decimal blanket2quantity = d.blanket2.Quantity;
+                        decimal blanket1warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket1.Id).Quantity;
+                        decimal blanket2warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket2.Id).Quantity;
                         d._blanketOrderDetailService.FinishObject(d.blanketODContact1, DateTime.Today, d._blanketOrderService, d._stockMutationService,
-                                                                  d._blanketService, d._itemService, d._warehouseItemService, d._accountService,
+                                                                  d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._accountService,
                                                                   d._generalLedgerJournalService, d._closingService);
                         d._blanketOrderDetailService.FinishObject(d.blanketODContact2, DateTime.Today, d._blanketOrderService, d._stockMutationService,
-                                                                  d._blanketService, d._itemService, d._warehouseItemService, d._accountService,
+                                                                  d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._accountService,
                                                                   d._generalLedgerJournalService, d._closingService);
                         d._blanketOrderDetailService.FinishObject(d.blanketODContact3, DateTime.Today, d._blanketOrderService, d._stockMutationService,
-                                                                  d._blanketService, d._itemService, d._warehouseItemService, d._accountService,
+                                                                  d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._accountService,
                                                                   d._generalLedgerJournalService, d._closingService);
                         d._blanketOrderDetailService.RejectObject(d.blanketODContact4, DateTime.Today, d._blanketOrderService, d._stockMutationService,
-                                                                  d._blanketService, d._itemService, d._warehouseItemService, d._accountService,
+                                                                  d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._accountService,
                                                                   d._generalLedgerJournalService, d._closingService);
-                        int rollBlanket1quantityfinal = d.rollBlanket1.Quantity;
-                        int rollBlanket2quantityfinal = d.rollBlanket2.Quantity;
-                        int bargenericquantityfinal = d.bargeneric.Quantity;
-                        int barleft1quantityfinal = d.barleft1.Quantity;
-                        int barright1quantityfinal = d.barright1.Quantity;
+                        decimal rollBlanket1quantityfinal = d.rollBlanket1.Quantity;
+                        decimal rollBlanket2quantityfinal = d.rollBlanket2.Quantity;
+                        decimal bargenericquantityfinal = d.bargeneric.Quantity;
+                        decimal barleft1quantityfinal = d.barleft1.Quantity;
+                        decimal barright1quantityfinal = d.barright1.Quantity;
                         rollBlanket1quantityfinal.should_be(rollBlanket1quantity - 2);
                         rollBlanket2quantityfinal.should_be(rollBlanket2quantity - 2);
                         bargenericquantityfinal.should_be(bargenericquantity - 4);
                         barleft1quantityfinal.should_be(barleft1quantity - 2);
                         barright1quantityfinal.should_be(barright1quantity - 2);
                         d.blanketOrderContact.IsCompleted.should_be(true);
-                        int blanket1quantityfinal = d.blanket1.Quantity;
-                        int blanket2quantityfinal = d.blanket2.Quantity;
-                        int blanket1warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket1.Id).Quantity;
-                        int blanket2warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket2.Id).Quantity;
+                        decimal blanket1quantityfinal = d.blanket1.Quantity;
+                        decimal blanket2quantityfinal = d.blanket2.Quantity;
+                        decimal blanket1warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket1.Id).Quantity;
+                        decimal blanket2warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.blanket2.Id).Quantity;
                         blanket1quantityfinal.should_be(blanket1quantity + 2);
                         blanket2quantityfinal.should_be(blanket2quantity + 1);
                         blanket1warehousequantityfinal.should_be(blanket1warehousequantity + 2);

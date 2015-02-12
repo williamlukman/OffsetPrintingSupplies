@@ -137,13 +137,22 @@ namespace Service.Service
         }
 
         public SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderService _deliveryOrderService,
-                                                  IDeliveryOrderDetailService _deliveryOrderDetailService)
+                                                  IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                                  IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService, IItemService _itemService)
         {
             if (_validator.ValidUnconfirmObject(salesInvoiceDetail))
             {
                 salesInvoiceDetail = _repository.UnconfirmObject(salesInvoiceDetail);
                 // reverse sales receival detail PendingInvoiceQuantity
                 DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
+                SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+                if (salesOrderDetail.IsService)
+                {
+                    ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
+                    serviceCost.Quantity += salesInvoiceDetail.Quantity;
+                    _serviceCostService.UpdateObject(serviceCost, _rollerBuilderService, _itemService);
+                    salesInvoiceDetail.COS = 0;
+                }
                 _deliveryOrderDetailService.UndoInvoiceObject(deliveryOrderDetail, salesInvoiceDetail.Quantity, _deliveryOrderService);
             }
             return salesInvoiceDetail;

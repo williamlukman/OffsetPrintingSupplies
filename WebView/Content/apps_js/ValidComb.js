@@ -30,13 +30,12 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 80 },
-				  { name: 'name', index: 'name', width: 150 },
+				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'period', index: 'period', width: 60 },
 				  { name: 'yearperiod', index: 'yearperiod', width: 60 },
                   { name: 'beginningperiod', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'enddateperiod', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-
         ],
         page: '1',
         pager: $('#pager'),
@@ -46,7 +45,7 @@
         scrollrows: true,
         viewrecords: true,
         shrinkToFit: false,
-        sortorder: "DESC",
+        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -72,7 +71,7 @@
     });
 
     $('#btn_search').click(function () {
-        ReloadGridClosing()
+        ReloadGrid()
         $("#search_div").dialog("open");
     });
 

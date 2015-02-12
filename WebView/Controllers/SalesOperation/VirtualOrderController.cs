@@ -267,6 +267,79 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetConsignmentListConfirmedNotCompleted(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _virtualOrderService.GetQueryable().Include("Contact")
+                                      .Where(x => x.IsConfirmed && !x.IsDeliveryCompleted && !x.IsDeleted && x.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.NomorSurat,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.OrderDate,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Code,
+                            model.NomorSurat,
+                            model.ContactId,
+                            model.Contact,
+                            model.OrderDate,
+                            model.IsConfirmed,
+                            model.ConfirmationDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                            0,
+                            ""
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
@@ -499,6 +572,7 @@ namespace WebView.Controllers
                 var data = _virtualOrderDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.PendingDeliveryQuantity = model.PendingDeliveryQuantity;
                 data.Price = model.Price;
                 model = _virtualOrderDetailService.UpdateObject(data, _virtualOrderService, _itemService);
             }

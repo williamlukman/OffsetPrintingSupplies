@@ -24,7 +24,7 @@
             shrinkToFit: false,
             sortorder: "asc",
             width: $("#toolbar").width(),
-            height: $(window).height() - 190,
+            height: $(window).height() - 200,
             onSelectRow: function (id) {
                 var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
                 if (id) {
@@ -53,17 +53,18 @@
             url: base_url + 'MstItem/GetList',
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM'],
+            colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'Customer QTY', 'UoM'],
             colModel: [
                       { name: 'id', index: 'id', width: 35, align: "center" },
                       { name: 'sku', index: 'sku', width: 70 },
-                      { name: 'name', index: 'name', width: 120 },
+                      { name: 'name', index: 'name', width: 240 },
                       { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                      { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                      { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                      { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                      { name: 'uom', index: 'uom', width: 40 },
+                      { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'minimumquantity', index: 'minimumquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'virtual', index: 'virtual', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'customerquantity', index: 'customerquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'uom', index: 'uom', width: 70 },
             ],
             page: '1',
             pager: jQuery('#pager'),
@@ -75,7 +76,7 @@
             shrinkToFit: true,
             sortorder: "asc",
             width: $("#toolbar").width(),
-            height: $(window).height() - 190,
+            height: $(window).height() - 200,
             onSelectRow: function (id) {
                 var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
                 if (id) {
@@ -106,11 +107,11 @@
             ],
             colModel: [
                       { name: 'itemid', index: 'itemid', width: 80, align: "center"},
-                      { name: 'sku', index: 'sku', width: 80 },
+                      { name: 'itemsku', index: 'itemsku', width: 80 },
                       { name: 'item', index: 'item', width: 200},
                       { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'customerquantity', index: 'customerquantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'uomname', index: 'uomname', width: 100 },
+                      { name: 'uom', index: 'uom', width: 100 },
             ],
             page: '1',
             pager: $('#pager_detail'),
@@ -122,7 +123,7 @@
             shrinkToFit: false,
             sortorder: "asc",
             width: $("#detail_toolbar").width(),
-            height: $(window).height() - 190,
+            height: $(window).height() - 200,
             gridComplete:
               function () {
               }
@@ -157,7 +158,7 @@
             shrinkToFit: false,
             sortorder: "asc",
             width: $("#detail_toolbar").width(),
-            height: $(window).height() - 190,
+            height: $(window).height() - 200,
             gridComplete:
               function () {
               }
@@ -181,46 +182,6 @@
         ReloadGridListItem();
     });
 
-
-    //GRID +++++++++++++++
-    $("#list").jqGrid({
-        url: base_url + 'PaymentVoucher/GetList',
-        datatype: "json",
-        colNames: ['ID', 'Code', 'Name', 'Description', 'Created At', 'Updated At'],
-        colModel: [
-                  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 80 },
-                  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
-                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-        ],
-        page: '1',
-        pager: jQuery('#pager'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "DESC",
-        width: $("#toolbar").width(),
-        height: $(window).height() - 200,
-        onSelectRow: function (id) {
-            var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-            if (id) {
-                $("#list_detail").setGridParam({ url: base_url + 'WarehouseItem/GetListItem?Id=' + id, postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
-            } else {
-                $.messager.alert('Information', 'Data Not Found...!!', 'info');
-            };
-        },
-        gridComplete:
-          function () {
-          }
-
-    });//END GRID
-    $("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    // .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

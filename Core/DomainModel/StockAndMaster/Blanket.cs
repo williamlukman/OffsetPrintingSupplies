@@ -10,7 +10,8 @@ namespace Core.DomainModel
         public string RollNo { get; set; }
         public int ContactId { get; set; }
         public int MachineId { get; set; }
-        public int AdhesiveId { get; set; }
+        public Nullable<int> AdhesiveId { get; set; }
+        public Nullable<int> Adhesive2Id { get; set; }
         public int RollBlanketItemId { get; set; }
         public Nullable<int> LeftBarItemId { get; set; }
         public Nullable<int> RightBarItemId { get; set; }
@@ -26,11 +27,13 @@ namespace Core.DomainModel
         public string CroppingType { get; set; }
         public decimal LeftOverAC { get; set; }
         public decimal LeftOverAR { get; set; }
+        public decimal Special { get; set; }
         public string ApplicationCase { get; set; }
 
         public virtual Contact Contact { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual Item Adhesive { get; set; }
+        public virtual Item Adhesive2 { get; set; }
         public virtual ICollection<BlanketOrderDetail> BlanketOrderDetails { get; set; }
         public virtual Item RollBlanketItem { get; set; }
         public virtual Item LeftBarItem { get; set; }

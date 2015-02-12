@@ -96,12 +96,12 @@ namespace Validation.Validation
         }
 
         public PurchaseReceivalDetail VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail,
-                                                        IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService, bool CaseCreate)
+                                      IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService, bool CaseCreate)
         {
             PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseOrderDetailId(purchaseReceivalDetail.PurchaseOrderDetailId);
 
-            int totalReceivalQuantity = 0;
+            decimal totalReceivalQuantity = 0;
             foreach (var detail in details)
             {
                 if (!detail.IsConfirmed)
@@ -112,12 +112,25 @@ namespace Validation.Validation
             if (CaseCreate) { totalReceivalQuantity += purchaseReceivalDetail.Quantity; }
             if (totalReceivalQuantity > purchaseOrderDetail.PendingReceivalQuantity)
             {
-                int maxquantity = purchaseOrderDetail.PendingReceivalQuantity - totalReceivalQuantity + purchaseReceivalDetail.Quantity;
+                decimal maxquantity = purchaseOrderDetail.PendingReceivalQuantity - totalReceivalQuantity + purchaseReceivalDetail.Quantity;
                 purchaseReceivalDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return purchaseReceivalDetail;
         }
 
+        public PurchaseReceivalDetail VPriceOfPurchaseOrderDetailsIsNotNegativeNorZero(PurchaseReceivalDetail purchaseReceivalDetail,
+                                      IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
+        {
+            PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+
+            if (purchaseOrderDetail.Price <= 0)
+            {
+                Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
+                purchaseReceivalDetail.Errors.Add("Generic", "Harga di PO masih <= 0 untuk Item: [" + item.Sku + "] " + item.Name);
+            }
+            return purchaseReceivalDetail;
+        }
+ 
         public PurchaseReceivalDetail VHasNotBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail)
         {
             if (purchaseReceivalDetail.IsConfirmed)
@@ -227,13 +240,15 @@ namespace Validation.Validation
 
         public PurchaseReceivalDetail VConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail,
                                                      IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                                     IPurchaseOrderDetailService _purchaseOrderDetailService)
+                                                     IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
             VHasConfirmationDate(purchaseReceivalDetail);
             if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
             VHasNotBeenConfirmed(purchaseReceivalDetail);
             if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
             VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, false);
+            if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
+            VPriceOfPurchaseOrderDetailsIsNotNegativeNorZero(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, _itemService);
             return purchaseReceivalDetail;
         }
 
@@ -269,10 +284,10 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                       IPurchaseOrderDetailService _purchaseOrderDetailService)
+                                       IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VConfirmObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
+            VConfirmObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, _itemService);
             return isValid(purchaseReceivalDetail);
         }
 

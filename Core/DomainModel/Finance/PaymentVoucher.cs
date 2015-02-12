@@ -11,8 +11,10 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public int CashBankId { get; set; }
         public string Code { get; set; }
+        public string NoBukti { get; set; }
         public DateTime PaymentDate { get; set; }
         public bool IsGBCH { get; set; }
+        public string GBCH_No { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
@@ -20,6 +22,11 @@ namespace Core.DomainModel
 
 
         public decimal TotalAmount { get; set; }
+        public decimal TotalPPH23 { get; set; }
+        public decimal TotalPPH21 { get; set; }
+        public decimal BiayaBank { get; set; }
+        public decimal Pembulatan { get; set; }
+        public int StatusPembulatan { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

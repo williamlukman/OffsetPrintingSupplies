@@ -4,6 +4,8 @@ using Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 using System.Text;
 
 namespace Data.Repository
@@ -43,7 +45,7 @@ namespace Data.Repository
 
         public PaymentVoucherDetail GetObjectById(int Id)
         {
-            PaymentVoucherDetail detail = Find(pvd => pvd.Id == Id);
+            PaymentVoucherDetail detail = FindAll(pvd => pvd.Id == Id).Include(x => x.Payable).Include(x => x.PaymentVoucher).FirstOrDefault();
             if (detail != null) { detail.Errors = new Dictionary<string, string>(); }
             return detail;
         }

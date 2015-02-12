@@ -8,15 +8,24 @@ namespace Core.DomainModel
     public partial class Contact
     {
         public int Id { get; set; }
+        public Nullable<int> ContactGroupId { get; set; }
 
         public string Name { get; set; }
+        public string NamaFakturPajak { get; set; }
+
         public string Address { get; set; }
+        public string DeliveryAddress { get; set; }
+        public string NPWP { get; set; }
+        public string Description { get; set; }
+    
         public string ContactNo { get; set; }
         public string PIC { get; set; }
         public string PICContactNo { get; set; }
         public string Email { get; set; }
         public bool IsTaxable { get; set; }
         public string TaxCode { get; set; }
+        public string ContactType { get; set; } // Customer/Supplier
+        public int DefaultPaymentTerm { get; set; } // duedate days
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -30,5 +39,7 @@ namespace Core.DomainModel
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
         public ICollection<VirtualOrder> VirtualOrders { get; set; }
         public ICollection<SalesQuotation> SalesQuotations { get; set; }
+        public ICollection<ContactDetail> ContactDetails { get; set; }
+        public ContactGroup ContactGroup { get; set; }
     }
 }

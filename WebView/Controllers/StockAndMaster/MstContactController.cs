@@ -23,6 +23,7 @@ namespace WebView.Controllers
         private ISalesOrderService _salesOrderService;
         private ISalesQuotationService _salesQuotationService;
         private IVirtualOrderService _virtualOrderService;
+        private IContactGroupService _contactGroupService;
 
         public MstContactController()
         {
@@ -33,6 +34,7 @@ namespace WebView.Controllers
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
             _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
         }
 
         public ActionResult Index()
@@ -40,7 +42,7 @@ namespace WebView.Controllers
             return View();
         }
 
-         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -56,13 +58,19 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.NamaFakturPajak,
                              model.Address,
+                             model.DeliveryAddress,
+                             model.Description,
                              model.ContactNo,
                              model.PIC,
                              model.PICContactNo,
                              model.Email,
                              model.TaxCode,
                              model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -98,13 +106,19 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.NamaFakturPajak,
                             model.Address,
+                            model.DeliveryAddress,
+                            model.Description,
                             model.ContactNo,
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
                             model.TaxCode,
                             model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -112,6 +126,177 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListCustomer(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Supplier");
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.NamaFakturPajak,
+                             model.Address,
+                             model.DeliveryAddress,
+                             model.Description,
+                             model.NPWP,
+                             model.ContactNo,
+                             model.PIC,
+                             model.PICContactNo,
+                             model.Email,
+                             model.TaxCode,
+                             model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.NamaFakturPajak,
+                            model.Address,
+                            model.DeliveryAddress,
+                            model.Description,
+                            model.NPWP,
+                            model.ContactNo,
+                            model.PIC,
+                            model.PICContactNo,
+                            model.Email,
+                            model.TaxCode,
+                            model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListSupplier(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Customer");
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.NamaFakturPajak,
+                             model.Address,
+                             model.DeliveryAddress,
+                             model.Description,
+                             model.NPWP,
+                             model.ContactNo,
+                             model.PIC,
+                             model.PICContactNo,
+                             model.Email,
+                             model.TaxCode,
+                             model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.NamaFakturPajak,
+                            model.Address,
+                            model.DeliveryAddress,
+                            model.Description,
+                            model.NPWP,
+                            model.ContactNo,
+                            model.PIC,
+                            model.PICContactNo,
+                            model.Email,
+                            model.TaxCode,
+                            model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
 
          public dynamic GetInfo(int Id)
          {
@@ -130,13 +315,20 @@ namespace WebView.Controllers
              {
                  model.Id,
                  model.Name,
+                 model.NamaFakturPajak,
                  model.Address,
+                 model.DeliveryAddress,
+                 model.Description,
+                 model.NPWP,
                  model.ContactNo,
                  model.PIC,
                  model.PICContactNo,
                  model.Email,
                  model.TaxCode,
                  model.IsTaxable,
+                 model.ContactGroupId,
+                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId.GetValueOrDefault()).Name,
+                 model.ContactType,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -167,13 +359,18 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 data.Name = model.Name;
+                data.NamaFakturPajak = model.NamaFakturPajak;
                 data.Address = model.Address;
+                data.DeliveryAddress = model.DeliveryAddress;
+                data.Description = model.Description;
+                data.NPWP = model.NPWP;
                 data.ContactNo = model.ContactNo;
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
                 data.TaxCode = model.TaxCode;
                 data.IsTaxable = model.IsTaxable;
+                data.ContactGroupId = model.ContactGroupId;
                 model = _contactService.UpdateObject(data);
             }
             catch (Exception ex)

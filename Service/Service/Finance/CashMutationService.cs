@@ -69,9 +69,10 @@ namespace Service.Service
         #region PaymentVoucher
         public CashMutation CreateCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank)
         {
+            decimal Total = paymentVoucher.TotalAmount - (paymentVoucher.TotalPPH21 + paymentVoucher.TotalPPH23 - paymentVoucher.BiayaBank + (paymentVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? paymentVoucher.Pembulatan : -paymentVoucher.Pembulatan));
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(paymentVoucher.TotalAmount);
+            cashMutation.Amount = Math.Abs(Total);
             cashMutation.MutationDate = paymentVoucher.IsGBCH ? (DateTime) paymentVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) paymentVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.PaymentVoucher;
             cashMutation.SourceDocumentId = paymentVoucher.Id;
@@ -119,9 +120,10 @@ namespace Service.Service
         #region Receipt Voucher
         public CashMutation CreateCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank)
         {
+            decimal Total = receiptVoucher.TotalAmount - (receiptVoucher.TotalPPH23 + receiptVoucher.BiayaBank + (receiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? -receiptVoucher.Pembulatan : receiptVoucher.Pembulatan));
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(receiptVoucher.TotalAmount);
+            cashMutation.Amount = Math.Abs(Total);
             cashMutation.MutationDate = receiptVoucher.IsGBCH ? (DateTime) receiptVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) receiptVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.ReceiptVoucher;
             cashMutation.SourceDocumentId = receiptVoucher.Id;

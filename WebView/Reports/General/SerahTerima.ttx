@@ -1,0 +1,4 @@
+NoInvoice	String	255
+TglInvoice	DateTime
+Customer	String	255
+Remark	String	255		

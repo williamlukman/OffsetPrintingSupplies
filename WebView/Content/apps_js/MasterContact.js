@@ -20,12 +20,13 @@
     };
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstContact/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContact/GetListCustomer', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
+        $('#NamaFakturPajak').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -33,24 +34,33 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    
+    $("#lookup_div_contactgroup").dialog('close');
+    $("#ContactGroupId").hide();
+
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstContact/GetList',
+        url: base_url + 'MstContact/GetListCustomer',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
-                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'npwp', index: 'npwp', width: 100 },
+                  { name: 'contact', index: 'contactno', width: 150 },
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    			  { name: 'contactgroupid', index: 'contactgroupid', width: 60, align: "center", hidden: true },
+				  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'contacttype', index: 'contacttype', width: 60, hidden: true },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -92,8 +102,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -108,6 +118,8 @@
         ClearData();
         clearForm('#frm');
         document.getElementById("IsTaxable").checked = true;
+        document.getElementById("ContactType").selectedIndex = 1;
+        $('#btnContactGroup').removeAttr('disabled');
         onIsTaxable();
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
@@ -138,11 +150,19 @@
                             $("#form_btn_save").data('kode', id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
+                            $('#NamaFakturPajak').val(result.NamaFakturPajak);
                             $('#Address').val(result.Address);
+                            $('#DeliveryAddress').val(result.DeliveryAddress);
+                            $('#NPWP').val(result.NPWP);
+                            $('#Description').val(result.Description);
                             $('#ContactNo').val(result.ContactNo);
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            $('#ContactGroupId').val(result.ContactGroupId);
+                            $('#ContactGroup').val(result.ContactGroup);
+                            $('#btnContactGroup').attr('disabled', true);
+                            document.getElementById("ContactType").selectedIndex = 1;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
                             var e = document.getElementById("TaxCode");
@@ -237,15 +257,20 @@
 
         var e = document.getElementById("TaxCode");
         var taxcode = e.options[e.selectedIndex].value;
+        var f = document.getElementById("ContactType");
+        var contacttype = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
+                Id: id, Name: $("#Name").val(), NamaFakturPajak: $("#NamaFakturPajak").val(),
+                Address: $("#Address").val(), DeliveryAddress: $("#DeliveryAddress").val(),
+                NPWP: $("#NPWP").val(), Description: $("#Description").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
+                ContactType: contacttype, ContactGroupId: $("#ContactGroupId").val()
             }),
             async: false,
             cache: false,
@@ -288,4 +313,64 @@
                 $(this).numberbox('clear');
         });
     }
+
+    // -------------------------------------------------------Look Up contactgroup-------------------------------------------------------
+    $('#btnContact').click(function () {
+        var lookUpURL = base_url + 'ContactGroup/GetList';
+        var lookupGrid = $('#lookup_table_contactgroup');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_contactgroup').dialog('open');
+    });
+
+    jQuery("#lookup_table_contactgroup").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_contactgroup'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_contactgroup").width() - 10,
+        height: $("#lookup_div_contactgroup").height() - 110,
+    });
+    $("#lookup_table_contactgroup").jqGrid('navGrid', '#lookup_toolbar_contactgroup', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_contactgroup').click(function () {
+        $('#lookup_div_contactgroup').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_contactgroup').click(function () {
+        var id = jQuery("#lookup_table_contactgroup").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_contactgroup").jqGrid('getRowData', id);
+
+            $('#ContactGroupId').val(ret.id).data("kode", id);
+            $('#ContactGroup').val(ret.name);
+
+            $('#lookup_div_contactgroup').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+    // ---------------------------------------------End Lookup contactgroup----------------------------------------------------------------
+
 }); //END DOCUMENT READY

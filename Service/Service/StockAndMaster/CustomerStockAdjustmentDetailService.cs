@@ -122,7 +122,6 @@ namespace Service.Service
                 {
                     _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, false, _itemService, _customerItemService, _warehouseItemService);
                 }
-                _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutations);
             }
             return customerStockAdjustmentDetail;
         }

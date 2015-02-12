@@ -71,7 +71,7 @@ namespace Service.Service
 
         public bool IsNameDuplicated(Contact contact)
         {
-            IQueryable<Contact> contacts = _repository.FindAll(x => x.Name == contact.Name && !x.IsDeleted && x.Id != contact.Id);
+            IQueryable<Contact> contacts = _repository.FindAll(x => x.Name == contact.Name && !x.IsDeleted && x.Id != contact.Id && x.ContactType == contact.ContactType);
             return (contacts.Count() > 0 ? true : false);
         }
     }

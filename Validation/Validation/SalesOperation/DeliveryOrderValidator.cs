@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public DeliveryOrder VHasUniqueNomorSurat(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService)
         {
-            IList<DeliveryOrder> duplicates = _deliveryOrderService.GetQueryable().Where(x => x.NomorSurat == deliveryOrder.NomorSurat && x.Id != deliveryOrder.Id).ToList();
+            IList<DeliveryOrder> duplicates = _deliveryOrderService.GetQueryable().Where(x => x.NomorSurat == deliveryOrder.NomorSurat && x.Id != deliveryOrder.Id && !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 deliveryOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");

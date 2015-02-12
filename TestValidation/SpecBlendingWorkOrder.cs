@@ -26,6 +26,7 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
                 d.PopulateDataNoClosing();
+                d.PopulateBlendingWorkOrders();
             }
         }
 
@@ -53,8 +54,8 @@ namespace TestValidation
 
             it["confirms_blendingworkorder"] = () =>
             {
-                d.blendingWorkOrder = d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService, 
-                                                        d._blanketService, d._itemService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
+                d.blendingWorkOrder = d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
+                                                        d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
                 d.blendingWorkOrder.IsConfirmed.should_be(true);
                 d.blendingWorkOrder.Errors.Count().should_be(0);
                 
@@ -69,11 +70,11 @@ namespace TestValidation
             it["unconfirms_blendingworkorder"] = () =>
             {
                 d.blendingWorkOrder = d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
-                                                        d._blanketService, d._itemService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
+                                                        d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
                 d.blendingWorkOrder.IsConfirmed.should_be(true);
                 d.blendingWorkOrder.Errors.Count().should_be(0);
-                d.blendingWorkOrder = d._blendingWorkOrderService.UnconfirmObject(d.blendingWorkOrder, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService, 
-                                                    d._blanketService, d._itemService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
+                d.blendingWorkOrder = d._blendingWorkOrderService.UnconfirmObject(d.blendingWorkOrder, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
+                                                    d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
                 d.blendingWorkOrder.IsConfirmed.should_be(false);
                 d.blendingWorkOrder.Errors.Count().should_be(0);
 

@@ -24,8 +24,8 @@ namespace WebView.Controllers
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService;
         private IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService;
-        private IReceiptVoucherService _receiptVoucherService;
-        private IReceiptVoucherDetailService _receiptVoucherDetailService;
+        private IPaymentVoucherService _paymentVoucherService;
+        private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IPayableService _payableService;
         private IReceivableService _receivableService;
         private IItemService _itemService;
@@ -37,7 +37,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IExchangeRateService _exchangeRateService;
-        private ICurrencyService _currencyService;
+        public ICurrencyService _currencyService;
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public PurchaseDownPaymentController()
@@ -54,8 +54,8 @@ namespace WebView.Controllers
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
             _purchaseDownPaymentAllocationService = new PurchaseDownPaymentAllocationService(new PurchaseDownPaymentAllocationRepository(), new PurchaseDownPaymentAllocationValidator());
             _purchaseDownPaymentAllocationDetailService = new PurchaseDownPaymentAllocationDetailService(new PurchaseDownPaymentAllocationDetailRepository(), new PurchaseDownPaymentAllocationDetailValidator());
-            _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
-            _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
+            _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
+            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -70,7 +70,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -82,8 +82,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseDownPaymentService.GetQueryable().Include("Payable").Include("Receivable")
-                                               .Include("Contact").Where(x => !x.IsDeleted);
+            var q = _purchaseDownPaymentService.GetQueryable().Include("Payable").Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -96,6 +95,8 @@ namespace WebView.Controllers
                              model.DueDate,
                              model.TotalAmount,
                              model.IsConfirmed,
+                             Currency = model.Currency.Name,
+                             model.ExchangeRateAmount,
                              model.ConfirmationDate,
                              model.PayableId,
                              model.ReceivableId,
@@ -140,6 +141,8 @@ namespace WebView.Controllers
                             model.DueDate,
                             model.TotalAmount,
                             model.IsConfirmed,
+                            model.Currency,
+                            model.ExchangeRateAmount,
                             model.ConfirmationDate,
                             model.PayableId,
                             model.ReceivableId,
@@ -248,6 +251,7 @@ namespace WebView.Controllers
                 ConfirmationDate = model.ConfirmationDate,
                 model.PayableId,
                 model.ReceivableId,
+                model.CurrencyId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -280,7 +284,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.DownPaymentDate = model.DownPaymentDate;
                 data.DueDate = model.DueDate;
-                data.TotalAmount = model.TotalAmount;
+                data.CurrencyId = model.CurrencyId;
                 model = _purchaseDownPaymentService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
@@ -322,7 +326,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
                 model = _purchaseDownPaymentService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _receivableService,
-                        _contactService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_exchangeRateService,_gLNonBaseCurrencyService);
+                        _contactService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -343,7 +347,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
                 model = _purchaseDownPaymentService.UnconfirmObject(data, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
-                    _payableService, _receivableService, _contactService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService);
+                    _payableService, _receivableService, _contactService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {

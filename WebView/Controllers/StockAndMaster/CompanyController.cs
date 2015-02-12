@@ -25,7 +25,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Master))
             {
                 return Content(Core.Constants.Constant.ControllerOutput.PageViewNotAllowed);
             }
@@ -50,8 +50,10 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Address,
+                             model.City,
                              model.ContactNo,
                              model.Email,
+                             model.NPWP,
                              model.Logo,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -89,8 +91,10 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Address,
+                            model.City,
                             model.ContactNo,
                             model.Email,
+                            model.NPWP,
                             model.Logo,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -124,9 +128,11 @@ namespace WebView.Controllers
                  model.Id,
                  model.Name,
                  model.Address,
+                 model.City,
                  model.ContactNo,
                  model.Logo,
                  model.Email,
+                 model.NPWP,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -155,9 +161,11 @@ namespace WebView.Controllers
                  model.Id,
                  model.Name,
                  model.Address,
+                 model.City,
                  model.ContactNo,
                  model.Logo,
                  model.Email,
+                 model.NPWP,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -167,7 +175,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add record");
@@ -203,7 +211,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Edit record");
@@ -220,6 +228,8 @@ namespace WebView.Controllers
                 data.ContactNo = model.ContactNo;
                 data.Logo = model.Logo;
                 data.Email = model.Email;
+                data.City = model.City;
+                data.NPWP = model.NPWP;
                 model = _companyService.UpdateObject(data);
             }
             catch (Exception ex)
@@ -245,7 +255,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Delete Record");

@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = "Master Supplier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastersupplier.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Master Supplier :.">
+<div id="toolbar" class="form_toolbar">
+        <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
+        <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+        <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
+        <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+    </div>
+
+    <div id="table_div">
+        <table id="list"></table>
+        <div id="pager" class="scroll" style="text-align: center;"></div>
+    </div>
+
+    <!-- Dialog Box -->
+    <div id="form_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px" data-options="modal:true" 
+        title=".: Master Supplier :.">
+
+        <div id="form_toolbar" class="form_toolbar">
+            <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
+            <a id="form_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+
+        <div style="overflow: auto">
+            <form id="frm">
+                @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                        <tr nowrap>
+                            <td width="139" nowrap style="width: 100px">
+                                <label>ID</label></td>
+                            <td width="226">
+                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Name</label></td>
+                            <td colspan="3">
+                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="IsTaxable">Taxable </label></td>
+                            <td>
+                                <input type="checkbox" id="IsTaxable" name="IsTaxable" value="value" onchange="onIsTaxable()"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Tax Code</label>
+                            </td>
+                            <td colspan="3">
+                                <select id="TaxCode">
+                                    <option value="01">01 - Pajak 10%</option>
+                                    <option value="02">02 - Pajak 10%</option>
+                                    <option value="03">03 - Pajak 10%</option>
+                                    <option value="04">04 - Pajak 1%</option>
+                                    <option value="05">05 - Pajak 10%</option>
+                                    <option value="06">06 - Pajak 10%</option>
+                                    <option value="07">07 - Pajak 0%</option>
+                                    <option value="08">08 - Pajak 0%</option>
+                                    <option value="09">09 - Pajak 0%</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Address</label></td>
+                            <td colspan="3"><label>
+                              <textarea name="Address" id="Address" cols="60" rows="3"></textarea>
+                            </label></td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Description</label></td>
+                            <td colspan="3"><label>
+                              <textarea name="Description" id="Description" cols="60" rows="2"></textarea>
+                            </label></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label>Contact No</label></td>
+                            <td colspan="3">
+                                <input id="ContactNo" name="ContactNo" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>PIC</label></td>
+                            <td colspan="3">
+                                <input id="PIC" name="PIC" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>PIC Contact No</label></td>
+                            <td colspan="3">
+                                <input id="PICContactNo" name="PICContactNo" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Email</label></td>
+                            <td colspan="3">
+                                <input id="Email" name="Email" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Contact Group</label></td>
+                            <td>
+                                <input id="ContactGroupId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnContactGroup" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="ContactGroup" name="ContactGroupId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr class="hide-row">
+                            <td>
+                                <label>Tipe</label>
+                            </td>
+                            <td colspan="3">
+                                <select id="ContactType">
+                                    <option value="Supplier" selected="selected">Supplier</option>
+                                    <option value="Customer">Customer</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                @*</fieldset>*@
+            </form>
+        </div>
+    </div>
+    <!-- End Dialog Box -->
+
+    <!-- Dialog Box  Delete-->
+    <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
+        data-options="modal:true" title=".: Confirmation :.">
+
+        <div id="delete_confirm_toolbar" class="form_toolbar">
+            <a id="delete_confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="delete_confirm_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="delete_confirm_info">
+            <span>Are you sure to delete the selected record?</span>
+            <input id="delete_confirm_id" type="hidden" />
+        </div>
+    </div>
+    <!-- End Dialog Box Delete-->
+
+    <!-- Look Up contactgroup -->
+    <div id="lookup_div_contactgroup" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_contactgroup" class="grid_toolbar">
+            <a id="lookup_btn_add_contactgroup" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_contactgroup" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_contactgroup" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_contactgroup" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up contactgroup -->
+
+
+  </div>
+

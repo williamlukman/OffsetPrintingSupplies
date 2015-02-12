@@ -8,9 +8,25 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace WebView
 {
+    static class DateTimeExtensions
+    {
+        static int GetWeekOfYear(this DateTime time)
+        {
+            return _gc.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
+        }
+
+        static GregorianCalendar _gc = new GregorianCalendar();
+        public static int GetWeekOfMonth(this DateTime time)
+        {
+            DateTime first = new DateTime(time.Year, time.Month, 1);
+            return time.GetWeekOfYear() - first.GetWeekOfYear() + 1;
+        }
+    }
+
     public static class GeneralFunction
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("GeneralFunction");
@@ -230,6 +246,9 @@ namespace WebView
             return result;
         }
 
+        /// <summary>
+        /// Convert Currency Numbers to English Words.
+        /// </summary>
         public static String changeCurrencyToWords(decimal numb, bool isCurrency, string currencyName, string currencyPoints)
         {
             return changeToWords(numb.ToString(), isCurrency, currencyName, currencyPoints);
@@ -239,7 +258,7 @@ namespace WebView
         {
             String val = "", wholeNo = numb, dPoints = "", andStr = "", pointStr = "";
             String endStr = ("");
-            //String endStr = (isCurrency) ? ("Only") : ("");
+            //String endStr = (isCurrency) ? (" Only") : ("");
             try
             {
                 int decimalPlace = numb.IndexOf("."); if (decimalPlace > 0)
@@ -249,18 +268,18 @@ namespace WebView
 
                     if (Convert.ToInt32(dPoints) > 0)
                     {
-                        andStr = ("POINT");// just to separate whole numbers from points,nps
+                        andStr = (" Point ");// just to separate whole numbers from points,nps
                         endStr = (isCurrency) ? (endStr) : ("");
                         pointStr = changeNumbertoWords(dPoints);
                     }
                     else
                     {
-                        andStr = ("POINT ZERO");// just to separate whole numbers from points,nps
+                        //andStr = (" Point Zero");// just to separate whole numbers from points,nps
                         endStr = (isCurrency) ? (endStr) : ("");
                         pointStr = changeNumbertoWords(dPoints);
                     }
                 }
-                val = String.Format("{0} {1} {2}{3} {4} {5}", currencyName, changeNumbertoWords(wholeNo).Trim(), andStr, pointStr, currencyPoints, endStr);
+                val = String.Format("{0} {1} {2}{3} {4}{5}", changeNumbertoWords(wholeNo).Trim(), currencyName, andStr, pointStr, (pointStr != "") ? currencyPoints : "", endStr);
             }
             catch { ;} return val;
         }
@@ -280,7 +299,7 @@ namespace WebView
                     beginsZero = number.StartsWith("0");
                     int numDigits = number.Length;
                     int pos = 0;//store digit grouping
-                    String place = "";//digit grouping name:hundres,thousand,etc...
+                    String place = "";//digit grouping name:hundres,thousand,etc..
 
                     switch (numDigits)
                     {
@@ -294,33 +313,40 @@ namespace WebView
                             break;
                         case 3://hundreds' range
                             pos = (numDigits % 3) + 1;
-                            place = " HUNDRED ";
+                            place = " Hundred ";
                             break;
                         case 4://thousands' range
                         case 5:
                         case 6:
                             pos = (numDigits % 4) + 1;
-                            place = " THOUSAND ";
+                            place = " Thousand ";
                             break;
                         case 7://millions' range
                         case 8:
                         case 9:
                             pos = (numDigits % 7) + 1;
-                            place = " MILLION ";
+                            place = " Million ";
                             break;
                         case 10://Billions's range
+                        case 11:
+                        case 12:
                             pos = (numDigits % 10) + 1;
-                            place = " BILLION ";
+                            place = " Billion ";
                             break;
-                        //add extra case options for anything above Billion...
-
+                        //add extra case options for anything above Billion..
+                        case 13://Trillions's range
+                        case 14:
+                        case 15:
+                            pos = (numDigits % 13) + 1;
+                            place = " Trillion ";
+                            break;
                         default:
                             isDone = true;
                             break;
                     }
 
                     if (!isDone)
-                    {//if transalation is not done, continue...(Recursion comes in now!!)
+                    {//if transalation is not done, continue..(Recursion comes in now!!)
                         word = changeNumbertoWords(number.Substring(0, pos)) + place + changeNumbertoWords(number.Substring(pos));
 
                         //check for trailing zeros
@@ -341,58 +367,58 @@ namespace WebView
             String name = null; switch (digt)
             {
                 case 10:
-                    name = "TEN";
+                    name = "Ten";
                     break;
                 case 11:
-                    name = "ELEVEN";
+                    name = "Eleven";
                     break;
                 case 12:
-                    name = "TWELVE";
+                    name = "Twelve";
                     break;
                 case 13:
-                    name = "THIRTEEN";
+                    name = "Thirteen";
                     break;
                 case 14:
-                    name = "FOURTEEN";
+                    name = "Fourteen";
                     break;
                 case 15:
-                    name = "FIFTEEN";
+                    name = "Fifteen";
                     break;
                 case 16:
-                    name = "SIXTEEN";
+                    name = "Sixteen";
                     break;
                 case 17:
-                    name = "SEVENTEEN";
+                    name = "Seventeen";
                     break;
                 case 18:
-                    name = "EIGHTEEN";
+                    name = "Eighteen";
                     break;
                 case 19:
-                    name = "NINETEEN";
+                    name = "Nineteen";
                     break;
                 case 20:
-                    name = "TWENTY";
+                    name = "Twenty";
                     break;
                 case 30:
-                    name = "THIRTY";
+                    name = "Thirty";
                     break;
                 case 40:
-                    name = "FOURTY";
+                    name = "Fourty";
                     break;
                 case 50:
-                    name = "FIFTY";
+                    name = "Fifty";
                     break;
                 case 60:
-                    name = "SIXTY";
+                    name = "Sixty";
                     break;
                 case 70:
-                    name = "SEVENTY";
+                    name = "Seventy";
                     break;
                 case 80:
-                    name = "EIGHTY";
+                    name = "Eighty";
                     break;
                 case 90:
-                    name = "NINETY";
+                    name = "Ninety";
                     break;
                 default:
                     if (digt > 0)
@@ -412,31 +438,268 @@ namespace WebView
             switch (digt)
             {
                 case 1:
-                    name = "ONE";
+                    name = "One";
                     break;
                 case 2:
-                    name = "TWO";
+                    name = "Two";
                     break;
                 case 3:
-                    name = "THREE";
+                    name = "Three";
                     break;
                 case 4:
-                    name = "FOUR";
+                    name = "Four";
                     break;
                 case 5:
-                    name = "FIVE";
+                    name = "Five";
                     break;
                 case 6:
-                    name = "SIX";
+                    name = "Six";
                     break;
                 case 7:
-                    name = "SEVEN";
+                    name = "Seven";
                     break;
                 case 8:
-                    name = "EIGHT";
+                    name = "Eight";
                     break;
                 case 9:
-                    name = "NINE";
+                    name = "Nine";
+                    break;
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Convert Currency Numbers to Indonesian Words.
+        /// </summary>
+        public static String changeCurrencyToWordsIndo(decimal numb, bool isCurrency, string currencyName, string currencyPoints)
+        {
+            return changeToWordsIndo(numb.ToString(), isCurrency, currencyName, currencyPoints);
+        }
+
+        private static String changeToWordsIndo(String numb, bool isCurrency, string currencyName, string currencyPoints)
+        {
+            String val = "", wholeNo = numb, dPoints = "", andStr = "", pointStr = "";
+            String endStr = ("");
+            //String endStr = (isCurrency) ? (" Saja") : ("");
+            try
+            {
+                int decimalPlace = numb.IndexOf("."); if (decimalPlace > 0)
+                {
+                    wholeNo = numb.Substring(0, decimalPlace);
+                    dPoints = numb.Substring(decimalPlace + 1);
+
+                    if (Convert.ToInt32(dPoints) > 0)
+                    {
+                        //andStr = (" Koma ");// just to separate whole numbers from points,nps
+                        endStr = (isCurrency) ? (endStr) : ("");
+                        pointStr = changeNumbertoWordsIndo(dPoints);
+                    }
+                    else
+                    {
+                        //andStr = (" Koma Nol");// just to separate whole numbers from points,nps
+                        endStr = (isCurrency) ? (endStr) : ("");
+                        pointStr = changeNumbertoWordsIndo(dPoints);
+                    }
+                }
+                val = String.Format("{0} {1} {2}{3} {4}{5}", changeNumbertoWordsIndo(wholeNo).Trim(), currencyName, andStr, pointStr, (pointStr != "") ? currencyPoints : "", endStr);
+    
+            }
+            catch { ;} return val;
+        }
+
+        private static String changeNumbertoWordsIndo(String number)
+        {
+            string word = "";
+            try
+            {
+                bool beginsZero = false;//tests for 0XX
+                bool isDone = false;//test if already translated
+                double dblAmt = (Convert.ToDouble(number));
+                //if ((dblAmt > 0) && number.StartsWith("0"))
+
+                if (dblAmt > 0)
+                {//test for zero or digit zero in a nuemric
+                    beginsZero = number.StartsWith("0");
+                    int numDigits = number.Length;
+                    int pos = 0;//store digit grouping
+                    String place = "";//digit grouping name:hundres,thousand,etc..
+
+                    switch (numDigits)
+                    {
+                        case 1://ones' range
+                            word = satuan(number);
+                            isDone = true;
+                            break;
+                        case 2://tens' range
+                            word = puluhan(number);
+                            isDone = true;
+                            break;
+                        case 3://hundreds' range
+                            pos = (numDigits % 3) + 1;
+                            place = " Ratus ";
+                            break;
+                        case 4://thousands' range
+                        case 5:
+                        case 6:
+                            pos = (numDigits % 4) + 1;
+                            place = " Ribu ";
+                            break;
+                        case 7://millions' range
+                        case 8:
+                        case 9:
+                            pos = (numDigits % 7) + 1;
+                            place = " Juta ";
+                            break;
+                        case 10://Billions's range
+                        case 11:
+                        case 12:
+                            pos = (numDigits % 10) + 1;
+                            place = " Miliar ";
+                            break;
+                        //add extra case options for anything above Billion..
+                        case 13://Trillion's range
+                        case 14:
+                        case 15:
+                            pos = (numDigits % 13) + 1;
+                            place = " Triliun ";
+                            break;
+                        default:
+                            isDone = true;
+                            break;
+                    }
+
+                    if (!isDone)
+                    {//if transalation is not done, continue..(Recursion comes in now!!)
+                        string numstr = changeNumbertoWordsIndo(number.Substring(0, pos));
+                        if (numstr == "Satu")
+                        {
+                            if (place == " Ratus ")
+                            {
+                                numstr = "Seratus ";
+                                place = "";
+                            }
+                            else if (place == " Ribu ")
+                            {
+                                numstr = "Seribu ";
+                                place = "";
+                            }
+                        }
+                        word = numstr + place + changeNumbertoWordsIndo(number.Substring(pos));
+
+                        //check for trailing zeros
+                        //if (beginsZero) word = " and " + word.Trim();
+                        if (beginsZero) word = " " + word.Trim();
+                    }
+
+                    //ignore digit grouping names
+                    if (word.Trim().Equals(place.Trim())) word = "";
+                }
+            }
+            catch { ;} return word.Trim();
+        }
+
+        private static String puluhan(String digit)
+        {
+            int digt = Convert.ToInt32(digit);
+            String name = null; switch (digt)
+            {
+                case 10:
+                    name = "Sepuluh";
+                    break;
+                case 11:
+                    name = "Sebelas";
+                    break;
+                case 12:
+                    name = "Dua Belas";
+                    break;
+                case 13:
+                    name = "Tiga Belas";
+                    break;
+                case 14:
+                    name = "Empat Belas";
+                    break;
+                case 15:
+                    name = "Lima Belas";
+                    break;
+                case 16:
+                    name = "Enam Belas";
+                    break;
+                case 17:
+                    name = "Tujuh Belas";
+                    break;
+                case 18:
+                    name = "Delapan Belas";
+                    break;
+                case 19:
+                    name = "Sembilan Belas";
+                    break;
+                case 20:
+                    name = "Dua Puluh";
+                    break;
+                case 30:
+                    name = "Tiga Puluh";
+                    break;
+                case 40:
+                    name = "Empat Puluh";
+                    break;
+                case 50:
+                    name = "Lima Puluh";
+                    break;
+                case 60:
+                    name = "Enam Puluh";
+                    break;
+                case 70:
+                    name = "Tujuh Puluh";
+                    break;
+                case 80:
+                    name = "Delapan Puluh";
+                    break;
+                case 90:
+                    name = "Sembilan Puluh";
+                    break;
+                default:
+                    if (digt > 0)
+                    {
+                        name = puluhan(digit.Substring(0, 1) + "0") + " " + satuan(digit.Substring(1));
+                    }
+                    break;
+            }
+            return name;
+        }
+
+        private static String satuan(String digit)
+        {
+            int digt = Convert.ToInt32(digit);
+            String name = "";
+
+            switch (digt)
+            {
+                case 1:
+                    name = "Satu";
+                    break;
+                case 2:
+                    name = "Dua";
+                    break;
+                case 3:
+                    name = "Tiga";
+                    break;
+                case 4:
+                    name = "Empat";
+                    break;
+                case 5:
+                    name = "Lima";
+                    break;
+                case 6:
+                    name = "Enam";
+                    break;
+                case 7:
+                    name = "Tujuh";
+                    break;
+                case 8:
+                    name = "Delapan";
+                    break;
+                case 9:
+                    name = "Sembilan";
                     break;
             }
             return name;
@@ -712,6 +975,10 @@ namespace WebView
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
                         string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string[] split = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string actualtext = conditions[i].Substring(split[0].Length + split[1].Length + 1);
+                        string actualcut = actualtext.Trim().Substring(2, actualtext.Trim().Length - 4);
+                        string compare = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -729,7 +996,7 @@ namespace WebView
 
                         string filterValue = "";
                         if (useLike)
-                            filterValue = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                            filterValue = actualcut;
                         else
                             filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
 
@@ -790,6 +1057,10 @@ namespace WebView
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
                         string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string[] split = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string actualtext = conditions[i].Substring(split[0].Length + split[1].Length + 2);
+                        string actualcut = actualtext.Trim().Substring(2, actualtext.Trim().Length - 4);
+                        string compare = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -807,7 +1078,7 @@ namespace WebView
 
                         string filterValue = "";
                         if (useLike)
-                            filterValue = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                            filterValue = actualcut;
                         else
                             filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
 
@@ -851,5 +1122,8 @@ namespace WebView
                 LOG.Error("", ex);
             }
         }
+
+        
+
     }
 }

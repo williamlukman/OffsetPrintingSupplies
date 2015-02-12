@@ -113,7 +113,8 @@ namespace Service.Service
                     _salesDownPaymentAllocationDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesDownPaymentService, _receivableService, _payableService);
                 }
                 _repository.ConfirmObject(salesDownPaymentAllocation);
-                _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService);
+                _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService,
+                                             _payableService, _receivableService);
             }
             return salesDownPaymentAllocation;
         }
@@ -131,8 +132,9 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _salesDownPaymentAllocationDetailService.UnconfirmObject(detail, this, _salesDownPaymentService, _receivableService, _payableService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService,
+                                             _payableService, _receivableService);
                 _repository.UnconfirmObject(salesDownPaymentAllocation);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService);
             }
             return salesDownPaymentAllocation;
         }

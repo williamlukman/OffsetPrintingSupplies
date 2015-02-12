@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using System.Text.RegularExpressions;
 
 namespace WebView.Controllers
 {
@@ -74,6 +75,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -118,6 +120,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -140,7 +143,7 @@ namespace WebView.Controllers
              GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
              if (filter == "") filter = "true";
              // Get Data
-             var leaves = _accountService.GetQueryable().Where(x => !x.IsDeleted && x.IsLeaf && x.Parent.LegacyCode == Constant.AccountLegacyCode.AccountPayable);
+             var leaves = _accountService.GetQueryable().Where(x => !x.IsDeleted && x.IsLeaf && x.Group == Constant.AccountGroup.Liability);
              var parent = _accountService.GetQueryable().Where(x => x.Level < 5 && !x.IsDeleted);
 
              var query = (from model in leaves
@@ -150,8 +153,10 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                               ParentCode = newaccount.Code,
+                              model.IsPayableReceivable,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
              var list = query.AsEnumerable();
@@ -185,9 +190,13 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
-                             currency = _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Name,
-                             currencyId = _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Id                      }
+                             currency = (model.IsPayableReceivable) ?
+                                         _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Name : _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault().Name,
+                             currencyId = (model.IsPayableReceivable) ?
+                                         _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Id : _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault().Id,
+                         }
                      }).ToArray()
              }, JsonRequestBehavior.AllowGet);
          }
@@ -210,6 +219,7 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                               model.Group,
                               model.Level,
@@ -254,6 +264,7 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -282,6 +293,7 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -317,6 +329,7 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                       }
                      }).ToArray()
@@ -346,6 +359,7 @@ namespace WebView.Controllers
              {
                  model.Id,
                  model.Code,
+                 model.ParseCode,
                  model.Name,
                  model.Group,
                  model.Level,

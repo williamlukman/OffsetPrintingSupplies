@@ -123,7 +123,7 @@
 
             $(document).ready(function () {
                 $('#mega-1, .mega-menu').dcVerticalMegaMenu({
-                    rowItems: '4',
+                    rowItems: '6',
                     speed: 'fast',
                     effect: 'slide',
                     direction: 'right'
@@ -264,28 +264,64 @@
                                         <ul>
                                                <li><a href="#">Data</a>
                                                 <ul>
-                                               <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "Company")">Company</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ContactGroup, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "ContactGroup")">Contact Group</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ContactDetail, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "ContactDetail")">Contact Detail</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SupplierDetail, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "SupplierDetail")">Supplier Detail</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Employee, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "Employee")">Marketing</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Supplier, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstSupplier")">Supplier</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SubType, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstSubType")">SubType</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Machine, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerType, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.UoM, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Logistic</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "MstBlanket")">Blanket</a> </li>
-                                                    <li><a href="@Url.Action("Index", "MstBlendingRecipe")">Blending Recipe</a> </li>
-                                                    <li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
-                                                    <li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
-                                                    <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>
-                                                    <li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "CustomerStockAdjustment")">Customer's Stock Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "StockMutation")">Stock Mutation</a></li>
-                                                    <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
-                                                    <li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>
-                                                    <li><a href="@Url.Action("Index", "WarehouseMutation")">Warehouse Mutation</a></li>
-                                                    <li><a href="@Url.Action("Index", "CustomerItem")">Customer's Warehouse Item</a> </li>
-                                                    <li><a href="@Url.Action("Index", "CustomerStockMutation")">Customer's Stock Mutation</a></li>
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Blanket, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstBlanket")">Blanket</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlendingRecipe, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstBlendingRecipe")">Blending Recipe</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CoreBuilder, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ItemAvgPrice, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstItemAvgPrice")">Item Avg Price</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerBuilder, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Repacking, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "Repacking")">Unit Conversion</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "StockMutation")">Stock Mutation</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CustomerStockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "CustomerStockAdjustment")">Customer's Stock Adjustment</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CustomerStockMutation, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "CustomerStockMutation")">Customer's Stock Mutation</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Warehouse, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.WarehouseItem, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.WarehouseMutation, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "WarehouseMutation")">Warehouse Mutation</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CustomerItem, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "CustomerItem")">Customer's Item</a> </li>}
                                                 </ul>
                                             </li>
                                         </ul>                 
@@ -294,22 +330,30 @@
                                         <ul>
                                             <li><a href="#">Blanket</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "BlanketWorkOrder")">Blanket Work Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "BlanketWorkProcess")">Blanket Work Process</a></li>
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlanketWorkOrder, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                    {<li><a href="@Url.Action("Index", "BlanketWorkOrder")">Blanket Work Order</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlanketWorkProcess, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                    {<li><a href="@Url.Action("Index", "BlanketWorkProcess")">Blanket Work Process</a></li>}
                                                 </ul>
                                             </li>
                                            <li><a href="#">Roller Recovery</a>
                                              <ul>
-                                                 <li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>
-                                                 <li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Roller Accessory Detail</a></li>
-                                                 <li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>
-                                                 <li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>
-                                                 <li><a href="@Url.Action("Index", "RecoveryWorkProcess")">Recovery Work Process</a></li>
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerIdentification, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification Form (RIF)</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkOrder, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Roller Collection Note (RCN)</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerAccessoryDetail, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Customer's Accessories</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkProcess, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkProcess")">Recovery Work Chart (RWC)</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerWarehouseMutation, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>}
                                              </ul>
                                             </li>
                                             <li><a href="#">Chemical Blending</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "BlendingWorkOrder")">Blending Work Order</a></li>
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlendingWorkOrder, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                    {<li><a href="@Url.Action("Index", "BlendingWorkOrder")">Blending Work Order</a></li>}
                                                 </ul>
                                             </li>
                                         </ul>
@@ -318,48 +362,80 @@
                                         <ul>
                                             <li><a href="#">Accounting</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "PurchaseDownPaymentAllocation")">Purchase DP Allocation</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesDownPaymentAllocation")">Sales DP Allocation</a></li>
-	    											<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
-                                                    <li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
-                                                    <li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>
-                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
-                                                    <!--li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li-->
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseDPAllocation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PurchaseDownPaymentAllocation")">Purchase DP Allocation</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesDPAllocation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "SalesDownPaymentAllocation")">Sales DP Allocation</a></li>}
+	    											@if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedger, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "GeneralLedgerSaldo")">General Ledger</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Memorial, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "Closing")">Closing</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidCombIncomeStatement, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ValidCombIncomeStatement")">Valid Combination Income Statement</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Finance</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
-                                                    <li><a href="@Url.Action("Index", "MstCashBank")">Cash Bank</a> </li>
-                                                    <li><a href="@Url.Action("Index", "Currency")">Currency</a> </li>
-                                                    <li><a href="@Url.Action("Index", "ExchangeRate")">ExchangeRate</a> </li>
-                                                    <li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>
-                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
-                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
-                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "PurchaseDownPayment")">Purchase DP</a></li>
-                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
-                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "MstCashBank")">Cash Bank</a> </li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Currency, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "Currency")">Currency</a> </li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ExchangeRate, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ExchangeRate")">Tax Rate</a> </li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "Payable")">Payable</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PurchaseDownPayment")">Purchase DP</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Purchase</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
-                                                    <li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Sales</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "SalesQuotation")">Sales Quotation</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "VirtualOrder")">Virtual Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "TemporaryDeliveryOrder")">Temporary Delivery Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "TemporaryDeliveryOrderClearance")">Temporary Delivery Order Clearance</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesQuotation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "SalesQuotation")">Sales Quotation</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.VirtualOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "VirtualOrder")">Virtual Order</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "TemporaryDeliveryOrder")">Temporary Delivery Order</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrderClearance, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "TemporaryDeliveryOrderClearance")">Temporary Delivery Order Clearance</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>}
                                                 </ul>
                                             </li>
                                         </ul>
@@ -368,17 +444,82 @@
                                         <ul>
                                             <li><a href="#">Finance Report</a>
                                                 <ul>
-													<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
-                                                    <li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>}
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Customer Sales Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerGroupSalesQuarterly", "Report")">Customer Group Sales Quarterly</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerGroupSalesLast6Year", "Report")">Customer Group Sales Last 6 Years</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesQuarterly", "Report")">Customer Sales Quarterly</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesQuarterlyComparison", "Report")">Customer Sales Quarterly Comparison</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesYearly", "Report")">Customer Sales Yearly</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesComparedLastYear", "Report")">Customer Sales Compared with Last Year</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesLast6Year", "Report")">Customer Sales Last 6 Years</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesByItem", "Report")">Customer Sales by Item</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SortedCustomerSalesLast6Year", "Report")">Sorted Customer Sales Last 6 Years</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesOrderDailyByDate", "Report")">Sales Order Daily</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
+                                                    
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Sales Personnel Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesPersonnelYearly", "Report")">Sales Personnel Yearly by Value</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByValue", "Report")">Sales Personnel Comparison Yearly by Value</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByQty", "Report")">Sales Personnel Comparison Yearly by Quantity</a></li>}
+
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Item Sales Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ItemSalesYearlyByValue", "Report")">Item Sales Yearly by Value</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ItemSalesYearlyByQuantity", "Report")">Item Sales Yearly by Quantity</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("VulcanBlanketSales", "Report")">Vulcan Blanket Sales</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("DailyByQuantity", "Report")">Daily Report by Quantity</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SerahTerima", "Report")">Form Serah Terima</a></li>}
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Manufacturing Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Blanket, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyBlanketUsage", "Report")">Monthly Blanket Usage</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerBuilder, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">Monthly Roller Compound Usage</a></li>}
+
                                                 </ul>
                                             </li>
                                         </ul>
                                     </li>
                                     <li id="menu-item-51"><a href="#">Setting</a>
                                         <ul>
-                                            <li><a href="@Url.Action("Index", "User")">User</a></li>
-                                            <li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>
-                                            <li><a href="@Url.Action("Index", "Company")">Company</a> </li>
+                                            @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+                                            {<li><a href="@Url.Action("Index", "User")">User</a></li>}
+                                            @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting))
+                                            {<li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>}
+                                            
                                             <li><a href="#" id="menu_change_pass">Change Password</a></li>
                                         </ul>
                                     </li>
@@ -388,9 +529,9 @@
                     </div>
                     <div style="clear: both"></div>
                     <div id="sidebar-footer">
-                        Copyright &copy; 2014
+                        Copyright &copy; 2014 - @DateTime.Today.Year
 			            <br />
-                        PT. Solusi Sentral Data
+                        PT. Zentrum Graphics Asia
                     </div>
                 </div>
                 <div class="menuimage" style="text-align: center; width: 15px; height: 170px; border: solid 1px #4cff00; float: left; background: #b6ff00; margin-top: 150px; border-bottom-right-radius: 10px; border-top-right-radius: 10px;">

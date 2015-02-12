@@ -71,9 +71,10 @@ namespace Service.Service
                 {
                     receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid / receiptVoucherDetail.Rate;
                 }
-                rv.TotalAmount = rv.TotalAmount + receiptVoucherDetail.AmountPaid;
+                //rv.TotalAmount = rv.TotalAmount + receiptVoucherDetail.AmountPaid;
                 receiptVoucherDetail = _repository.CreateObject(receiptVoucherDetail);
-                _receiptVoucherService.UpdateAmount(rv);
+                _receiptVoucherService.CalculateTotalAmount(rv, this);
+                //_receiptVoucherService.UpdateAmount(rv);
             }
             return receiptVoucherDetail;
         }

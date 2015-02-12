@@ -67,7 +67,7 @@ namespace Service.Service
 
         public ServiceCost CalculateAndUpdateAvgPrice(ServiceCost serviceCost, int AdditionalQuantity, decimal AdditionalCost)
         {
-            int NewQuantity = serviceCost.Quantity + AdditionalQuantity;
+            decimal NewQuantity = serviceCost.Quantity + AdditionalQuantity;
             decimal NewAvgPrice = (serviceCost.Quantity + AdditionalQuantity == 0) ? 0 :
                 ((serviceCost.Quantity * serviceCost.AvgPrice) + (AdditionalQuantity * AdditionalCost) / NewQuantity);
             serviceCost.Quantity = NewQuantity;

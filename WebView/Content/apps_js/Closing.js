@@ -101,18 +101,17 @@
             url: base_url + "Currency/GetListNonBase?",
             success: function (result) {
                 if (result.query != null) {
-                    createContainerTable();
-                    var tbody = $('#list_containerSE');
+                    var tbody = $('#list_exchangerateclosing');
                     for (var i = 1; i <= result.query.length; i++) {
                         var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
                         $("<td>").addClass("tableCell").text(result.query[i-1].Id).appendTo(trow);
                         $("<td>").addClass("tableCell").text(result.query[i - 1].Name).appendTo(trow);
                         $("<td>").addClass("tableCell")
-                            .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>')
+                            .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value="0""/>')
                             .appendTo(trow);
                         trow.appendTo(tbody);
-                        $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>');
-                        $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
+                        $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value="0""/>');
+                        $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                     }
                 }
             }
@@ -163,16 +162,14 @@
                             $('#IsYear').attr('disabled', true);
                             $('#form_div').dialog('open');
                             createContainerTable();
-                            var tbody = $('#list_containerSE');
-                            for (var i = 1; i <= result.exchangeRateClosings.length; i++) {
+                            var tbody = $('#list_exchangerateclosing');
+                            for (var i = 0; i < result.exchangeRateClosings.length; i++) {
                                 var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
-                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].CurrencyId).appendTo(trow);
-                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].Name).appendTo(trow);
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i].CurrencyId).appendTo(trow);
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i].Name).appendTo(trow);
                                 $("<td>").addClass("tableCell")
-                                .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
+                                .append('<input id="TotalAmount' + (i) + '" name="TotalAmount' + (i) + '" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i].Rate+ ' disabled="disabled""/>')
                                 .appendTo(trow);
-                                $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
-                                $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
                                 trow.appendTo(tbody);
                             }
                         }
@@ -185,10 +182,10 @@
     });
 
     function createContainerTable() {
-        var tbody = $('#list_containerSE');
+        var tbody = $('#list_exchangerateclosing');
         if (tbody == null || tbody.length < 1) return;
         // Clear 
-        $("#list_containerSE tr.tableRow").each(function () {
+        $("#list_exchangerateclosing tr.tableRow").each(function () {
             $(this).remove();
         });
 
@@ -248,7 +245,7 @@
         var id = $("#form_btn_save").data('kode');
         var exchangerateclosingContainer = [];
         var exchangerateclosingContainerIdx = 0;
-        $('#list_containerSE tr').each(function () {
+        $('#list_exchangerateclosing tr').each(function () {
             if (exchangerateclosingContainerIdx > 0) {
                 obj = {};
                 obj['CurrencyId'] = $.trim($(this).find('td:eq(0)').text());
@@ -270,12 +267,6 @@
                 BeginningPeriod: $('#BeginningPeriod').datebox('getValue'), IsYear: isyear,
                 EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: exchangerateclosingContainer
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -303,11 +294,13 @@
 
     $("#close_confirm_btn_submit").click(function () {
         ClearErrorMessage();
+        ClickableButton($("#close_confirm_btn_submit"), false);
 
         var submitURL = '';
         var id = $("#idclose").val();
 
         submitURL = base_url + 'Closing/Close';
+        $("#close_confirm_div").dialog('close');
 
         $.ajax({
             contentType: "application/json",
@@ -316,13 +309,8 @@
             data: JSON.stringify({
                 Id: id, ClosedAt: $('#ClosedAt').datebox('getValue')
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
+                ClickableButton($("#close_confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -330,6 +318,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
+                            $("#close_confirm_div").dialog('open');
                             $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
@@ -348,13 +337,13 @@
     });
 
     $("#open_confirm_btn_submit").click(function () {
-
         ClearErrorMessage();
-
+        ClickableButton($("#open_confirm_btn_submit"), false);
         var submitURL = '';
         var id = $("#open_confirm_btn_submit").data('Id');
 
         submitURL = base_url + 'Closing/Open';
+        $("#open_confirm_div").dialog('close');
 
         $.ajax({
             contentType: "application/json",
@@ -363,13 +352,8 @@
             data: JSON.stringify({
                 Id: id
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
+                ClickableButton($("#open_confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -378,6 +362,7 @@
                         }
                         else {
                             $.messager.alert('Warning', result.Errors[key], 'warning');
+                            $("#open_confirm_div").dialog('open');
                         }
                     }
                 }
@@ -395,7 +380,7 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
-
+        ClickableButton($('#delete_confirm_btn_submit'), false);
         $.ajax({
             url: base_url + "Closing/Delete",
             type: "POST",
@@ -404,6 +389,7 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
+                ClickableButton($('#delete_confirm_btn_submit'), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -424,7 +410,7 @@
     });
 
     function clearForm(form) {
-
+        createContainerTable();
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case

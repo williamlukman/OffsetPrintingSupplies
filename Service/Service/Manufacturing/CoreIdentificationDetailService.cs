@@ -160,7 +160,6 @@ namespace Service.Service
                     {
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutations);
                 }
                 _repository.UnconfirmObject(coreIdentificationDetail);
             }

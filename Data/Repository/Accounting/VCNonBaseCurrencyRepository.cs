@@ -56,13 +56,8 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            VCNonBaseCurrency validComb = Find(x => x.ValidCombId == Id);
-            if (validComb != null)
-            {
-                return Delete(validComb) == 1 ? true :false;
-            }
-            return false;
+            VCNonBaseCurrency validComb = Find(x => x.Id == Id);
+            return (Delete(validComb) == 1) ? true : false;
         }
-
     }
 }

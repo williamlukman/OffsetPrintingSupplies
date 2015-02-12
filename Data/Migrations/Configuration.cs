@@ -15,6 +15,7 @@ namespace Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
     using Core.DomainModel;
+    using System.Text.RegularExpressions;
 
     internal sealed class Configuration : DbMigrationsConfiguration<OffsetPrintingSuppliesEntities>
     {
@@ -23,6 +24,15 @@ namespace Data.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+        }
+
+        public string GetValidNumber(string str)
+        {
+            Regex re = new Regex(@"([\d|\.]+)");
+            Match result = re.Match(str);
+            string ret = result.Groups[1].Value;
+            if (ret == null || ret.Trim() == "") ret = "0";
+            return ret;
         }
 
         protected override void Seed(Data.Context.OffsetPrintingSuppliesEntities context)
@@ -53,6 +63,59 @@ namespace Data.Migrations
             foreach (var customerItem in context.CustomerItems.Where(x => x.WarehouseItemId == null))
             {
                 customerItem.WarehouseItemId = whid;
+            }
+
+            int? accountid = null;
+            Account accounts = context.Accounts.FirstOrDefault();
+            if (accounts != null) { accountid = accounts.Id; }
+            foreach (var x in context.ItemTypes.Where(x => x.AccountId == null))
+            {
+                x.AccountId = accountid;
+            }
+
+            foreach (var account in context.Accounts.Where(x => x.ParseCode == 0))
+            {
+                account.ParseCode = int.Parse(GetValidNumber(account.Code));
+            }
+
+            foreach (var account in context.Accounts.Where(x => x.Name.Contains("Payable") || x.Name.Contains("Receivable")))
+            {
+                account.IsPayableReceivable = true;
+            }
+
+            int? employeeid = null;
+            Employee e = context.Employees.Where(x => !x.IsDeleted).FirstOrDefault();
+            if (e != null) { employeeid = e.Id; }
+            else
+            {
+                context.Employees.Add(new Employee() { Name = "Dummy Marketing", CreatedAt = DateTime.Now });
+                context.SaveChanges();
+                e = context.Employees.FirstOrDefault();
+                employeeid = e.Id;
+            }
+            foreach (var x in context.SalesOrders.Where(x => x.EmployeeId == null))
+            {
+                x.EmployeeId = employeeid;
+            }
+
+            int? contactgroupid = null;
+            ContactGroup cg = context.ContactGroups.Where(x => !x.IsDeleted).FirstOrDefault();
+            if (cg != null) { contactgroupid = cg.Id; }
+            else
+            {
+                context.ContactGroups.AddOrUpdate(new ContactGroup() { Name = "Dummy Contact Group", CreatedAt = DateTime.Now });
+                context.SaveChanges();
+                cg = context.ContactGroups.FirstOrDefault();
+                contactgroupid = cg.Id;
+            }
+            foreach (var x in context.Contacts.Where(x => x.ContactGroupId == null))
+            {
+                x.ContactGroupId = contactgroupid;
+            }
+
+            foreach(var x in context.UoMs.Where(x => x.Size == null))
+            {
+                x.Size = 1;
             }
 
             //if (context.Currencys.FirstOrDefault() == null)

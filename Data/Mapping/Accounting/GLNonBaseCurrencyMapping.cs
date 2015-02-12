@@ -15,7 +15,7 @@ namespace Data.Mapping
             HasRequired(cba => cba.GeneralLedgerJournal)
              .WithMany()
              .HasForeignKey(cba => cba.GeneralLedgerJournalId)
-             .WillCascadeOnDelete(false);
+             .WillCascadeOnDelete(true);
             Ignore(glj => glj.Errors);
         }
     }

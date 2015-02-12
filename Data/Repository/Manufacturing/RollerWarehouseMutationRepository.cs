@@ -75,7 +75,6 @@ namespace Data.Repository
         {
             rollerWarehouseMutation.Code = SetObjectCode();
             rollerWarehouseMutation.IsConfirmed = false;
-            rollerWarehouseMutation.IsCompleted = false;
             rollerWarehouseMutation.IsDeleted = false;
             rollerWarehouseMutation.CreatedAt = DateTime.Now;
             return Create(rollerWarehouseMutation);
@@ -107,14 +106,6 @@ namespace Data.Repository
         {
             rollerWarehouseMutation.IsConfirmed = false;
             rollerWarehouseMutation.ConfirmationDate = null;
-            Update(rollerWarehouseMutation);
-            return rollerWarehouseMutation;
-        }
-
-        public RollerWarehouseMutation CompleteObject(RollerWarehouseMutation rollerWarehouseMutation)
-        {
-            rollerWarehouseMutation.IsCompleted = true;
-            rollerWarehouseMutation.UpdatedAt = DateTime.Now;
             Update(rollerWarehouseMutation);
             return rollerWarehouseMutation;
         }

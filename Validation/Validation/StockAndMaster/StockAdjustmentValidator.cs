@@ -66,7 +66,7 @@ namespace Validation.Validation
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
             foreach (var stockAdjustmentDetail in details)
             {
-                int stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
+                decimal stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
                 //decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);

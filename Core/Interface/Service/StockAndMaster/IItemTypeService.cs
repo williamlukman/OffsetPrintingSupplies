@@ -14,10 +14,11 @@ namespace Core.Interface.Service
         IList<ItemType> GetAll();
         ItemType GetObjectById(int Id);
         ItemType GetObjectByName(string Name);
-        ItemType CreateObject(ItemType itemType);
-        ItemType CreateObject(string Name, string Description);
-        ItemType CreateObject(string Name, string Description, bool IsLegacy);
-        ItemType UpdateObject(ItemType itemType);
+        ItemType CreateObject(ItemType itemType, IAccountService _accountService);
+        ItemType CreateObject(string Name, string Description, IAccountService _accountService);
+        ItemType CreateObject(string Name, string Description, bool IsLegacy, IAccountService _accountService);
+        ItemType CreateObject(string Name, string Description, bool IsLegacy, Account account, IAccountService _accountService);
+        ItemType UpdateObject(ItemType itemType, IAccountService _accountService);
         ItemType SoftDeleteObject(ItemType itemType, IItemService _itemService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(ItemType itemType);

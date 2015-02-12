@@ -25,6 +25,7 @@ namespace WebView.Controllers
         private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private IReceivableService _receivableService;
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
@@ -33,6 +34,7 @@ namespace WebView.Controllers
         public ICurrencyService _currencyService;
         public IExchangeRateService _exchangeRateService;
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
+        private IContactService _contactService;
 
         public SalesInvoiceController()
         {
@@ -45,6 +47,7 @@ namespace WebView.Controllers
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
@@ -53,6 +56,7 @@ namespace WebView.Controllers
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
         public ActionResult Index()
@@ -69,13 +73,15 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesInvoiceService.GetQueryable().Where(x => !x.IsDeleted);
+            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Include("SalesOrder").Include("Contact")
+                                        .Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.DeliveryOrder.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.DeliveryOrderId,
                              DeliveryOrderCode = model.DeliveryOrder.Code,
@@ -83,7 +89,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.Discount,
                              model.Tax,
-                             currency = model.Currency.Name,
+                             Currency = model.Currency.Name,
                              model.ExchangeRateAmount,
                              model.InvoiceDate,
                              model.DueDate,
@@ -125,13 +131,14 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.DeliveryOrderId,
                             model.DeliveryOrderCode,
                             model.Description,
                             model.Discount,
                             model.Tax,
-                            model.currency,
+                            model.Currency,
                             model.ExchangeRateAmount,
                             model.InvoiceDate,
                             model.DueDate,
@@ -430,10 +437,10 @@ namespace WebView.Controllers
             //try
             //{
             var data = _salesInvoiceService.GetObjectById(model.Id);
-            model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
+            model = _salesInvoiceService.ConfirmObject(data,  model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
                     _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService,
                     _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, 
-                    _itemService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
+                    _itemService, _itemTypeService, _contactService, _exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             //}
             //catch (Exception ex)
             //{
@@ -455,7 +462,8 @@ namespace WebView.Controllers
 
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
-                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService,
+                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _salesOrderService, _salesOrderDetailService, _contactService, 
+                        _itemService, _itemTypeService, _rollerBuilderService, _serviceCostService, _accountService,
                         _generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)

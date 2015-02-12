@@ -35,11 +35,11 @@
         datatype: "json",
         colNames: ['ID', 'Base Sku', 'Name', 'Description', 'Machine', 'Type',
                     'Used Sku', 'QTY', 'UoM',
-                    'New Sku', 'QTY', 'UoM', 'Created At', 'Updated At'],
+                    'New Sku', 'QTY', 'UoM', 'CD', 'TL', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'basesku', index: 'basesku', width: 60 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 300 },
                   { name: 'description', index: 'description', width: 70 },
                   { name: 'machine', index: 'machine', width: 100 },
                   { name: 'corebuildertypecase', index: 'corebuildertypecase', width: 60 },
@@ -49,8 +49,10 @@
                   { name: 'skunewcore', index: 'skunewcore', width: 75 },
                   { name: 'newcorequantity', index: 'newcorequantity', width: 30, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'cd', index: 'cd', width: 30 },
+                  { name: 'tl', index: 'tl', width: 30 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -68,8 +70,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -85,6 +87,27 @@
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
+        $.ajax({
+            dataType: "json",
+            url: base_url + "MstItemType/GetInfoByName?itemType=Core",
+            success: function (result) {
+                if (result.Id == null) {
+                    $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                }
+                else {
+                    if (JSON.stringify(result.Errors) != '{}') {
+                        var error = '';
+                        for (var key in result.Errors) {
+                            error = error + "<br>" + key + " " + result.Errors[key];
+                        }
+                        $.messager.alert('Warning', error, 'warning');
+                    }
+                    else {
+                        $('#BaseSku').val(result.SKU);
+                    }
+                }
+            }
+        });
     });
 
     $('#btn_edit').click(function () {
@@ -119,6 +142,8 @@
                             $('#Description').val(result.Description);
                             $('#MachineId').val(result.MachineId);
                             $('#Machine').val(result.Machine);
+                            $('#CD').numberbox('setValue', result.CD);
+                            $('#TL').numberbox('setValue', result.TL);
                             $('#UsedCoreQuantity').numberbox('setValue', (result.UsedCoreQuantity));
                             $('#NewCoreQuantity').numberbox('setValue', (result.NewCoreQuantity));
                             document.getElementById("CoreBuilderTypeCase").value = result.CoreBuilderTypeCase;
@@ -214,7 +239,7 @@
                 Id: id, BaseSku: $("#BaseSku").val(), SkuUsedCore: $("#BaseSku").val() + "U",
                 SkuNewCore: $("#BaseSku").val() + "N", UoMId: $("#UoMId").val(), Name: $("#Name").val(),
                 MachineId: $("MachineId").val(), Description: $("#Description").val(), MachineId: $("#MachineId").val(),
-                CoreBuilderTypeCase: corebuildertypecase
+                CoreBuilderTypeCase: corebuildertypecase, CD: $("#CD").numberbox('getValue'), TL: $("#TL").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -288,8 +313,8 @@
         width: $("#lookup_div_uom").width() - 10,
         height: $("#lookup_div_uom").height() - 110,
     });
-    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_uom').click(function () {
@@ -345,8 +370,8 @@
         width: $("#lookup_div_machine").width() - 10,
         height: $("#lookup_div_machine").height() - 110,
     });
-    $("#lookup_table_machine").jqGrid('navGrid', '#lookup_toolbar_machine', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_machine").jqGrid('navGrid', '#lookup_toolbar_machine', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_machine').click(function () {

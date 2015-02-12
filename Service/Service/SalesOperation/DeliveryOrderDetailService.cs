@@ -137,8 +137,8 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
-                }
+                    _stockMutationService.GetStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                } 
                 else
                 {
                     CustomerItem customerItem = _customerItemService.FindOrCreateObject(deliveryOrder.SalesOrder.ContactId, warehouseItem.Id);
@@ -147,16 +147,15 @@ namespace Service.Service
                     {
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, false, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutationForDeliveryOrder(deliveryOrderDetail, customerItem);
                 }
                 deliveryOrderDetail.COGS = 0;
-                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
                 _salesOrderDetailService.UnsetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity, _salesOrderService);
+                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
             }
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity)
+        public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity)
         {
             deliveryOrderDetail.PendingInvoicedQuantity -= Quantity;
             if (deliveryOrderDetail.PendingInvoicedQuantity == 0) { deliveryOrderDetail.IsAllInvoiced = true; }
@@ -164,7 +163,7 @@ namespace Service.Service
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService)
+        public DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity, IDeliveryOrderService _deliveryOrderService)
         {
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
             _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);

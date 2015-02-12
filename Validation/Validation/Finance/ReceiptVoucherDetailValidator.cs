@@ -103,6 +103,15 @@ namespace Validation.Validation
             return receiptVoucherDetail;
         }
 
+        public ReceiptVoucherDetail VHasValidPPH23(ReceiptVoucherDetail receiptVoucherDetail)
+        {
+            if (receiptVoucherDetail.PPH23 < 0)
+            {
+                receiptVoucherDetail.Errors.Add("PPH23", "Tidak boleh negatif");
+            }
+            return receiptVoucherDetail;
+        }
+
         public ReceiptVoucherDetail VDetailsAmountLessOrEqualReceiptVoucherTotal(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
                                                                                  IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
@@ -139,6 +148,7 @@ namespace Validation.Validation
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VUniqueReceivableId(receiptVoucherDetail, _receiptVoucherDetailService, _receivableService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
+            VHasValidPPH23(receiptVoucherDetail);
             return receiptVoucherDetail;
         }
 

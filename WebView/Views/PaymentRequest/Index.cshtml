@@ -18,10 +18,10 @@
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
+        <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
-        <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
     <div id="table_div">
@@ -54,7 +54,15 @@
                              <label>Code</label>
                             </td>
                             <td  colspan="3">
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                               <input id="Code" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                             <label>No Bukti</label>
+                            </td>
+                            <td colspan="3" >
+                               <input id="NoBukti" name="NoBukti" type="text" size="10"/>
                             </td>
                         </tr>
                          <tr>
@@ -103,7 +111,7 @@
                              <td >
                                 <label>Amount</label></td>
                              <td colspan="3">
-                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled="disabled"/>
                                <span id="Currency"></span>
                              </td>     
                          </tr>
@@ -158,7 +166,7 @@
                         Amount
                     </td>
                     <td>
-                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
                     </td>
                   </tr>
               </table>
@@ -230,7 +238,7 @@
     <!-- END Look Up account -->
 
      <!-- Look Up accountPayable -->
-    <div id="lookup_div_accountPayable" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_accountPayable" class="easyui-dialog" title="List Payable" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_accountPayable" class="grid_toolbar">

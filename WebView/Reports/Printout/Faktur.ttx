@@ -1,0 +1,34 @@
+FakturNo	String	30	
+CompanyName	String	100	
+CompanyAddress	String	255	
+CompanyNPWP	String	30	
+CustomerName	String	100	
+CustomerAddress	String	255	
+CustomerNPWP	String	30	
+NPPKP	String	30	
+Currency	String	3	
+No	Number		
+Desc	String	75	
+USD	Currency		
+IDR	Currency		
+JualUSD	Currency		
+JualIDR	Currency		
+DiscUSD	Currency		
+DiscIDR	Currency		
+DPUSD	Currency		
+DPIDR	Currency		
+TaxUSD	Currency		
+TaxIDR	Currency		
+PPnUSD	Currency		
+PPnIDR	Currency		
+Description	String	255	
+Kurs	Currency	
+Kurs2	Currency	
+EntryDate	String	50
+Approved	String	50	
+MBL	String	50	
+HBL	String	50	
+TypePajak	Number	
+KMKNo	String	50	
+KMKTgl	String	50
+CityName	String	50

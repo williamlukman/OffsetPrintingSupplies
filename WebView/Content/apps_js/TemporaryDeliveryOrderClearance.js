@@ -67,7 +67,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'clearancedate', index: 'clearancedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -103,9 +103,9 @@
 
 		          rowIsWaste = $(this).getRowData(cl).iswaste;
 		          if (rowIsWaste == 'true') {
-		              rowIsWaste = "Waste";
+		              rowIsWaste = "Rejected";
 		          } else {
-		              rowIsWaste = "Return";
+		              rowIsWaste = "Approved";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { iswaste: rowIsWaste });
 		      }
@@ -194,12 +194,12 @@
                             $('#ClearanceType').attr('disabled', true);
                             $('#btnPreviousOrder').attr('disabled', true);
                             $('#tabledetail_div').show();
+                            $('#Price').numberbox('setValue', 0);
                             if (result.IsWaste) {
-                                $('#Price').numberbox('setValue', 0);
-                                $('#Price').attr('disabled', true);
+                                $('#Price').removeAttr('disabled');
                             }
                             else {
-                                $('#Price').removeAttr('disabled');
+                                $('#Price').attr('disabled', true);
                             }
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -308,6 +308,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "TemporaryDeliveryOrderClearance/Confirm",
             type: "POST",
@@ -316,6 +317,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -521,13 +523,12 @@
                             $('#Quantity').numberbox('setValue', result.Quantity);
                             $('#WasteQuantity').numberbox('setValue', result.WasteQuantity);
                             $('#RestockQuantity').numberbox('setValue', result.RestockQuantity);
+                            $('#Price').numberbox('setValue', result.SellingPrice);
                             if (result.IsWaste) {
-                                $('#Price').attr('disabled', true);
-                                $('#Price').numberbox('setValue', 0);
+                                $('#Price').removeAttr('disabled');
                             }
                             else {
-                                $('#Price').removeAttr('disabled');
-                                $('#Price').numberbox('setValue', result.SellingPrice);
+                                $('#Price').attr('disabled', true);
                             }
                             $('#PreviousOrderDetailId').val(result.TemporaryDeliveryOrderDetailId);
                             $('#Quantity').removeAttr('disabled');
@@ -665,11 +666,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
                     'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
                   { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
@@ -681,7 +683,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isreconciled', index: 'isreconciled', width: 60 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#lookup_pager_previousorder'),
@@ -704,7 +706,10 @@
 		              rowOrderType = "Trial";
 		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
-		          } else {
+		          } else if (rowOrderType == '2') {
+		              rowOrderType = "Consignment";
+		          }
+                  else {
 		              rowOrderType = "Part Delivery";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });

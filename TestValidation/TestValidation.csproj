@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecRepacking.cs" />
+    <Compile Include="DataBuilder.cs" />
     <Compile Include="SpecVirtualOrder.cs" />
     <Compile Include="SpecBlendingWorkOrder.cs" />
     <Compile Include="SpecAccounting.cs" />
@@ -65,7 +67,6 @@
     <Compile Include="SpecPurchaseInvoice.cs" />
     <Compile Include="SpecPurchaseOrder.cs" />
     <Compile Include="SpecPurchaseReceival.cs" />
-    <Compile Include="DataBuilder.cs" />
     <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecRecoveryOrder.cs" />
