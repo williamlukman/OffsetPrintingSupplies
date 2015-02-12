@@ -13,6 +13,8 @@ using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.DomainModel;
 using Core.Constants;
+using Data.Context;
+using System.Data.Objects;
 
 namespace WebView.Controllers
 {
@@ -77,6 +79,81 @@ namespace WebView.Controllers
 
             return View();
         }
+         
+        public ActionResult TranscationList()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        } 
+
+        public ActionResult ReportTranscationList(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.Date.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.GeneralLedgerJournals.Include(x => x.Account)
+                                                    .Where(x => !x.IsDeleted && (
+                                                            (x.TransactionDate >= startDate && x.TransactionDate < endDay)
+                                                        )).OrderBy(x =>x.Id);
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new 
+                {
+                    TransactionDate = EntityFunctions.TruncateTime(m.TransactionDate).Value,
+                    SourceDocument =m.SourceDocument,
+                    SourceDocumentId =m.SourceDocumentId,
+                    AccountCode = m.Account.Code,
+                   
+                }).
+                Select(g => new
+                {
+                    TransactionDate = g.Key.TransactionDate,
+                    SourceDocument = g.Key.SourceDocument,
+                    SourceDocumentId = g.Key.SourceDocumentId,
+                    DocumentId = g.Key.SourceDocumentId,
+                    AccountName = g.FirstOrDefault().Account.Name,
+                    AccountCode = g.Key.AccountCode,
+                    Debet = db.GeneralLedgerJournals.Where(x=>x.IsDeleted == false && 
+                                                              x.TransactionDate == g.Key.TransactionDate && 
+                                                              x.SourceDocument == g.Key.SourceDocument &&
+                                                              x.SourceDocumentId == g.Key.SourceDocumentId &&
+                                                              x.Account.Code == g.Key.AccountCode).
+                                                              Sum(x=>((Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0)
+                }).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/DaftarTransaksi.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                //rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate.Date);
+                rd.SetParameterValue("endDate", endDate.Date);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+
 
         // Revenue - Expense - TaxExpense - Divident = NetEarnings
         public ActionResult ReportIncomeStatement(int period, int yearPeriod)
