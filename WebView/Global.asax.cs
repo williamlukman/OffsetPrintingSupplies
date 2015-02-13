@@ -166,12 +166,15 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Transaction);
 
-            //_userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Report);
-            //_userMenuService.CreateObject(Constant.MenuName.Sales, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Stock, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Purchases, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Sales, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Manufacturing, Constant.MenuGroupName.Report);
             //_userMenuService.CreateObject(Constant.MenuName.TopSales, Constant.MenuGroupName.Report);
             //_userMenuService.CreateObject(Constant.MenuName.ProfitLoss, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Finance, Constant.MenuGroupName.Report);
 
             _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);
