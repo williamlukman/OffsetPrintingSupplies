@@ -7,6 +7,7 @@ using Data.Migrations;
 using System.Linq;
 using System.Text;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using Core.Constants;
 
 namespace Data.Context
 {
@@ -17,6 +18,129 @@ namespace Data.Context
            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
            this.Configuration.LazyLoadingEnabled = true; // automatically loads virtual when accessed
+        }
+
+        public string GetNoBukti(string table, int Id)
+        {
+            string idstr = Id.ToString();
+            string nobukti = idstr;
+            string tbl = table.ToUpper();
+            if (tbl == Constant.GeneralLedgerSource.BlendingWorkOrder.ToUpper())
+            {
+                var obj = BlendingWorkOrders.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.CashBankAdjustment.ToUpper())
+            {
+                var obj = CashBankAdjustments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.CashBankMutation.ToUpper())
+            {
+                var obj = CashBankMutations.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.CustomerStockAdjustment.ToUpper())
+            {
+                var obj = CustomerStockAdjustments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.DeliveryOrder.ToUpper())
+            {
+                var obj = DeliveryOrders.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.Memorial.ToUpper())
+            {
+                var obj = Memorials.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PaymentRequest.ToUpper())
+            {
+                var obj = PaymentRequests.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PaymentVoucher.ToUpper())
+            {
+                var obj = PaymentVouchers.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseAllowance.ToUpper())
+            {
+                var obj = PurchaseAllowances.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseDownPayment.ToUpper())
+            {
+                var obj = PurchaseDownPayments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseDownPaymentAllocation.ToUpper())
+            {
+                var obj = PurchaseDownPaymentAllocations.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseInvoice.ToUpper())
+            {
+                var obj = PurchaseInvoices.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseInvoiceMigration.ToUpper())
+            {
+                var obj = PurchaseInvoiceMigrations.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.PurchaseReceival.ToUpper())
+            {
+                var obj = PurchaseReceivals.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.ReceiptRequest.ToUpper())
+            {
+                var obj = ReceiptRequests.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.ReceiptVoucher.ToUpper())
+            {
+                var obj = ReceiptVouchers.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.Repacking.ToUpper())
+            {
+                var obj = Repackings.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.SalesAllowance.ToUpper())
+            {
+                var obj = SalesAllowances.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.SalesDownPayment.ToUpper())
+            {
+                var obj = SalesDownPayments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.SalesDownPaymentAllocation.ToUpper())
+            {
+                var obj = SalesDownPaymentAllocations.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.SalesInvoice.ToUpper())
+            {
+                var obj = SalesInvoices.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.SalesInvoiceMigration.ToUpper())
+            {
+                var obj = SalesInvoiceMigrations.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NomorSurat ?? idstr : idstr;
+            }
+            else if (tbl == Constant.GeneralLedgerSource.StockAdjustment.ToUpper())
+            {
+                var obj = StockAdjustments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+            }
+            return nobukti;
         }
 
         public void DeleteAllTables()
@@ -197,6 +321,7 @@ namespace Data.Context
         public DbSet<CashBankAdjustment> CashBankAdjustments { get; set; }
         public DbSet<CashBankMutation> CashBankMutations { get; set; }
         public DbSet<CashMutation> CashMutations { get; set; }
+        public DbSet<Closing> Closings { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Compound> Compounds { get; set; }
         public DbSet<Contact> Contacts { get; set; }

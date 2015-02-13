@@ -1,9 +1,8 @@
 TransactionDate		DateTime		
 SourceDocument	String	255	
-DocumentId	Number		
+NoBukti	String	255	
 AccountCode	String	255	
 AccountName	String	255	
-Debet	Currency		
-Credit	Currency		
-SourceDocumentId	Number		
-Status	Number
+Amount	Number				
+SourceDocumentId	Number	
+	

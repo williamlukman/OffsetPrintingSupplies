@@ -92,7 +92,10 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        //var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        //if (id) {
+        window.open(base_url + "FinanceReport/ReportKartuBukuBesar?AccountId=" + $('#AccountId').val() + '&startDate=' + $('#StartDate').datebox('getValue') + '&endDate=' + $('#EndDate').datebox('getValue'));
+        //}
     });
 
     $('#btn_search').click(function () {

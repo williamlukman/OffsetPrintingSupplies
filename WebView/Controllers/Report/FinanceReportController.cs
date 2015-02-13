@@ -100,32 +100,31 @@ namespace WebView.Controllers
                 var q = db.GeneralLedgerJournals.Include(x => x.Account)
                                                     .Where(x => !x.IsDeleted && (
                                                             (x.TransactionDate >= startDate && x.TransactionDate < endDay)
-                                                        )).OrderBy(x =>x.Id);
+                                                        )).ToList();
                 string user = AuthenticationModel.GetUserName();
 
                 var query = q.GroupBy(m => new 
                 {
-                    TransactionDate = EntityFunctions.TruncateTime(m.TransactionDate).Value,
-                    SourceDocument =m.SourceDocument,
-                    SourceDocumentId =m.SourceDocumentId,
+                    TransactionDate = m.TransactionDate.Date, //EntityFunctions.TruncateTime(m.TransactionDate).Value,
+                    SourceDocument = m.SourceDocument,
+                    SourceDocumentId = m.SourceDocumentId,
                     AccountCode = m.Account.Code,
-                   
                 }).
                 Select(g => new
                 {
                     TransactionDate = g.Key.TransactionDate,
                     SourceDocument = g.Key.SourceDocument,
                     SourceDocumentId = g.Key.SourceDocumentId,
-                    DocumentId = g.Key.SourceDocumentId,
                     AccountName = g.FirstOrDefault().Account.Name,
                     AccountCode = g.Key.AccountCode,
-                    Debet = db.GeneralLedgerJournals.Where(x=>x.IsDeleted == false && 
+                    NoBukti = db.GetNoBukti(g.Key.SourceDocument, g.Key.SourceDocumentId),
+                    Amount = db.GeneralLedgerJournals.Where(x=>x.IsDeleted == false && 
                                                               x.TransactionDate == g.Key.TransactionDate && 
                                                               x.SourceDocument == g.Key.SourceDocument &&
                                                               x.SourceDocumentId == g.Key.SourceDocumentId &&
                                                               x.Account.Code == g.Key.AccountCode).
-                                                              Sum(x=>((Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0)
-                }).ToList();
+                                                              Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0
+                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ToList();
 
                 if (!query.Any())
                 {
@@ -154,6 +153,86 @@ namespace WebView.Controllers
             }
         }
 
+        public ActionResult KartuBukuBesar()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportKartuBukuBesar(DateTime startDate, DateTime endDate, int AccountId = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.Date.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.GeneralLedgerJournals.Include(x => x.Account)
+                                                    .Where(x => !x.IsDeleted && (
+                                                            (x.AccountId == AccountId && x.TransactionDate >= startDate && x.TransactionDate < endDay)
+                                                        )).ToList();
+                string user = AuthenticationModel.GetUserName();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.GroupBy(m => new
+                {
+                    TransactionDate = m.TransactionDate.Date, //EntityFunctions.TruncateTime(m.TransactionDate).Value,
+                    SourceDocument = m.SourceDocument,
+                    SourceDocumentId = m.SourceDocumentId,
+                    //AccountCode = m.Account.Code,
+                }).
+                Select(g => new
+                {
+                    TransactionDate = g.Key.TransactionDate,
+                    SourceDocument = g.Key.SourceDocument,
+                    SourceDocumentId = g.Key.SourceDocumentId,
+                    //AccountName = g.FirstOrDefault().Account.Name,
+                    //AccountCode = g.Key.AccountCode,
+                    NoBukti = db.GetNoBukti(g.Key.SourceDocument, g.Key.SourceDocumentId),
+                    Amount = db.GeneralLedgerJournals.Where(x => x.IsDeleted == false &&
+                                                              x.TransactionDate == g.Key.TransactionDate &&
+                                                              x.SourceDocument == g.Key.SourceDocument &&
+                                                              x.SourceDocumentId == g.Key.SourceDocumentId &&
+                                                              x.AccountId == AccountId).
+                                                              Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0
+                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/KartuBukuBesar.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                DateTime startDay = startDate.Date;
+                decimal SaldoAwal = db.GeneralLedgerJournals.Where(x => !x.IsDeleted && x.AccountId == AccountId && x.TransactionDate < startDate).Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0;
+                rd.SetParameterValue("CompanyName", company.Name);
+                //rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate.Date);
+                rd.SetParameterValue("endDate", endDate.Date);
+                rd.SetParameterValue("Code", obj.Account.Code);
+                rd.SetParameterValue("Name", obj.Account.Name);
+                rd.SetParameterValue("SaldoAwal", SaldoAwal);
+                rd.SetParameterValue("SaldoAkhir", SaldoAwal + query.Sum(x => x.Amount));
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
 
         // Revenue - Expense - TaxExpense - Divident = NetEarnings
         public ActionResult ReportIncomeStatement(int period, int yearPeriod)

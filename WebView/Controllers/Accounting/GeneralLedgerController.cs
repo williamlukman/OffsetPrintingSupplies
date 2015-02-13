@@ -12,6 +12,7 @@ using System.Linq.Dynamic;
 using System.Data.Entity;
 using System.Data.Objects;
 using Core.Constants;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -106,56 +107,58 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
-            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
-
-            var query = (from model in q
-                         select new
-                         {
-                            model.Id,
-                            model.TransactionDate,
-                            model.Status,
-                            AccountCode = model.Account.Code,
-                            Account = model.Account.Name,
-                            DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
-                            CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
-                            model.SourceDocument,
-                            model.SourceDocumentId,
-                            NomorSurat = model.SourceDocumentId,                                                                                        
-                            model.AccountId,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
-//             (model.SourceDocument == Constant.GeneralLedgerSource.BlanketOrderDetail) ? _blanketOrderDetailService.get .GetObjectById(model.SourceDocumentId).Code :
-//                                         (model.SourceDocument == Constant.GeneralLedgerSource.StockAdjustment) ? _stockAdjustmentService.GetObjectById(model.SourceDocumentId).Code :
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.GeneralLedgerJournals.Where(x => !x.IsDeleted).Include(x => x.Account).ToList(); //_generalLedgerJournalService.GetQueryable().Include("Account").ToList();
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.TransactionDate,
+                                 model.Status,
+                                 AccountCode = model.Account.Code,
+                                 Account = model.Account.Name,
+                                 DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
+                                 CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                                 model.SourceDocument,
+                                 model.SourceDocumentId,
+                                 NomorSurat = db.GetNoBukti(model.SourceDocument, model.SourceDocumentId), //model.SourceDocumentId,                                                                                        
+                                 model.AccountId,
+                             }).AsQueryable().Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+                //             (model.SourceDocument == Constant.GeneralLedgerSource.BlanketOrderDetail) ? _blanketOrderDetailService.get .GetObjectById(model.SourceDocumentId).Code :
+                //                                         (model.SourceDocument == Constant.GeneralLedgerSource.StockAdjustment) ? _stockAdjustmentService.GetObjectById(model.SourceDocumentId).Code :
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = model.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from model in list
+                        select new
+                        {
+                            id = model.Id,
+                            cell = new object[] {
                             model.Id,
                             model.TransactionDate,
                             model.Status,
@@ -168,8 +171,9 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.AccountId
                       }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime? startdate, DateTime? enddate, string filters = "")
@@ -185,54 +189,56 @@ namespace WebView.Controllers
                 filter = "(" + filter + ") AND TransactionDate >= @0 AND TransactionDate < @1";
             }
 
-            // Get Data
-            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.TransactionDate,
-                             model.Status,
-                             AccountCode = model.Account.Code,
-                             Account = model.Account.Name,
-                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
-                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
-                             model.SourceDocument,
-                             model.SourceDocumentId,
-                             NomorSurat = model.SourceDocumentId,
-                             model.AccountId,
-                         }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.GeneralLedgerJournals.Where(x => !x.IsDeleted).Include(x => x.Account).ToList(); //_generalLedgerJournalService.GetQueryable().Include("Account");
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.TransactionDate,
+                                 model.Status,
+                                 AccountCode = model.Account.Code,
+                                 Account = model.Account.Name,
+                                 DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
+                                 CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                                 model.SourceDocument,
+                                 model.SourceDocumentId,
+                                 NomorSurat = db.GetNoBukti(model.SourceDocument, model.SourceDocumentId), //model.SourceDocumentId,
+                                 model.AccountId,
+                             }).AsQueryable().Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = model.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from model in list
+                        select new
+                        {
+                            id = model.Id,
+                            cell = new object[] {
                             model.Id,
                             model.TransactionDate,
                             model.Status,
@@ -245,8 +251,9 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.AccountId
                          }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public dynamic GetInfoSaldo(int AccountId, DateTime StartDate, DateTime EndDate)
@@ -327,54 +334,56 @@ namespace WebView.Controllers
                 filter = "(" + filter + ") AND AccountId = @0 AND TransactionDate >= @1 AND TransactionDate < @2";
             }
 
-            // Get Data
-            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
-
-            var query = (from model in q
-                         select new
-                         {
-                             model.Id,
-                             model.TransactionDate,
-                             model.Status,
-                             AccountCode = model.Account.Code,
-                             Account = model.Account.Name,
-                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
-                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
-                             model.SourceDocument,
-                             model.SourceDocumentId,
-                             NomorSurat = model.SourceDocumentId,
-                             model.AccountId
-                         }).Where(filter, accountid.GetValueOrDefault(), startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
-
-            var list = query.AsEnumerable();
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
+            using (var db = new OffsetPrintingSuppliesEntities())
             {
-                if (!page.HasValue)
+                // Get Data
+                var q = db.GeneralLedgerJournals.Where(x => !x.IsDeleted).Include(x => x.Account).ToList(); //_generalLedgerJournalService.GetQueryable().Include("Account");
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Id,
+                                 model.TransactionDate,
+                                 model.Status,
+                                 AccountCode = model.Account.Code,
+                                 Account = model.Account.Name,
+                                 DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
+                                 CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                                 model.SourceDocument,
+                                 model.SourceDocumentId,
+                                 NomorSurat = db.GetNoBukti(model.SourceDocument, model.SourceDocumentId), //model.SourceDocumentId,
+                                 model.AccountId
+                             }).AsQueryable().Where(filter, accountid.GetValueOrDefault(), startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+
+                var list = query.AsEnumerable();
+
+                var pageIndex = Convert.ToInt32(page) - 1;
+                var pageSize = rows;
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+                // default last page
+                if (totalPages > 0)
                 {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-            
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
+                    if (!page.HasValue)
                     {
-                        id = model.Id,
-                        cell = new object[] {
+                        pageIndex = totalPages - 1;
+                        page = totalPages;
+                    }
+                }
+
+                list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+                return Json(new
+                {
+                    total = totalPages,
+                    page = page,
+                    records = totalRecords,
+                    rows = (
+                        from model in list
+                        select new
+                        {
+                            id = model.Id,
+                            cell = new object[] {
                             model.Id,
                             model.TransactionDate,
                             model.Status,
@@ -387,8 +396,9 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.AccountId
                          }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
+                        }).ToArray()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
