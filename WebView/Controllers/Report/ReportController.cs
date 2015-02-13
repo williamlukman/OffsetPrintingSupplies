@@ -2449,6 +2449,82 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region RecoveringWorkChart
+        public ActionResult RecoveringWorkChart()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutRecoveringWorkChart(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.RecoveryOrderDetails.Include(x => x.RecoveryOrder).Include(x => x.RollerBuilder).Include(x => x.CoreIdentificationDetail).Include(x => x.CompoundUnderLayer).Include(x => x.RecoveryAccessoryDetails)
+                                                              .Where(x => !x.IsDeleted && !x.RecoveryOrder.IsDeleted && x.Id == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    RollerNo = g.CoreIdentificationDetail.RollerNo ?? "",
+                    RD = g.RollerBuilder.RD,
+                    CD = g.RollerBuilder.CD,
+                    RL = g.RollerBuilder.RL,
+                    WL = g.RollerBuilder.WL,
+                    TL = g.RollerBuilder.TL,
+                    Press = g.RollerBuilder.Machine.Name,
+                    RollerType = g.RollerBuilder.RollerType.Name,
+                    CoreType = g.CoreIdentificationDetail.CoreBuilder.CoreBuilderTypeCase, //g.CoreTypeCase,
+                    CoreMaterial = "",
+                    DrawingNo = "",
+                    Compound = g.RollerBuilder.Compound.Name ?? "",
+                    Quantity = g.RecoveryOrder.RecoveryOrderDetails.Where(x => !x.IsDeleted && x.CoreIdentificationDetail.RollerNo == g.CoreIdentificationDetail.RollerNo && x.CoreIdentificationDetailId == g.CoreIdentificationDetailId && x.RollerBuilderId == g.RollerBuilderId && x.CoreTypeCase == g.CoreTypeCase).Count(),
+                    Acc = (g.RecoveryAccessoryDetails.Where(y => !y.IsDeleted).Count() > 0) ? "YES" : "NO",
+                    AsmReq = "",
+                    UnderLayer = g.CompoundUnderLayer != null ? g.CompoundUnderLayer.Name : "",
+                    TopCompound = "",
+                }).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/RecoveringWorkChart.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", DateTime.Today);
+                rd.SetParameterValue("OrderNo", obj.RecoveryOrder.Code);
+                rd.SetParameterValue("Customer", obj.CoreIdentificationDetail.CoreIdentification.Contact.Name);
+                rd.SetParameterValue("RollerIncomingDate", obj.CoreIdentificationDetail.CoreIdentification.IncomingRoll.GetValueOrDefault());
+                rd.SetParameterValue("CNIncomingDate", obj.RecoveryOrder.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("TotalQty", obj.RecoveryOrder.QuantityReceived);
+                rd.SetParameterValue("DeliveryDate", obj.RecoveryOrder.DueDate.GetValueOrDefault());
+                rd.SetParameterValue("Status", "");
+                rd.SetParameterValue("DissDate", obj.CoreIdentificationDetail.CoreIdentification.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("DissName", "");
+                rd.SetParameterValue("DissNo", obj.CoreIdentificationDetail.CoreIdentification.NomorDisassembly);
+                rd.SetParameterValue("WorkingTime", 0);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
         #region IdentifyBlanket
         public ActionResult IdentifyBlanket()
         {

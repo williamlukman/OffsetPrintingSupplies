@@ -1,0 +1,17 @@
+RollerNo	String	255	
+RD	Number		
+CD	Number		
+RL	Number		
+WL	Number		
+TL	Number		
+Press	String	255	
+RollerType	String	255	
+CoreType	String	255	
+CoreMaterial	String	255	
+DrawingNo	String	255	
+Compound	String	255	
+Quantity	Number	
+Acc	String	255	
+AsmReq	String	255
+Underlayer	String	255	
+TopCompound	String	255	
