@@ -76,19 +76,20 @@ namespace Core.Constants
             public static string PPH23 = "11070002";
 
             public static string Expense = "2";
+            public static string COGSExpense = "51"; // 51 code dari zengra ?
             public static string COGS = "21";
             public static string COS = "22";
             public static string OperationalExpense = "23";
             public static string ManufacturingExpense = "2301";
             public static string RecoveryExpense = "2301001";
             public static string ConversionExpense = "2301002";
-            public static string SellingGeneralAndAdministrationExpense = "2302";
+            public static string SellingGeneralAndAdministrationExpense = "62"; //"2302"; // 62 code dari zengra ?
             public static string CashBankAdjustmentExpense = "2302001";
             public static string Discount = "2302002";
             public static string SalesAllowance = "2302003";
             public static string StockAdjustmentExpense = "2302004";
             public static string SampleAndTrialExpense = "2302005";
-            public static string NonOperationalExpense = "24";
+            public static string NonOperationalExpense = "72"; //"24"; // 72 code dari zengra ?
 
             public static string DepreciationExpense = "2401";
             public static string Amortization = "2402";            

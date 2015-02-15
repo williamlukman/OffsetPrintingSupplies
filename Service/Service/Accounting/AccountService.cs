@@ -56,6 +56,11 @@ namespace Service.Service
             return _repository.Find(x => x.LegacyCode == LegacyCode);
         }
 
+        public Account GetObjectByCode(string Code)
+        {
+            return _repository.FindAll(x => x.Code == Code).FirstOrDefault();
+        }
+
         public Account GetObjectByIsLegacy(bool IsLegacy)
         {
             return _repository.GetObjectByIsLegacy(IsLegacy);
