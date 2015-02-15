@@ -449,7 +449,9 @@
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Transaction List</a></li>}
+                                                    {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Daftar Transaksi</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("NeracaSaldo", "FinanceReport")">Ringkasan Neraca Saldo</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Customer Sales Report</a>

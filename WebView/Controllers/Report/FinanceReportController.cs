@@ -234,6 +234,73 @@ namespace WebView.Controllers
             }
         }
 
+        public ActionResult NeracaSaldo()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportNeracaSaldo(DateTime Tgl)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime startDay = Tgl.Date;
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var acl = db.Accounts.Where(x => !x.IsDeleted && x.IsLeaf && x.Level == 5); //.OrderBy(x => x.Code);
+                var q = db.GeneralLedgerJournals.Include(x => x.Account)
+                                                    .Where(x => !x.IsDeleted && (
+                                                            (EntityFunctions.TruncateTime(x.TransactionDate) == startDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var obj = q.FirstOrDefault();
+
+                var query = acl.GroupJoin(q, outer => outer.Id, inner => inner.AccountId, (outer, inner) => new
+                {
+                    AccountId = outer.Id,
+                    AccountCode = outer.Code,
+                    AccountName = outer.Name,
+                    Amount = inner.Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0,
+                    SaldoAwal = db.GeneralLedgerJournals.Where(x => !x.IsDeleted && x.AccountId == outer.Id && EntityFunctions.TruncateTime(x.TransactionDate) < startDay).Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0,
+                }).Select(m => new {
+                    AccountId = m.AccountId,
+                    AccountCode = m.AccountCode,
+                    AccountName = m.AccountName,
+                    Amount = m.Amount,
+                    SaldoAwal = m.SaldoAwal,
+                    SaldoAkhir = m.SaldoAwal + m.Amount,
+                }).OrderBy(x => x.AccountCode).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/NeracaSaldo.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", Tgl);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+
         // Revenue - Expense - TaxExpense - Divident = NetEarnings
         public ActionResult ReportIncomeStatement(int period, int yearPeriod)
         {

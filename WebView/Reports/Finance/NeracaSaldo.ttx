@@ -1,0 +1,10 @@
+TransactionDate		DateTime		
+SourceDocument	String	255	
+NoBukti	String	255	
+AccountCode	String	255	
+AccountName	String	255	
+Amount	Number				
+SaldoAwal	Number
+SaldoAkhir	Number
+SourceDocumentId	Number	
+	

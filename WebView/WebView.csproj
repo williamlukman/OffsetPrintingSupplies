@@ -368,6 +368,7 @@
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
     <Content Include="Content\apps_js\ValidCombIncomeStatement.js" />
@@ -1309,7 +1310,6 @@
     <Content Include="Reports\Printout\RCN.ttx" />
     <Content Include="Reports\Printout\ReceiptVoucherBank.rpt" />
     <Content Include="Reports\Printout\ReceiptVoucherBank.ttx" />
-    <Content Include="Reports\Finance\DaftarTransaksil.rpt" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Reports\General\zentrum_logo.png" />
@@ -1527,6 +1527,7 @@
     <Content Include="Views\ValidCombIncomeStatement\Index.cshtml" />
     <Content Include="Views\Report\SerahTerima.cshtml" />
     <Content Include="Views\FinanceReport\TranscationList.cshtml" />
+    <Content Include="Views\FinanceReport\NeracaSaldo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
