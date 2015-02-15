@@ -53,11 +53,15 @@ namespace WebView.Controllers
             public string DCNote { get; set; }
             public string AccountName { get; set; }
             public string AccountGroup { get; set; }
+            public string AccountParent { get; set; }
             public string AccountTitle { get; set; }
             public decimal CurrentAmount { get; set; }
             public decimal PrevAmount { get; set; }
             public string ASSET { get; set; }
             public string AccountCode { get; set; }
+            public string AccountParentCode { get; set; }
+            public int AccountLevel { get; set; }
+            public bool IsLeaf { get; set; }
         }
 
         public FinanceReportController()
@@ -310,7 +314,7 @@ namespace WebView.Controllers
             if (closing == null) { return Content(Constant.ControllerOutput.ErrorPageHasNoClosingDate); }
 
             ValidCombIncomeStatement Revenue = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
-            ValidCombIncomeStatement COGSExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGSExpense).Id, closing.Id);
+            ValidCombIncomeStatement COGSExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id); // Constant.AccountLegacyCode.COGSExpense
             ValidCombIncomeStatement SellingGeneralAndAdministrationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SellingGeneralAndAdministrationExpense).Id, closing.Id);
             ValidCombIncomeStatement NonOperationalExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.NonOperationalExpense).Id, closing.Id);
             ValidCombIncomeStatement DepreciationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.DepreciationExpense).Id, closing.Id);
@@ -406,5 +410,78 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+
+        public ActionResult BalanceSheetDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportBalanceSheetDetail(Nullable<int> closingId)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            Closing closing = _closingService.GetObjectById(closingId.GetValueOrDefault());
+
+            if (closing == null) return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+
+            var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
+                                                    .Where(x => x.ClosingId == closing.Id & x.Account.Level >= 2
+                                                    && x.Account.Group != (int)Constant.AccountGroup.Expense && x.Account.Group != (int)Constant.AccountGroup.Revenue
+                                                    );
+
+            //List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
+            var query = (from obj in balanceValidComb
+                         select new ModelBalanceSheet()
+                         {
+                             CompanyName = company.Name,
+                             StartDate = closing.BeginningPeriod.Date,
+                             EndDate = closing.EndDatePeriod.Date,
+                             DCNote = (obj.Account.Group == (int)Constant.AccountGroup.Asset ||
+                                      obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "D" : "C",
+                             AccountName = obj.Account.Code.Substring(0, 1),
+                             AccountGroup = (obj.Account.Group == (int)Constant.AccountGroup.Asset) ? "Asset" :
+                                            (obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "Expense" :
+                                            (obj.Account.Group == (int)Constant.AccountGroup.Liability) ? "Liability" :
+                                            (obj.Account.Group == (int)Constant.AccountGroup.Equity) ? "Equity" :
+                                            (obj.Account.Group == (int)Constant.AccountGroup.Revenue) ? "Revenue" : "",
+                             AccountTitle = obj.Account.Name,
+                             AccountParent = obj.Account.Parent.Name,
+                             CurrentAmount = obj.Amount,
+                             PrevAmount = obj.Amount,
+                             ASSET = "nonASSET", // untuk Fix Asset ? "ASSET" : "nonASSET",
+                             AccountCode = obj.Account.Code,
+                             AccountParentCode = obj.Account.Parent.Code,
+                             AccountLevel = obj.Account.Level,
+                             IsLeaf = obj.Account.IsLeaf,
+                         }).OrderBy(x => x.AccountCode);
+
+            var query1 = query.Where(x => x.AccountGroup == "Asset" || x.AccountGroup == "Expense").ToList();
+            var query2 = query.Where(x => x.AccountGroup != "Asset" && x.AccountGroup != "Expense").ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/Finance/BalanceSheetDetail.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(new List<object>());
+
+            // Setting subreport data source
+            rd.Subreports["SubBalanceSheetDetail1.rpt"].SetDataSource(query1);
+            rd.Subreports["SubBalanceSheetDetail2.rpt"].SetDataSource(query2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("StartDate", closing.BeginningPeriod.Date);
+            rd.SetParameterValue("EndDate", closing.EndDatePeriod.Date);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
     }
 }

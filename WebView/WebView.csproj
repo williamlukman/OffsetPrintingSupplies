@@ -368,6 +368,7 @@
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
@@ -1528,6 +1529,7 @@
     <Content Include="Views\Report\SerahTerima.cshtml" />
     <Content Include="Views\FinanceReport\TranscationList.cshtml" />
     <Content Include="Views\FinanceReport\NeracaSaldo.cshtml" />
+    <Content Include="Views\FinanceReport\BalanceSheetDetail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
