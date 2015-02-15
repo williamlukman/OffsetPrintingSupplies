@@ -62,9 +62,9 @@
 		          $(this).jqGrid('setRowData', ids[i], { isyear: rowIsBank });
 		          rowIsBank = $(this).getRowData(cl).isclosed;
 		          if (rowIsBank == 'true') {
-		              rowIsBank = "Close";
+		              rowIsBank = "Closed";
 		          } else {
-		              rowIsBank = "Open";
+		              rowIsBank = "Opened";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isclosed: rowIsBank });
 		      }
@@ -87,6 +87,8 @@
         ClearData();
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
+        $('#BeginningPeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#EndDatePeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#BaginningPeriodDiv').show();
         $('#BaginningPeriodDiv2').hide();
         $('#EndDatePeriodDiv').show();

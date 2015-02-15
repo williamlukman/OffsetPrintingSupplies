@@ -117,7 +117,7 @@ namespace Core.Constants
             public static string Equity = "4";
             public static string OwnersEquity = "41";
             public static string EquityAdjustment = "4101";
-            public static string NetEarning = "4102";
+            public static string NetEarning = "4102"; // 31040001 code dari zengra? 
             public static string ExchangeGain = "42";
 
             public static string Revenue = "5";
