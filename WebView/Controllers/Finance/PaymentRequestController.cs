@@ -345,7 +345,7 @@ namespace WebView.Controllers
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.Description = model.Description;
-                data.Amount = model.Amount;
+                //data.Amount = model.Amount;
                 data.RequestedDate = model.RequestedDate;
                 data.DueDate = model.DueDate;
                 data.NoBukti = model.NoBukti;

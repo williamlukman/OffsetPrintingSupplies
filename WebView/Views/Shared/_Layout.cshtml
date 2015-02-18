@@ -478,8 +478,7 @@
                                                     {<li><a href="@Url.Action("SortedCustomerSalesLast6Year", "Report")">Sorted Customer Sales Last 6 Years</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SalesOrderDailyByDate", "Report")">Sales Order Daily</a></li>}
-                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
+                                                    
                                                     
                                                 </ul>
                                             </li>
@@ -491,7 +490,6 @@
                                                     {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByValue", "Report")">Sales Personnel Comparison Yearly by Value</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByQty", "Report")">Sales Personnel Comparison Yearly by Quantity</a></li>}
-
                                                 </ul>
                                             </li>
                                             <li><a href="#">Item Sales Report</a>
@@ -504,6 +502,8 @@
                                                     {<li><a href="@Url.Action("VulcanBlanketSales", "Report")">Vulcan Blanket Sales</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("DailyByQuantity", "Report")">Daily Report by Quantity</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SerahTerima", "Report")">Form Serah Terima</a></li>}
                                                 </ul>

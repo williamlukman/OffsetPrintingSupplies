@@ -1882,6 +1882,7 @@ namespace Repair
                                     var receivable = db.Receivables.Where(x => !x.IsDeleted && x.ReceivableSource == Constant.ReceivableSource.SalesInvoice && x.ReceivableSourceId == obj.Id).OrderByDescending(x => x.Id).FirstOrDefault();
                                     var id = receivable.Id;
                                     var tbl = receivable.GetType().Name.Split('_')[0];
+                                    // TODO: Must not have ReceiptVoucherDetail referencing this Receivable
                                     //db.Receivables.Remove(receivable);
                                     //db.SaveChanges();
                                     _receivableService.DeleteObject(receivable.Id);

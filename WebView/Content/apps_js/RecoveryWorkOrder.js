@@ -121,7 +121,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
+                url: base_url + "RecoveryWorkOrder/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');

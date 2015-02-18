@@ -61,7 +61,7 @@
                   { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100, hidden: true },
-                  { name: 'deliveryorder', index: 'deliveryorder', width: 70 },
+                  { name: 'deliveryordercode', index: 'deliveryordercode', width: 70 },
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'tax', index: 'tax', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -103,7 +103,7 @@
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 

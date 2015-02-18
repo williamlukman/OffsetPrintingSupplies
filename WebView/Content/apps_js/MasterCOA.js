@@ -27,7 +27,7 @@
         colNames: ['Id', 'Account Code', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy','CashBank', 'Legacy Code', 'Leaf'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true},
-				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col", hidden: true },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
                   { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'group', index: 'group', width: 90 },

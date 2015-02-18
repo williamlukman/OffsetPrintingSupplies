@@ -109,7 +109,7 @@
         colNames: ['Id', 'Account Code', 'Account Code', 'Account Name'],
         colModel: [
                   { name: 'Id', index: 'Id', width: 40, hidden: true },
-				  { name: 'Code', index: 'Code', width: 80, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80 },
                   { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
 				  { name: 'Name', index: 'Name', width: 150 },
         ],

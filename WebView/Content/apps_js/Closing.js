@@ -382,6 +382,7 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
+        $("#delete_confirm_div").dialog('close');
         ClickableButton($('#delete_confirm_btn_submit'), false);
         $.ajax({
             url: base_url + "Closing/Delete",
@@ -405,7 +406,7 @@
                 }
                 else {
                     ReloadGrid();
-                    $("#delete_confirm_div").dialog('close');
+                    //$("#delete_confirm_div").dialog('close');
                 }
             }
         });

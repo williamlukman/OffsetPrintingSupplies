@@ -31,18 +31,20 @@ namespace Validation.Validation
             return paymentRequestDetail;
         }
 
-        public PaymentRequestDetail VHasNotBeenConfirmed(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail VHasNotBeenConfirmed(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            if (paymentRequestDetail.IsConfirmed)
+            var paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
+            if (paymentRequest.IsConfirmed)
             {
                 paymentRequestDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
             }
             return paymentRequestDetail;
         }
 
-        public PaymentRequestDetail VHasBeenConfirmed(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail VHasBeenConfirmed(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            if (!paymentRequestDetail.IsConfirmed)
+            var paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
+            if (!paymentRequest.IsConfirmed)
             {
                 paymentRequestDetail.Errors.Add("Generic", "Belum dikonfirmasi");
             }
@@ -119,7 +121,7 @@ namespace Validation.Validation
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasAccount(paymentRequestDetail, _accountService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasNotBeenDeleted(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
@@ -133,7 +135,7 @@ namespace Validation.Validation
 
         public PaymentRequestDetail VUpdateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
         {
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VCreateObject(paymentRequestDetail, _paymentRequestService, _paymentRequestDetailService, _accountService);
             return paymentRequestDetail;    
@@ -145,7 +147,7 @@ namespace Validation.Validation
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasAccount(paymentRequestDetail, _accountService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasNotBeenDeleted(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
@@ -161,14 +163,14 @@ namespace Validation.Validation
 
         public PaymentRequestDetail VUpdateLegacyObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
         {
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VCreateLegacyObject(paymentRequestDetail, _paymentRequestService, _paymentRequestDetailService, _accountService);
             return paymentRequestDetail;
         }
-        public PaymentRequestDetail VDeleteObject(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail VDeleteObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasNotBeenDeleted(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
@@ -185,17 +187,17 @@ namespace Validation.Validation
             return obj;
         }
 
-        public PaymentRequestDetail VConfirmObject(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail VConfirmObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
             VHasConfirmationDate(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
-            VHasNotBeenConfirmed(paymentRequestDetail);
+            VHasNotBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             return paymentRequestDetail;
         }
 
-        public PaymentRequestDetail VUnconfirmObject(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail VUnconfirmObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            VHasBeenConfirmed(paymentRequestDetail);
+            VHasBeenConfirmed(paymentRequestDetail, _paymentRequestService);
             return paymentRequestDetail;
         }
 
@@ -223,21 +225,21 @@ namespace Validation.Validation
             return isValid(paymentRequestDetail);
         }
 
-        public bool ValidDeleteObject(PaymentRequestDetail paymentRequestDetail)
+        public bool ValidDeleteObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            VDeleteObject(paymentRequestDetail);
+            VDeleteObject(paymentRequestDetail, _paymentRequestService);
             return isValid(paymentRequestDetail);
         }
 
-        public bool ValidConfirmObject(PaymentRequestDetail paymentRequestDetail)
+        public bool ValidConfirmObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            VConfirmObject(paymentRequestDetail);
+            VConfirmObject(paymentRequestDetail, _paymentRequestService);
             return isValid(paymentRequestDetail);
         }
 
-        public bool ValidUnconfirmObject(PaymentRequestDetail paymentRequestDetail)
+        public bool ValidUnconfirmObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            VUnconfirmObject(paymentRequestDetail);
+            VUnconfirmObject(paymentRequestDetail, _paymentRequestService);
             return isValid(paymentRequestDetail);
         }
 

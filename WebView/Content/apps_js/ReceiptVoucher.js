@@ -150,7 +150,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/PrintoutReceiptVoucherBank?Id=" + id);
+                        window.open(base_url + "Report/PrintoutReceiptVoucher?Id=" + id);
                     }
                 }
             });

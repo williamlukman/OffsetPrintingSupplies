@@ -94,7 +94,7 @@ namespace Service.Service
 
         public PaymentRequestDetail SoftDeleteObject(PaymentRequestDetail paymentRequestDetail,IPaymentRequestService _paymentRequestService)
         {
-            if (_validator.ValidDeleteObject(paymentRequestDetail))
+            if (_validator.ValidDeleteObject(paymentRequestDetail, _paymentRequestService))
             {
                 paymentRequestDetail = _repository.SoftDeleteObject(paymentRequestDetail);
                 PaymentRequest paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
@@ -112,7 +112,7 @@ namespace Service.Service
         public PaymentRequestDetail ConfirmObject(PaymentRequestDetail paymentRequestDetail, DateTime ConfirmationDate, IPaymentRequestService _paymentRequestService)
         {
             paymentRequestDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(paymentRequestDetail))
+            if (_validator.ValidConfirmObject(paymentRequestDetail, _paymentRequestService))
             {
                 paymentRequestDetail = _repository.ConfirmObject(paymentRequestDetail);
             }
@@ -121,7 +121,7 @@ namespace Service.Service
 
         public PaymentRequestDetail UnconfirmObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService)
         {
-            if (_validator.ValidUnconfirmObject(paymentRequestDetail))
+            if (_validator.ValidUnconfirmObject(paymentRequestDetail, _paymentRequestService))
             {
                 paymentRequestDetail = _repository.UnconfirmObject(paymentRequestDetail);
             }

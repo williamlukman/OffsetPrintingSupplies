@@ -961,7 +961,7 @@ namespace TestValidation
                 TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable,
                 RateToIDR = 1
             };
-            _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+            _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService, _currencyService);
 
             rvd1 = new ReceiptVoucherDetail()
             {

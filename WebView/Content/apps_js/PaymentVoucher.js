@@ -150,7 +150,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/PrintoutPaymentVoucherBank?Id=" + id);
+                        window.open(base_url + "Report/PrintoutPaymentVoucher?Id=" + id);
                     }
                 }
             });

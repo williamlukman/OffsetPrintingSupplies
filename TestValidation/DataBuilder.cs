@@ -84,6 +84,7 @@ namespace TestValidation
         public IUserMenuService _userMenuService;
         public IUserAccessService _userAccessService;
         public IValidCombService _validCombService;
+        public IValidCombIncomeStatementService _validCombIncomeStatementService;
         public IVirtualOrderDetailService _virtualOrderDetailService;
         public IVirtualOrderService _virtualOrderService;
         public IWarehouseItemService _warehouseItemService;
@@ -290,6 +291,7 @@ namespace TestValidation
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
             _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
             _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
+            _validCombIncomeStatementService = new ValidCombIncomeStatementService(new ValidCombIncomeStatementRepository(), new ValidCombIncomeStatementValidator());
             _virtualOrderDetailService = new VirtualOrderDetailService(new VirtualOrderDetailRepository(), new VirtualOrderDetailValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
@@ -1817,7 +1819,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact1);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20, recoveryODContact1.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact1);
@@ -1827,7 +1829,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20, recoveryODContact2.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2);
@@ -1837,7 +1839,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact3, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact3);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20, recoveryODContact3.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact3);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact3);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact3);
@@ -1847,7 +1849,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse1);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20, recoveryODInHouse1.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse1);
@@ -1857,7 +1859,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse2);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20, recoveryODInHouse2.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse2);
@@ -2063,7 +2065,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse3b);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20, recoveryODInHouse3b.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse3b);
@@ -2073,7 +2075,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2b);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20, recoveryODContact2b.CompoundUnderLayerUsage, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2b);
@@ -2782,7 +2784,7 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(14),
                 RateToIDR = 1,                
             };
-            _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+            _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService, _currencyService);
 
             rvd1 = new ReceiptVoucherDetail()
             {
@@ -3406,7 +3408,7 @@ namespace TestValidation
                 ReceiptDate = DateTime.Today,
                 RateToIDR = 1
             };
-            _receiptVoucherService.CreateObject(receiptVoucher1, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+            _receiptVoucherService.CreateObject(receiptVoucher1, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService, _currencyService);
 
             receiptVoucher2 = new ReceiptVoucher()
             {
@@ -3417,7 +3419,7 @@ namespace TestValidation
                 ReceiptDate = DateTime.Today,
                 RateToIDR = 1
             };
-            _receiptVoucherService.CreateObject(receiptVoucher2, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+            _receiptVoucherService.CreateObject(receiptVoucher2, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService, _currencyService);
 
             receiptVoucher3 = new ReceiptVoucher()
             {
@@ -3428,7 +3430,7 @@ namespace TestValidation
                 ReceiptDate = DateTime.Today,
                 RateToIDR = 1
             };
-            _receiptVoucherService.CreateObject(receiptVoucher3, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+            _receiptVoucherService.CreateObject(receiptVoucher3, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService, _currencyService);
 
             receiptVD1a = new ReceiptVoucherDetail()
             {
@@ -4057,10 +4059,10 @@ namespace TestValidation
             };
             exchangeRateClosing.Add(usd);
             exchangeRateClosing.Add(eur);
-            _closingService.CreateObject(thisMonthClosing, exchangeRateClosing, _accountService, _validCombService, _exchangeRateClosingService);
+            _closingService.CreateObject(thisMonthClosing, exchangeRateClosing, _accountService, _validCombService, _validCombIncomeStatementService, _exchangeRateClosingService);
 
             thisMonthClosing.ClosedAt = DateTime.Today;
-            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService, _cashBankService);
+            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService, _validCombIncomeStatementService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService, _cashBankService);
         }
     }
 }

@@ -214,10 +214,13 @@ namespace Service.Service
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Status = Constant.GeneralLedgerStatus.Debit, //
                                     Amount = validComb.Amount - totalCurrencyAmountInLedger
                                 };
                                 debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
+                                //ValidComb vcExchangeLoss = _validCombService.FindOrCreateObjectByAccountAndClosing(debitExchangeLoss.AccountId, closing.Id);
+                                //vcExchangeLoss.Amount += debitExchangeLoss.Amount;
+                                //_validCombService.UpdateObject(vcExchangeLoss, _accountService, this);
 
                                 GeneralLedgerJournal creditCashBank = new GeneralLedgerJournal()
                                 {
@@ -225,10 +228,13 @@ namespace Service.Service
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Credit,
+                                    Status = Constant.GeneralLedgerStatus.Credit, //
                                     Amount = validComb.Amount - totalCurrencyAmountInLedger
                                 };
                                 creditCashBank = _generalLedgerJournalService.CreateObject(creditCashBank, _accountService);
+                                //ValidComb vcCashBank = _validCombService.FindOrCreateObjectByAccountAndClosing(creditCashBank.AccountId, closing.Id);
+                                //vcCashBank.Amount -= creditCashBank.Amount;
+                                //_validCombService.UpdateObject(vcCashBank, _accountService, this);
                                 #endregion
                             }
                             else if (totalCurrencyAmountInLedger > validComb.Amount)
@@ -240,10 +246,13 @@ namespace Service.Service
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Credit,
+                                    Status = Constant.GeneralLedgerStatus.Credit, //
                                     Amount = totalCurrencyAmountInLedger - validComb.Amount
                                 };
                                 creditExchangeGain = _generalLedgerJournalService.CreateObject(creditExchangeGain, _accountService);
+                                //ValidComb vcExchangeGain = _validCombService.FindOrCreateObjectByAccountAndClosing(creditExchangeGain.AccountId, closing.Id);
+                                //vcExchangeGain.Amount -= creditExchangeGain.Amount;
+                                //_validCombService.UpdateObject(vcExchangeGain, _accountService, this);
 
                                 GeneralLedgerJournal debitCashBank = new GeneralLedgerJournal()
                                 {
@@ -251,10 +260,13 @@ namespace Service.Service
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Status = Constant.GeneralLedgerStatus.Debit, //
                                     Amount = totalCurrencyAmountInLedger - validComb.Amount
                                 };
                                 debitCashBank = _generalLedgerJournalService.CreateObject(debitCashBank, _accountService);
+                                //ValidComb vcCashBank = _validCombService.FindOrCreateObjectByAccountAndClosing(debitCashBank.AccountId, closing.Id);
+                                //vcCashBank.Amount += debitCashBank.Amount;
+                                //_validCombService.UpdateObject(vcCashBank, _accountService, this);
                                 #endregion
                             }
                             else
@@ -502,10 +514,33 @@ namespace Service.Service
                 }
                 #endregion
 
+                #region ClosingEntries: Balancing Cents
+                // Perbedaan Cent dianggap Biaya Pembulatan
+                decimal diff = _generalLedgerJournalService.GetQueryable().Include("Account").Where(x => !x.IsDeleted && EntityFunctions.TruncateTime(x.TransactionDate) <= closing.EndDatePeriod && EntityFunctions.TruncateTime(x.TransactionDate) >= closing.BeginningPeriod).Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0;
+                if (diff != 0 && Math.Abs(diff) < 1.0m)
+                {
+                    Account pembulatan = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.BiayaPembulatan);
+                    GeneralLedgerJournal debitPembulatan = new GeneralLedgerJournal()
+                    {
+                        AccountId = pembulatan.Id,
+                        SourceDocument = Constant.GeneralLedgerSource.Closing,
+                        SourceDocumentId = closing.Id,
+                        TransactionDate = closing.EndDatePeriod, //(DateTime)EndDate,
+                        Status = diff < 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
+                        Amount = Math.Abs(diff)
+                    };
+                    debitPembulatan = _generalLedgerJournalService.CreateObject(debitPembulatan, _accountService);
+                    ValidComb vcPembulatan = _validCombService.FindOrCreateObjectByAccountAndClosing(pembulatan.Id, closing.Id);
+                    vcPembulatan.Amount -= diff;
+                    _validCombService.UpdateObject(vcPembulatan, _accountService, this);
+                }
+                #endregion
+
                 #region ClosingEntries: Net Earning
                 IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => (x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense) && x.IsLeaf && !x.IsDeleted).ToList();
                 decimal creditNetEarning = 0;
-                foreach(var account in IncomeStatementAccounts)
+                // Calculate Retained Earning = Revenue - Expense, and then contra all Revenues & Expenses to be 0
+                foreach (var account in IncomeStatementAccounts)
                 {
                     ValidComb vcClosingEntries = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
                     ValidCombIncomeStatement validCombIncomeStatement = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
@@ -516,12 +551,13 @@ namespace Service.Service
                             AccountId = account.Id,
                             SourceDocument = Constant.GeneralLedgerSource.Closing,
                             SourceDocumentId = closing.Id,
-                            TransactionDate = (DateTime) EndDate,
-                            Status = vcClosingEntries.Amount > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                            TransactionDate = closing.EndDatePeriod, //(DateTime)EndDate,
+                            Status = vcClosingEntries.Amount < 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
                             Amount = Math.Round(Math.Abs(vcClosingEntries.Amount), 2)
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
-                        creditNetEarning = vcClosingEntries.Amount > 0 ? creditNetEarning - vcClosingEntries.Amount : creditNetEarning + vcClosingEntries.Amount;
+                        creditNetEarning -= vcClosingEntries.Amount; //vcClosingEntries.Amount > 0 ? creditNetEarning - vcClosingEntries.Amount : creditNetEarning + vcClosingEntries.Amount;
+                        //creditNetEarning -= journal.Amount * (journal.Status == Constant.GeneralLedgerStatus.Credit ? 1 : -1);
                         validCombIncomeStatement.Amount = vcClosingEntries.Amount;
                         _validCombIncomeStatementService.UpdateObject(validCombIncomeStatement, _accountService, this);
                         vcClosingEntries.Amount = 0;
@@ -534,12 +570,13 @@ namespace Service.Service
                             AccountId = account.Id,
                             SourceDocument = Constant.GeneralLedgerSource.Closing,
                             SourceDocumentId = closing.Id,
-                            TransactionDate = (DateTime) EndDate,
-                            Status = vcClosingEntries.Amount > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
+                            TransactionDate = closing.EndDatePeriod, //(DateTime)EndDate,
+                            Status = vcClosingEntries.Amount < 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
                             Amount = Math.Round(Math.Abs(vcClosingEntries.Amount), 2)
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning += vcClosingEntries.Amount;
+                        //creditNetEarning += journal.Amount * (journal.Status == Constant.GeneralLedgerStatus.Credit ? -1 : 1);
                         validCombIncomeStatement.Amount = vcClosingEntries.Amount;
                         _validCombIncomeStatementService.UpdateObject(validCombIncomeStatement, _accountService, this);
                         vcClosingEntries.Amount = 0;
@@ -553,8 +590,8 @@ namespace Service.Service
                     AccountId = netEarningAccount.Id,
                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                     SourceDocumentId = closing.Id,
-                    TransactionDate = (DateTime)EndDate,
-                    Status = creditNetEarning > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                    TransactionDate = closing.EndDatePeriod, //(DateTime)EndDate,
+                    Status = creditNetEarning < 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
                     Amount = Math.Round(Math.Abs(creditNetEarning), 2)
                 };
                 netEarningJournal = _generalLedgerJournalService.CreateObject(netEarningJournal, _accountService);

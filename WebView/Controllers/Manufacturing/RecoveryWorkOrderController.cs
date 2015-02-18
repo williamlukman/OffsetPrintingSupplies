@@ -433,6 +433,7 @@ namespace WebView.Controllers
                 model.QuantityReceived,
                 model.HasDueDate,
                 model.DueDate,
+                model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

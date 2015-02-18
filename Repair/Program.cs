@@ -30,6 +30,7 @@ namespace Repair
             }
             catch (Exception e)
             {
+                //Console.SetOut(oldOut);
                 Console.WriteLine("Cannot open ConsoleLog.txt for writing");
                 Console.WriteLine(e.Message);
                 //return;

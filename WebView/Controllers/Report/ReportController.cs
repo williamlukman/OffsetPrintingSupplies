@@ -2331,8 +2331,8 @@ namespace WebView.Controllers
                     ContactAddr = g.SalesQuotation.Contact.DeliveryAddress,
                     ContactPerson = ContactNames, //g.SalesQuotation.Contact.ContactDetails.FirstOrDefault().Name,
                     Personnel = user,
-                    Hal = g.SalesQuotation.IsConfirmed ? "Konfirmasi Harga" : "Penawaran Harga",
-                    HalDesc = "Perkenankan kami menyampaikan " + (g.SalesQuotation.IsConfirmed ? "konfirmasi harga" : "penawaran harga") + " untuk produk berikut :",
+                    Hal = g.SalesQuotation.IsApproved ? "Konfirmasi Harga" : "Penawaran Harga",
+                    HalDesc = "Perkenankan kami menyampaikan " + (g.SalesQuotation.IsApproved ? "konfirmasi harga" : "penawaran harga") + " untuk produk berikut :",
                 }).OrderBy(x => x.NamaProduk).ToList(); //.AsEnumerable();
 
                 if (!query.Any())
@@ -3341,7 +3341,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Disiapkan", "");
                 rd.SetParameterValue("Disetujui", "");
                 rd.SetParameterValue("Diterima", "");
-                rd.SetParameterValue("Remarks", obj.PaymentRequest.Description);
+                rd.SetParameterValue("Remarks", obj.PaymentRequest.Description ?? "");
                 rd.SetParameterValue("Currency", CurCode);
                 rd.SetParameterValue("Rate", obj.PaymentRequest.ExchangeRateAmount);
 
@@ -3351,13 +3351,13 @@ namespace WebView.Controllers
         }
         #endregion
 
-        #region ReceiptVoucherBank
-        public ActionResult ReceiptVoucherBank()
+        #region ReceiptVoucher
+        public ActionResult ReceiptVoucher()
         {
             return View();
         }
 
-        public ActionResult PrintoutReceiptVoucherBank(int Id = 0)
+        public ActionResult PrintoutReceiptVoucher(int Id = 0)
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -3510,13 +3510,13 @@ namespace WebView.Controllers
         }
         #endregion
 
-        #region PaymentVoucherBank
-        public ActionResult PaymentVoucherBank()
+        #region PaymentVoucher
+        public ActionResult PaymentVoucher()
         {
             return View();
         }
 
-        public ActionResult PrintoutPaymentVoucherBank(int Id = 0)
+        public ActionResult PrintoutPaymentVoucher(int Id = 0)
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {

@@ -128,7 +128,7 @@ namespace WebView.Controllers
                                                               x.SourceDocumentId == g.Key.SourceDocumentId &&
                                                               x.Account.Code == g.Key.AccountCode).
                                                               Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0
-                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ToList();
+                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ThenBy(x => x.NoBukti).ToList();
 
                 if (!query.Any())
                 {
@@ -203,7 +203,7 @@ namespace WebView.Controllers
                                                               x.SourceDocumentId == g.Key.SourceDocumentId &&
                                                               x.AccountId == AccountId).
                                                               Sum(x => (Decimal?)(x.Status == Constant.GeneralLedgerStatus.Credit ? -x.Amount : x.Amount)) ?? 0
-                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ToList();
+                }).Where(x => x.Amount != 0).OrderBy(x => x.TransactionDate).ThenBy(x => x.Amount > 0 ? "D" : "K").ThenBy(x => x.NoBukti).ToList();
 
                 if (!query.Any())
                 {
@@ -372,9 +372,9 @@ namespace WebView.Controllers
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
                                                     .Where(x => x.ClosingId == closing.Id && 
-                                                           (x.Account.Group == Constant.AccountGroup.Asset ||
-                                                            x.Account.Group == Constant.AccountGroup.Liability ||
-                                                            x.Account.Group == Constant.AccountGroup.Equity) && 
+                                                           //(x.Account.Group == Constant.AccountGroup.Asset ||
+                                                           // x.Account.Group == Constant.AccountGroup.Liability ||
+                                                           // x.Account.Group == Constant.AccountGroup.Equity) && 
                                                            (x.Account.Level == 2 || (x.Account.Level == 1 && x.Account.IsLeaf)));
 
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();

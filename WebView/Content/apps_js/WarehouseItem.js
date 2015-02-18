@@ -92,7 +92,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     }
 
@@ -129,7 +129,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
     // itemwarehouse
@@ -164,7 +164,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
 
