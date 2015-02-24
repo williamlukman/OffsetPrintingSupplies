@@ -59,7 +59,7 @@
     <Compile Include="DomainModel\Finance\CashBankMutation.cs" />
     <Compile Include="DomainModel\Accounting\Memorial.cs" />
     <Compile Include="DomainModel\Accounting\MemorialDetail.cs" />
-    <Compile Include="DomainModel\Finance\InterestIncome.cs" />
+    <Compile Include="DomainModel\Finance\InterestAdjustment.cs" />
     <Compile Include="DomainModel\Finance\ReceiptRequest.cs" />
     <Compile Include="DomainModel\Finance\ReceiptRequestDetail.cs" />
     <Compile Include="DomainModel\Finance\ExchangeRate.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IGeneralLedgerJournalRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IValidCombRepository.cs" />
-    <Compile Include="Interface\Repository\Finance\IInterestIncomeRepository.cs" />
+    <Compile Include="Interface\Repository\Finance\IInterestAdjustmentRepository.cs" />
     <Compile Include="Interface\Repository\Finance\IReceiptRequestDetailRepository.cs" />
     <Compile Include="Interface\Repository\Finance\IReceiptRequestRepository.cs" />
     <Compile Include="Interface\Repository\Finance\IExchangeRateRepository.cs" />
@@ -270,7 +270,7 @@
     <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
     <Compile Include="Interface\Service\Accounting\IGeneralLedgerJournalService.cs" />
     <Compile Include="Interface\Service\Accounting\IValidCombService.cs" />
-    <Compile Include="Interface\Service\Finance\IInterestIncomeService.cs" />
+    <Compile Include="Interface\Service\Finance\IInterestAdjustmentService.cs" />
     <Compile Include="Interface\Service\Finance\IReceiptRequestDetailService.cs" />
     <Compile Include="Interface\Service\Finance\IReceiptRequestService.cs" />
     <Compile Include="Interface\Service\Finance\IExchangeRateService.cs" />
@@ -378,7 +378,7 @@
     <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IGeneralLedgerJournalValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IValidCombValidator.cs" />
-    <Compile Include="Interface\Validation\Finance\IInterestIncomeValidator.cs" />
+    <Compile Include="Interface\Validation\Finance\IInterestAdjustmentValidator.cs" />
     <Compile Include="Interface\Validation\Finance\IReceiptRequestDetailValidator.cs" />
     <Compile Include="Interface\Validation\Finance\IReceiptRequestValidator.cs" />
     <Compile Include="Interface\Validation\Finance\IExchangeRateValidator.cs" />

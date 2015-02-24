@@ -22,7 +22,7 @@ namespace Core.Constants
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
             public static string Closing = "Closing";
-            public static string InterestIncome = "InterestIncome";
+            public static string InterestAdjustment = "InterestAdjustment";
             public static string Memorial = "Memorial";
             public static string PaymentRequest = "PaymentRequest";
             public static string PaymentVoucher = "PaymentVoucher";
@@ -162,7 +162,7 @@ namespace Core.Constants
             public static string DividentExpense = "X2405";
             public static string ExchangeLoss = "X25";
             public static string BiayaPembulatan = "X62020014";
-            public static string BiayaBungaBank = "X62090001";
+            //public static string BiayaBungaBank = "X62090001"; //InterestExpense
             public static string BiayaAdminBank = "X62090002";
 
             public static string Liability = "L3";

@@ -52,7 +52,7 @@
     <Compile Include="Validation\Finance\CashMutationValidator.cs" />
     <Compile Include="Validation\Finance\CashBankAdjustmentValidator.cs" />
     <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
-    <Compile Include="Validation\Finance\InterestIncomeValidator.cs" />
+    <Compile Include="Validation\Finance\InterestAdjustmentValidator.cs" />
     <Compile Include="Validation\Finance\ReceiptRequestDetailValidator.cs" />
     <Compile Include="Validation\Finance\ReceiptRequestValidator.cs" />
     <Compile Include="Validation\Finance\ExchangeRateValidator.cs" />

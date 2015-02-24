@@ -309,26 +309,27 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForInterestIncome(InterestIncome interestIncome, CashBank cashBank,
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank,
             IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // if (Amount >= 0) then Debit CashBank, Credit PendapatanBungaBank
             // if (Amount < 0) then Debit BiayaBungaBank, Credit CashBank
             #region if (Amount >= 0) then Debit CashBank, Credit PendapatanBungaBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            decimal Amount = interestAdjustment.Amount - interestAdjustment.TaxAmount;
 
-            if (interestIncome.Amount >= 0)
+            if (!interestAdjustment.IsExpense) //(Amount >= 0)
             {
                 string LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString();
                 int AccountId = _accountService.GetObjectByLegacyCode(LegacyCode).Id;
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = AccountId,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = (DateTime)interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = (DateTime)interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(interestIncome.Amount * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Amount * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
 
@@ -338,7 +339,7 @@ namespace Service.Service
                     {
                         GeneralLedgerJournalId = debitcashbank.Id,
                         CurrencyId = cashBank.CurrencyId,
-                        Amount = interestIncome.Amount,
+                        Amount = Amount,
                     };
                     debitcashbank2 = _gLNonBaseCurrencyService.CreateObject(debitcashbank2, _accountService);
                 }
@@ -346,11 +347,11 @@ namespace Service.Service
                 GeneralLedgerJournal creditPendapatanBungaBank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PendapatanBungaBank).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = (DateTime)interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = (DateTime)interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(interestIncome.Amount * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Amount * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 creditPendapatanBungaBank = CreateObject(creditPendapatanBungaBank, _accountService);
 
@@ -359,27 +360,27 @@ namespace Service.Service
             }
             #endregion
             #region if (Amount < 0) then Debit BiayaBungaBank, Credit CashBank
-            else
+            else // IsExpense
             {
                 GeneralLedgerJournal debitBiayaBungaBank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.BiayaBungaBank).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = (DateTime)interestIncome.InterestDate,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestExpense).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = (DateTime)interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(Math.Abs(interestIncome.Amount) * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Math.Abs(Amount) * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 debitBiayaBungaBank = CreateObject(debitBiayaBungaBank, _accountService);
 
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = (DateTime)interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = (DateTime)interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(Math.Abs(interestIncome.Amount) * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Math.Abs(Amount) * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
@@ -389,7 +390,7 @@ namespace Service.Service
                     {
                         GeneralLedgerJournalId = creditcashbank.Id,
                         CurrencyId = cashBank.CurrencyId,
-                        Amount = Math.Abs(interestIncome.Amount)
+                        Amount = Math.Abs(Amount)
                     };
                     creditcashbank2 = _gLNonBaseCurrencyService.CreateObject(creditcashbank2, _accountService);
                 }
@@ -401,24 +402,25 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForInterestIncome(InterestIncome interestIncome, CashBank cashBank, IAccountService _accountService,
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank, IAccountService _accountService,
                 ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // if (Amount >= 0) then Credit CashBank, Debit PendapatanBungaBank
             // if (Amount < 0) then Debit CashBank, Credit BiayaBungaBank
             #region if (Amount >= 0) then Credit CashBank, Debit PendapatanBungaBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            decimal Amount = interestAdjustment.Amount - interestAdjustment.TaxAmount;
 
-            if (interestIncome.Amount >= 0)
+            if (!interestAdjustment.IsExpense) //(Amount >= 0)
             {
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(interestIncome.Amount * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Amount * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
@@ -428,7 +430,7 @@ namespace Service.Service
                     {
                         GeneralLedgerJournalId = creditcashbank.Id,
                         CurrencyId = cashBank.CurrencyId,
-                        Amount = interestIncome.Amount
+                        Amount = Amount
                     };
                     creditcashbank2 = _gLNonBaseCurrencyService.CreateObject(creditcashbank2, _accountService);
                 }
@@ -436,11 +438,11 @@ namespace Service.Service
                 GeneralLedgerJournal debitPendapatanBungaBank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PendapatanBungaBank).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(interestIncome.Amount * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Amount * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 debitPendapatanBungaBank = CreateObject(debitPendapatanBungaBank, _accountService);
 
@@ -449,27 +451,27 @@ namespace Service.Service
             }
             #endregion
             #region if (Amount < 0) then Debit CashBank, Credit BiayaBungaBank
-            else
+            else //IsExpense
             {
                 GeneralLedgerJournal creditBiayaBungaBank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.BiayaBungaBank).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = interestIncome.InterestDate,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestExpense).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(Math.Abs(interestIncome.Amount) * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Math.Abs(Amount) * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 creditBiayaBungaBank = CreateObject(creditBiayaBungaBank, _accountService);
 
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.InterestIncome,
-                    SourceDocumentId = interestIncome.Id,
-                    TransactionDate = interestIncome.InterestDate,
+                    SourceDocument = Constant.GeneralLedgerSource.InterestAdjustment,
+                    SourceDocumentId = interestAdjustment.Id,
+                    TransactionDate = interestAdjustment.InterestDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(Math.Abs(interestIncome.Amount) * interestIncome.ExchangeRateAmount, 2)
+                    Amount = Math.Round(Math.Abs(Amount) * interestAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
 
@@ -479,7 +481,7 @@ namespace Service.Service
                     {
                         GeneralLedgerJournalId = debitcashbank.Id,
                         CurrencyId = cashBank.CurrencyId,
-                        Amount = interestIncome.Amount
+                        Amount = Amount
                     };
                     debitcashbank2 = _gLNonBaseCurrencyService.CreateObject(debitcashbank2, _accountService);
                 }

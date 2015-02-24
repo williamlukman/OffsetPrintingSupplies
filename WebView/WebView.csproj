@@ -280,6 +280,7 @@
     <Compile Include="Controllers\Accounting\GeneralLedgerSaldoController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\InterestAdjustmentController.cs" />
     <Compile Include="Controllers\Finance\ReceiptRequestController.cs" />
     <Compile Include="Controllers\Finance\ExchangeRateController.cs" />
     <Compile Include="Controllers\Finance\CurrencyController.cs" />
@@ -369,6 +370,7 @@
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
+    <Content Include="Content\apps_js\InterestAdjustment.js" />
     <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
@@ -1530,6 +1532,7 @@
     <Content Include="Views\FinanceReport\TranscationList.cshtml" />
     <Content Include="Views\FinanceReport\NeracaSaldo.cshtml" />
     <Content Include="Views\FinanceReport\BalanceSheetDetail.cshtml" />
+    <Content Include="Views\InterestAdjustment\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

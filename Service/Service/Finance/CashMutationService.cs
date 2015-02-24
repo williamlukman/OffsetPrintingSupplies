@@ -194,22 +194,23 @@ namespace Service.Service
         #endregion
 
         #region Interest Income
-        public CashMutation CreateCashMutationForInterestIncome(InterestIncome interestIncome, CashBank cashBank)
+        public CashMutation CreateCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank)
         {
+            decimal Amount = interestAdjustment.Amount - interestAdjustment.TaxAmount;
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(interestIncome.Amount);
-            cashMutation.MutationDate = (DateTime)interestIncome.ConfirmationDate.GetValueOrDefault();
-            cashMutation.SourceDocumentType = Constant.SourceDocumentType.InterestIncome;
-            cashMutation.SourceDocumentId = interestIncome.Id;
-            cashMutation.SourceDocumentCode = interestIncome.Code;
-            cashMutation.Status = (interestIncome.Amount >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            cashMutation.Amount = Math.Abs(Amount);
+            cashMutation.MutationDate = (DateTime)interestAdjustment.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.InterestAdjustment;
+            cashMutation.SourceDocumentId = interestAdjustment.Id;
+            cashMutation.SourceDocumentCode = interestAdjustment.Code;
+            cashMutation.Status = (!interestAdjustment.IsExpense) /*(Amount >= 0)*/ ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(cashMutation);
         }
 
-        public IList<CashMutation> SoftDeleteCashMutationForInterestIncome(InterestIncome interestIncome, CashBank cashBank)
+        public IList<CashMutation> SoftDeleteCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank)
         {
-            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.InterestIncome, interestIncome.Id);
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.InterestAdjustment, interestAdjustment.Id);
             foreach (var cashMutation in cashMutations)
             {
                 _repository.Delete(cashMutation);

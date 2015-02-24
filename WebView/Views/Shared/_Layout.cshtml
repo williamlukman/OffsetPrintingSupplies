@@ -408,6 +408,8 @@
                                                     {<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.InterestAdjustment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "InterestAdjustment")">Interest Adjustment</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Purchase</a>

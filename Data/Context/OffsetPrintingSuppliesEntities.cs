@@ -35,10 +35,10 @@ namespace Data.Context
                 var obj = CashBankAdjustments.Where(x => x.Id == Id).FirstOrDefault();
                 nobukti = obj != null ? obj.Code ?? idstr : idstr;
             }
-            else if (tbl == Constant.GeneralLedgerSource.InterestIncome.ToUpper())
+            else if (tbl == Constant.GeneralLedgerSource.InterestAdjustment.ToUpper())
             {
-                var obj = InterestIncomes.Where(x => x.Id == Id).FirstOrDefault();
-                nobukti = obj != null ? obj.Code ?? idstr : idstr;
+                var obj = InterestAdjustments.Where(x => x.Id == Id).FirstOrDefault();
+                nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
             }
             else if (tbl == Constant.GeneralLedgerSource.CashBankMutation.ToUpper())
             {
@@ -181,7 +181,7 @@ namespace Data.Context
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "SubType", "ItemType", "UoM", "ContactDetail", "Employee", "Contact", "ContactGroup", "RollerType", "Machine", "Company" };
             IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "InterestIncome", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
+                                          "CashMutation", "CashBankAdjustment", "InterestAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -231,7 +231,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new EmployeeMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
-            modelBuilder.Configurations.Add(new InterestIncomeMapping());
+            modelBuilder.Configurations.Add(new InterestAdjustmentMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
@@ -345,7 +345,7 @@ namespace Data.Context
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
-        public DbSet<InterestIncome> InterestIncomes { get; set; }
+        public DbSet<InterestAdjustment> InterestAdjustments { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }

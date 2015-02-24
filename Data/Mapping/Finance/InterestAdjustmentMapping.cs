@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Data.Mapping
 {
-    public class InterestIncomeMapping : EntityTypeConfiguration<InterestIncome>
+    public class InterestAdjustmentMapping : EntityTypeConfiguration<InterestAdjustment>
     {
-        public InterestIncomeMapping()
+        public InterestAdjustmentMapping()
         {
             HasKey(cba => cba.Id);
             HasRequired(cba => cba.CashBank)

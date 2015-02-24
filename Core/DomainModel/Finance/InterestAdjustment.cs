@@ -5,16 +5,19 @@ using System.Text;
 
 namespace Core.DomainModel
 {
-    public partial class InterestIncome
+    public partial class InterestAdjustment
     {
         public int Id { get; set; }
         public int CashBankId { get; set; }
 
         public DateTime InterestDate { get; set; }
         public decimal Amount { get; set; }
+        public decimal TaxAmount { get; set; }
         public string Code { get; set; }
+        public string NoBukti { get; set; }
         public decimal ExchangeRateAmount { get; set; }
         public Nullable<int> ExchangeRateId { get; set; }
+        public bool IsExpense { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
