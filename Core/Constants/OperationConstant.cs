@@ -35,6 +35,7 @@ namespace Core.Constants
             public static string CashBankAdjustment = "CashBankAdjustment";
             public static string CoreIdentification = "CoreIdentification";
             public static string DeliveryOrder = "DeliveryOrder";
+            public static string InterestIncome = "InterestIncome";
             public static string PaymentVoucher = "PaymentVoucher";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseAllowance = "PurchaseAllowance";
@@ -216,6 +217,9 @@ namespace Core.Constants
             public static string BalanceSheet = "Balance Sheet";
             public static string IncomeStatement = "Income Statement";
             public static string Memorial = "Memorial";
+
+            public static string KelengkapanTukarFaktur = "Kelengkapan Tukar Faktur";
+            public static string KelengkapanArsip = "KelengkapanArsip";
 
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";

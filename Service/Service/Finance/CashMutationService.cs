@@ -193,6 +193,31 @@ namespace Service.Service
         }
         #endregion
 
+        #region Interest Income
+        public CashMutation CreateCashMutationForInterestIncome(InterestIncome interestIncome, CashBank cashBank)
+        {
+            CashMutation cashMutation = new CashMutation();
+            cashMutation.CashBankId = cashBank.Id;
+            cashMutation.Amount = Math.Abs(interestIncome.Amount);
+            cashMutation.MutationDate = (DateTime)interestIncome.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.InterestIncome;
+            cashMutation.SourceDocumentId = interestIncome.Id;
+            cashMutation.SourceDocumentCode = interestIncome.Code;
+            cashMutation.Status = (interestIncome.Amount >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            return _repository.CreateObject(cashMutation);
+        }
+
+        public IList<CashMutation> SoftDeleteCashMutationForInterestIncome(InterestIncome interestIncome, CashBank cashBank)
+        {
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.InterestIncome, interestIncome.Id);
+            foreach (var cashMutation in cashMutations)
+            {
+                _repository.Delete(cashMutation);
+            }
+            return cashMutations;
+        }
+        #endregion
+
         #region Cash Bank Mutation
         public IList<CashMutation> CreateCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank)
         {

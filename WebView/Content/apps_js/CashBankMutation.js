@@ -26,7 +26,7 @@
         url: base_url + 'CashBankMutation/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Source CashBank Name', 'Target CashBank Name', 'Mutation Date',
-                   'Amount', 'Confirmation Date', 'Created At', 'Updated At'],
+                   'Amount', 'Confirmation Date', 'No Bukti', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'code', index: 'code', width: 80 },
@@ -35,7 +35,8 @@
                   { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'amount', index: 'amount', width: 150, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'nobukti', index: 'nobukti', width: 100 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -81,6 +82,7 @@
         ClearData();
         clearForm('#frm');
         $('#MutationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        //$('#NoBukti').removeAttr('disabled');
         $('#MutationDateDiv').show();
         $('#MutationDateDiv2').hide();
         $('#form_div').dialog('open');
@@ -110,6 +112,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#SourceCashBankId').val(result.SourceCashBankId);
                             $('#SourceCashBank').val(result.SourceCashBank);
                             $('#TargetCashBankId').val(result.TargetCashBankId);
@@ -117,6 +120,7 @@
                             $('#Amount').numberbox('setValue', (result.Amount));
                             $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
                             $('#MutationDate2').val(dateEnt(result.MutationDate));
+                            //$('#NoBukti').removeAttr('disabled');
                             $('#MutationDateDiv').show();
                             $('#MutationDateDiv2').hide();
                             $('#form_div').dialog('open');
@@ -294,7 +298,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SourceCashBankId: $("#SourceCashBankId").val(), TargetCashBankId: $("#TargetCashBankId").val(),
-                Amount: $("#Amount").numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue')
+                Amount: $("#Amount").numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue'),
+                NoBukti: $("#NoBukti").val(),
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {

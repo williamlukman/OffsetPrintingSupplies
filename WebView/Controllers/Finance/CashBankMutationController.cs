@@ -67,6 +67,7 @@ namespace WebView.Controllers
                              model.MutationDate,
                              model.Amount,
                              model.ConfirmationDate,
+                             model.NoBukti,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -106,6 +107,7 @@ namespace WebView.Controllers
                             model.MutationDate,
                             model.Amount,
                             model.ConfirmationDate,
+                            model.NoBukti,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -139,6 +141,7 @@ namespace WebView.Controllers
                 model.MutationDate,
                 model.IsConfirmed,
                 model.ConfirmationDate,
+                model.NoBukti,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -171,6 +174,7 @@ namespace WebView.Controllers
                 data.TargetCashBankId = model.TargetCashBankId;
                 data.Amount = model.Amount;
                 data.MutationDate = model.MutationDate;
+                data.NoBukti = model.NoBukti;
                 model = _cashBankMutationService.UpdateObject(data,_cashBankService);
             }
             catch (Exception ex)

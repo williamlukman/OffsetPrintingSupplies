@@ -55,7 +55,7 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkProcess/GetList',
         datatype: "json",
-        colNames: ['RO Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material',
+        colNames: ['RO Id', 'RCN No', 'CoreIdentificationDetailId', 'RIFD Id', 'Diss No', 'Material',
                     'RollerBuilder Id', 'Roller Sku', 'Roller Name', 'Type', 'Core', 'Compound', 'Compound QTY',
                     'Under Layer', 'Under Layer QTY',
                    'D', 'S&G', 'W',
@@ -65,8 +65,10 @@
         ],
         colModel: [
                   { name: 'recoveryorderid', index: 'recoveryorderid', width: 40, sortable: false },
+                  { name: 'recoveryordercode', index: 'recoveryordercode', width: 80 },
                   { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'rifdid', index: 'rollerbuilderid', width: 40, sortable: false } ,
+                  { name: 'rifdid', index: 'rollerbuilderid', width: 40, sortable: false },
+                  { name: 'NomorDisassembly', index: 'NomorDisassembly', width: 80 },
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 40, sortable: false, hidden: true },
                   { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
@@ -253,9 +255,11 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#RecoveryOrderId').val(result.RecoveryOrderId);
+                            $('#RecoveryOrderCode').val(result.RecoveryOrderCode);
                             $('#RollerBuilderBaseSku').val(result.RollerBuilderBaseSku);
                             $('#RollerBuilder').val(result.RollerBuilder);
                             $('#CoreTypeCase').val(result.CoreTypeCase);
+                            $('#NomorDisassembly').val(result.NomorDisassembly);
                             $('#Compound').val(result.Compound);
                             $('#CompoundUsage').numberbox('setValue', result.CompoundUsage);
                             $('#CompoundUnderLayerId').val(result.CompoundUnderLayerId);

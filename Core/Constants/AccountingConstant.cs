@@ -22,6 +22,7 @@ namespace Core.Constants
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
             public static string Closing = "Closing";
+            public static string InterestIncome = "InterestIncome";
             public static string Memorial = "Memorial";
             public static string PaymentRequest = "PaymentRequest";
             public static string PaymentVoucher = "PaymentVoucher";
@@ -98,6 +99,7 @@ namespace Core.Constants
             public static string DividentExpense = "2405";
             public static string ExchangeLoss = "25";
             public static string BiayaPembulatan = "62020014";
+            public static string BiayaBungaBank = "62090001";
             public static string BiayaAdminBank = "62090002";
 
             public static string Liability = "3";
@@ -121,6 +123,7 @@ namespace Core.Constants
             public static string ExchangeGain = "42";
 
             public static string Revenue = "5";
+            public static string PendapatanBungaBank = "71010002";
         }
 
         public class AccountLegacyCode
@@ -159,6 +162,7 @@ namespace Core.Constants
             public static string DividentExpense = "X2405";
             public static string ExchangeLoss = "X25";
             public static string BiayaPembulatan = "X62020014";
+            public static string BiayaBungaBank = "X62090001";
             public static string BiayaAdminBank = "X62090002";
 
             public static string Liability = "L3";
@@ -179,7 +183,9 @@ namespace Core.Constants
             public static string EquityAdjustment = "E4101";
             public static string NetEarning = "E4102";
             public static string ExchangeGain = "E42";
+
             public static string Revenue = "R5";
+            public static string PendapatanBungaBank = "R71010002";
         }
         #endregion
     }

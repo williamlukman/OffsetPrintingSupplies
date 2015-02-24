@@ -27,7 +27,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
-                  { name: 'size', index: 'size', width: 100 },
+                  { name: 'size', index: 'size', width: 100, hidden:true },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -180,7 +180,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Size: ("#Size").val()
+                Id: id, Name: $("#Name").val(), Size: $("#Size").val()
             }),
             async: false,
             cache: false,

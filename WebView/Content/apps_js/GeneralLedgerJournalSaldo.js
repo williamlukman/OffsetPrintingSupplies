@@ -42,7 +42,7 @@
         url: base_url + 'GeneralLedger/GetList',
         datatype: "json",
         colNames: ['ID', 'Transaction Date', 'Status', 'Account Code', 'Account Name',
-                   'Debit', 'Credit', 'Source Document', 'Id', 'Nomor Surat', 'Account Id'],
+                   'Debit', 'Credit', 'Source Document', 'Id', 'Nomor Bukti/Surat', 'Account Id'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
 				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

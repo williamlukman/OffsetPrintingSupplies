@@ -87,8 +87,10 @@ namespace WebView.Controllers
                          {
                             model.Id,
                             model.RecoveryOrderId,
+                            RecoveryOrderCode = model.RecoveryOrder.Code,
                             model.CoreIdentificationDetail.DetailId,
                             model.CoreIdentificationDetailId,
+                            NomorDisassembly = model.CoreIdentificationDetail.CoreIdentification.NomorDisassembly,
                             MaterialCase = model.CoreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used",
                             model.RollerBuilderId,
                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
@@ -145,8 +147,10 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.RecoveryOrderId,
+                            model.RecoveryOrderCode,
                             model.DetailId,
                             model.CoreIdentificationDetailId,
+                            model.NomorDisassembly,
                             model.MaterialCase,
                             model.RollerBuilderId,
                             model.RollerBuilderBaseSku,
@@ -255,8 +259,10 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.RecoveryOrderId,
+                RecoveryOrderCode = model.RecoveryOrder.Code,
                 CoreIdentificationDetail =  _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
                 model.CoreIdentificationDetailId,
+                NomorDisassembly = model.CoreIdentificationDetail.CoreIdentification.NomorDisassembly,
                 MaterialCase = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
                 model.RollerBuilderId,
                 RollerBuilderBaseSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,

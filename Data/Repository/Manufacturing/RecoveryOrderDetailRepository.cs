@@ -7,6 +7,8 @@ using System.Text;
 using Data.Context;
 using Data.Repository;
 using System.Data;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace Data.Repository
 {
@@ -45,7 +47,7 @@ namespace Data.Repository
 
         public RecoveryOrderDetail GetObjectById(int Id)
         {
-            RecoveryOrderDetail recoveryOrderDetail = Find(x => x.Id == Id && !x.IsDeleted);
+            RecoveryOrderDetail recoveryOrderDetail = FindAll(x => x.Id == Id && !x.IsDeleted).Include(x => x.RecoveryOrder).Include(x => x.CoreIdentificationDetail).Include(x => x.RollerBuilder).Include(x => x.CompoundUnderLayer).FirstOrDefault();
             if (recoveryOrderDetail != null) { recoveryOrderDetail.Errors = new Dictionary<string, string>(); }
             return recoveryOrderDetail;
         }

@@ -541,6 +541,7 @@ namespace WebView.Controllers
                 model.MinimumQuantity,
                 model.Virtual,
                 model.Description,
+                model.IsTradeable,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

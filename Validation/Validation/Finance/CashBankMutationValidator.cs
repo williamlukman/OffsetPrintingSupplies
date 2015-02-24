@@ -19,6 +19,15 @@ namespace Validation.Validation
             return cashBankMutation;
         }
 
+        public CashBankMutation VHasNoBukti(CashBankMutation cashBankMutation)
+        {
+            if (cashBankMutation.NoBukti == null || cashBankMutation.NoBukti.Trim() == "")
+            {
+                cashBankMutation.Errors.Add("NoBukti", "Tidak boleh kosong");
+            }
+            return cashBankMutation;
+        }
+
         public CashBankMutation VHasDifferentCashBank(CashBankMutation cashBankMutation)
         {
             if (cashBankMutation.SourceCashBankId == cashBankMutation.TargetCashBankId)
@@ -126,6 +135,8 @@ namespace Validation.Validation
 
         public CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
+            VHasNoBukti(cashBankMutation);
+            if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VHasDifferentCashBank(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VHasSourceCashBank(cashBankMutation, _cashBankService);
