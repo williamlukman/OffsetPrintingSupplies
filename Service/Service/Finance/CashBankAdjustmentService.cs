@@ -83,6 +83,7 @@ namespace Service.Service
             cashBankAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankAdjustment, _cashBankService, _closingService)) 
             {
+                _repository.ConfirmObject(cashBankAdjustment);
                 CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
                 if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
                 {
@@ -97,7 +98,6 @@ namespace Service.Service
                 // cashBank.Amount += cashBankAdjustment.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                 _generalLedgerJournalService.CreateConfirmationJournalForCashBankAdjustment(cashBankAdjustment, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService);
-                _repository.ConfirmObject(cashBankAdjustment);
             }
             return cashBankAdjustment;
         }
@@ -108,6 +108,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(cashBankAdjustment, _cashBankService, _closingService))
             {
+                _repository.UnconfirmObject(cashBankAdjustment);
                 CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForCashBankAdjustment(cashBankAdjustment, cashBank);
                 // cashBank.Amount -= cashBankAdjustment.Amount;
@@ -116,7 +117,6 @@ namespace Service.Service
                     _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCashBankAdjustment(cashBankAdjustment, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService);
-                _repository.UnconfirmObject(cashBankAdjustment);
             }
             return cashBankAdjustment;
         }

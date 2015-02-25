@@ -121,6 +121,7 @@ namespace Service.Service
             interestAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(interestAdjustment, _cashBankService, _closingService)) 
             {
+                _repository.ConfirmObject(interestAdjustment);
                 CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
                 if (cashBank.Currency.IsBase)
                 {
@@ -140,7 +141,6 @@ namespace Service.Service
                 // cashBank.Amount += interestAdjustment.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                 _generalLedgerJournalService.CreateConfirmationJournalForInterestAdjustment(interestAdjustment, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService);
-                _repository.ConfirmObject(interestAdjustment);
             }
             return interestAdjustment;
         }
@@ -151,6 +151,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(interestAdjustment, _cashBankService, _closingService))
             {
+                _repository.UnconfirmObject(interestAdjustment);
                 CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForInterestAdjustment(interestAdjustment, cashBank);
                 // cashBank.Amount -= interestAdjustment.Amount;
@@ -159,7 +160,6 @@ namespace Service.Service
                     _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForInterestAdjustment(interestAdjustment, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService);
-                _repository.UnconfirmObject(interestAdjustment);
             }
             return interestAdjustment;
         }
