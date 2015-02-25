@@ -153,7 +153,7 @@ namespace WebView.Controllers
         {
             try
             {
-               model = _interestAdjustmentService.CreateObject(model, _cashBankService);
+               model = _interestAdjustmentService.CreateObject(model, _cashBankService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {
@@ -179,7 +179,7 @@ namespace WebView.Controllers
                 data.ExchangeRateAmount = model.ExchangeRateAmount;
                 data.TaxAmount = model.TaxAmount;
                 data.IsExpense = model.IsExpense;
-                model = _interestAdjustmentService.UpdateObject(data,_cashBankService);
+                model = _interestAdjustmentService.UpdateObject(data,_cashBankService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {

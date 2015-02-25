@@ -15,9 +15,9 @@ namespace Core.Interface.Service
         IList<InterestAdjustment> GetAll();
         IList<InterestAdjustment> GetObjectsByCashBankId(int cashBankId);
         InterestAdjustment GetObjectById(int Id);
-        InterestAdjustment CreateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService);
-        InterestAdjustment CreateObject(int CashBankId, DateTime interestDate, ICashBankService _cashBankService);
-        InterestAdjustment UpdateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService);
+        InterestAdjustment CreateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
+        InterestAdjustment CreateObject(int CashBankId, DateTime interestDate, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
+        InterestAdjustment UpdateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
         InterestAdjustment SoftDeleteObject(InterestAdjustment interestAdjustment);
         bool DeleteObject(int Id);
         InterestAdjustment ConfirmObject(InterestAdjustment interestAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,

@@ -44,26 +44,64 @@ namespace Service.Service
         {
             return _repository.GetObjectById(Id);
         }
-        
-        public InterestAdjustment CreateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService)
+
+        public InterestAdjustment CreateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             interestAdjustment.Errors = new Dictionary<String, String>();
-            return (interestAdjustment = _validator.ValidCreateObject(interestAdjustment, _cashBankService) ? _repository.CreateObject(interestAdjustment) : interestAdjustment);
+            if (_validator.ValidCreateObject(interestAdjustment, _cashBankService))
+            {
+                CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
+                if (cashBank.Currency.IsBase)
+                {
+                    interestAdjustment.ExchangeRateAmount = 1;
+                }
+                else
+                {
+                    ExchangeRate xRate = _exchangeRateService.GetLatestRate(interestAdjustment.InterestDate, cashBank.Currency);
+                    interestAdjustment.ExchangeRateId = xRate != null ? (int?)xRate.Id : null;
+                    if (interestAdjustment.ExchangeRateAmount <= 0)
+                    {
+                        xRate = _exchangeRateService.GetObjectById(interestAdjustment.ExchangeRateId.GetValueOrDefault());
+                        interestAdjustment.ExchangeRateAmount = xRate != null ? xRate.Rate : 1;
+                    }
+                }
+                interestAdjustment = _repository.CreateObject(interestAdjustment);
+            }
+            return interestAdjustment;
         }
 
-        public InterestAdjustment CreateObject(int CashBankId, DateTime interestDate, ICashBankService _cashBankService)
+        public InterestAdjustment CreateObject(int CashBankId, DateTime interestDate, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             InterestAdjustment interestAdjustment = new InterestAdjustment
             {
                 CashBankId = CashBankId,
                 InterestDate = interestDate
             };
-            return this.CreateObject(interestAdjustment, _cashBankService);
+            return this.CreateObject(interestAdjustment, _cashBankService, _currencyService, _exchangeRateService);
         }
 
-        public InterestAdjustment UpdateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService)
+        public InterestAdjustment UpdateObject(InterestAdjustment interestAdjustment, ICashBankService _cashBankService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
-            return (interestAdjustment = _validator.ValidUpdateObject(interestAdjustment, _cashBankService) ? _repository.UpdateObject(interestAdjustment) : interestAdjustment);
+            if (_validator.ValidUpdateObject(interestAdjustment, _cashBankService))
+            {
+                CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
+                if (cashBank.Currency.IsBase)
+                {
+                    interestAdjustment.ExchangeRateAmount = 1;
+                }
+                else
+                {
+                    ExchangeRate xRate = _exchangeRateService.GetLatestRate(interestAdjustment.InterestDate, cashBank.Currency);
+                    interestAdjustment.ExchangeRateId = xRate != null ? (int?)xRate.Id : null;
+                    if (interestAdjustment.ExchangeRateAmount <= 0)
+                    {
+                        xRate = _exchangeRateService.GetObjectById(interestAdjustment.ExchangeRateId.GetValueOrDefault());
+                        interestAdjustment.ExchangeRateAmount = xRate != null ? xRate.Rate : 1;
+                    }
+                }
+                _repository.UpdateObject(interestAdjustment);
+            }
+            return interestAdjustment;
         }
 
         public InterestAdjustment SoftDeleteObject(InterestAdjustment interestAdjustment)
@@ -84,17 +122,19 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(interestAdjustment, _cashBankService, _closingService)) 
             {
                 CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
-                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                if (cashBank.Currency.IsBase)
                 {
-                    interestAdjustment.ExchangeRateId = _exchangeRateService.GetLatestRate(interestAdjustment.ConfirmationDate.Value, _currencyService.GetObjectById(cashBank.CurrencyId)).Id;
-                    if (interestAdjustment.ExchangeRateAmount <= 0)
-                    {
-                        interestAdjustment.ExchangeRateAmount = _exchangeRateService.GetObjectById(interestAdjustment.ExchangeRateId.Value).Rate;
-                    }
+                    interestAdjustment.ExchangeRateAmount = 1;
                 }
                 else
                 {
-                    interestAdjustment.ExchangeRateAmount = 1;
+                    ExchangeRate xRate = _exchangeRateService.GetLatestRate(interestAdjustment.ConfirmationDate.GetValueOrDefault(), cashBank.Currency);
+                    interestAdjustment.ExchangeRateId = xRate != null ? (int?)xRate.Id : null;
+                    if (interestAdjustment.ExchangeRateAmount <= 0)
+                    {
+                        xRate = _exchangeRateService.GetObjectById(interestAdjustment.ExchangeRateId.GetValueOrDefault());
+                        interestAdjustment.ExchangeRateAmount = xRate != null ? xRate.Rate : 1;
+                    }
                 }
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForInterestAdjustment(interestAdjustment, cashBank);
                 // cashBank.Amount += interestAdjustment.Amount;

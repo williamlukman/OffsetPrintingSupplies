@@ -7,6 +7,8 @@ using System.Text;
 using Data.Context;
 using Data.Repository;
 using System.Data;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace Data.Repository
 {
@@ -31,7 +33,7 @@ namespace Data.Repository
 
         public CashBank GetObjectById(int Id)
         {
-            CashBank cb = Find(x => x.Id == Id && !x.IsDeleted);
+            CashBank cb = FindAll(x => x.Id == Id && !x.IsDeleted).Include(x => x.Currency).FirstOrDefault();
             if (cb != null) { cb.Errors = new Dictionary<string, string>(); }
             return cb;
         }

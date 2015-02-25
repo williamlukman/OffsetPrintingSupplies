@@ -71,9 +71,9 @@ namespace Validation.Validation
 
         public InterestAdjustment VIsValidExchangeRateAmount(InterestAdjustment interestAdjustment)
         {
-            if (interestAdjustment.ExchangeRateAmount <= 0)
+            if (interestAdjustment.ExchangeRateAmount < 0)
             {
-                interestAdjustment.Errors.Add("ExchangeRateAmount", "Harus lebih besar dari 0");
+                interestAdjustment.Errors.Add("ExchangeRateAmount", "Harus lebih besar atau sama dengan 0 (0 = mengambil nilai dari table Exchange Rate)");
             }
             return interestAdjustment;
         }
