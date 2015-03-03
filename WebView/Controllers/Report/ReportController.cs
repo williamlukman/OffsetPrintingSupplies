@@ -3499,6 +3499,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("IsBank", obj.ReceiptVoucher.CashBank.IsBank);
                 rd.SetParameterValue("NoRek", obj.ReceiptVoucher.CashBank.Description ?? "");
                 rd.SetParameterValue("NoCek", obj.ReceiptVoucher.IsGBCH ? obj.ReceiptVoucher.GBCH_No ?? "" : "");
+                rd.SetParameterValue("Catatan", obj.Description ?? "");
                 rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Total, true, obj.ReceiptVoucher.CashBank.Currency.Name, "Sen"));
                 rd.SetParameterValue("CompanyName", company.Name ?? "");
                 rd.SetParameterValue("Disiapkan", "");
@@ -3674,6 +3675,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("IsBank", obj.PaymentVoucher.CashBank.IsBank);
                 rd.SetParameterValue("NoRek", obj.PaymentVoucher.CashBank.Description ?? "");
                 rd.SetParameterValue("NoCek", obj.PaymentVoucher.IsGBCH ? obj.PaymentVoucher.GBCH_No ?? "" : "");
+                rd.SetParameterValue("Catatan", obj.Description ?? "");
                 rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Total, true, obj.PaymentVoucher.CashBank.Currency.Name, "Sen"));
                 rd.SetParameterValue("CompanyName", company.Name ?? "");
                 rd.SetParameterValue("Disiapkan", "");
@@ -3706,37 +3708,85 @@ namespace WebView.Controllers
 
                 var query = new List<object>();
 
+                decimal Total = (obj.PendapatanJasaAmount + obj.PendapatanBungaAmount + obj.PengembalianPiutangAmount) - 
+                                (obj.BiayaAdminAmount + obj.BiayaBungaAmount);
+
                 foreach (var det in q)
                 {
                     var CurCode = (det.CashBank.Currency.Name == "Rupiah") ? "IDR" :
                                     (det.CashBank.Currency.Name == "Euro") ? "EUR" : det.CashBank.Currency.Name;
-                    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == (det.IsExpense ? Constant.AccountLegacyCode.InterestExpense : Constant.AccountLegacyCode.PendapatanBungaBank)).FirstOrDefault();
-                    decimal netAmount = det.Amount;
                     //if (det.Id == obj.Id) netAmount -= (obj.ReceiptVoucher.BiayaBank + (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? obj.ReceiptVoucher.Pembulatan : -obj.ReceiptVoucher.Pembulatan));
 
-                    query.Add(new
+                    if (det.BiayaAdminAmount > 0)
                     {
-                        Code = acc.Code,
-                        Amount = (netAmount),
-                        AmountIDR = Math.Round(netAmount * det.ExchangeRateAmount, 2),
-                        Name = acc.Name,
-                        Status = det.IsExpense ? "D" : "K",
-                        ContactName = "",
-                    });
-
-                    if (det.TaxAmount > 0)
-                    {
+                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaAdminBank).FirstOrDefault();
+                        decimal Amount = (Total < 0) ? det.BiayaAdminAmount : -det.BiayaAdminAmount;
                         query.Add(new
                         {
-                            Code = "",
-                            Amount = -(det.TaxAmount),
-                            AmountIDR = Math.Round(-(det.TaxAmount) * obj.ExchangeRateAmount, 2),
-                            Name = "PAJAK BUNGA",
-                            Status = "", //det.IsExpense ? "K" : "D",
+                            Code = acc.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                            Name = acc.Name,
+                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
                             ContactName = "",
                         });
                     }
-
+                    if (det.BiayaBungaAmount > 0)
+                    {
+                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.InterestExpense).FirstOrDefault();
+                        decimal Amount = (Total < 0) ? det.BiayaBungaAmount : -det.BiayaBungaAmount;
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                            Name = acc.Name,
+                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                            ContactName = "",
+                        });
+                    }
+                    if (det.PendapatanJasaAmount > 0)
+                    {
+                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanJasaGiro).FirstOrDefault();
+                        decimal Amount = (Total >= 0) ? det.PendapatanJasaAmount : -det.PendapatanJasaAmount;
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                            Name = acc.Name,
+                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                            ContactName = "",
+                        });
+                    }
+                    if (det.PendapatanBungaAmount > 0)
+                    {
+                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanBungaBank).FirstOrDefault();
+                        decimal Amount = (Total >= 0) ? det.PendapatanBungaAmount : -det.PendapatanBungaAmount;
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                            Name = acc.Name,
+                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                            ContactName = "",
+                        });
+                    }
+                    if (det.PengembalianPiutangAmount > 0)
+                    {
+                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PiutangLainLain).FirstOrDefault();
+                        decimal Amount = (Total >= 0) ? det.PengembalianPiutangAmount : -det.PengembalianPiutangAmount;
+                        query.Add(new
+                        {
+                            Code = acc.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                            Name = acc.Name,
+                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                            ContactName = "",
+                        });
+                    }
                 }
 
                 //if (obj.ReceiptVoucher.Pembulatan != 0)
@@ -3774,7 +3824,7 @@ namespace WebView.Controllers
                 var rd = new ReportDocument();
 
                 //Loading Report
-                if (obj.IsExpense)
+                if (Total < 0) //(obj.IsExpense)
                 {
                     rd.Load(Server.MapPath("~/") + "Reports/Printout/PaymentVoucherBank.rpt");
                 }
@@ -3790,7 +3840,6 @@ namespace WebView.Controllers
                 rd.Subreports["BankList"].SetDataSource(banklist);
 
                 // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
-                decimal Total = obj.Amount - obj.TaxAmount;
                 var currency = (obj.CashBank.Currency.Name == "Rupiah") ? "IDR" :
                                     (obj.CashBank.Currency.Name == "Euro") ? "EUR" : obj.CashBank.Currency.Name;
                 rd.SetParameterValue("No", obj.NoBukti ?? "");
@@ -3800,7 +3849,8 @@ namespace WebView.Controllers
                 rd.SetParameterValue("IsBank", obj.CashBank.IsBank);
                 rd.SetParameterValue("NoRek", obj.CashBank.Description ?? "");
                 rd.SetParameterValue("NoCek", "");
-                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Total, true, obj.CashBank.Currency.Name, "Sen"));
+                rd.SetParameterValue("Catatan", obj.Description ?? "");
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Math.Abs(Total), true, obj.CashBank.Currency.Name, "Sen"));
                 rd.SetParameterValue("CompanyName", company.Name ?? "");
                 rd.SetParameterValue("Disiapkan", "");
                 rd.SetParameterValue("Diterima", "");

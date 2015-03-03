@@ -196,21 +196,22 @@ namespace Service.Service
         #region Interest Income
         public CashMutation CreateCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank)
         {
-            decimal Amount = interestAdjustment.Amount - interestAdjustment.TaxAmount;
+            decimal Amount = (interestAdjustment.PendapatanJasaAmount + interestAdjustment.PendapatanBungaAmount + interestAdjustment.PengembalianPiutangAmount) -
+                             (interestAdjustment.BiayaAdminAmount + interestAdjustment.BiayaBungaAmount);
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
             cashMutation.Amount = Math.Abs(Amount);
             cashMutation.MutationDate = (DateTime)interestAdjustment.ConfirmationDate.GetValueOrDefault();
-            cashMutation.SourceDocumentType = Constant.SourceDocumentType.InterestAdjustment;
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.BankAdministration;
             cashMutation.SourceDocumentId = interestAdjustment.Id;
             cashMutation.SourceDocumentCode = interestAdjustment.Code;
-            cashMutation.Status = (!interestAdjustment.IsExpense) /*(Amount >= 0)*/ ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            cashMutation.Status = (Amount < 0) ? Constant.MutationStatus.Deduction : Constant.MutationStatus.Addition;
             return _repository.CreateObject(cashMutation);
         }
 
         public IList<CashMutation> SoftDeleteCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank)
         {
-            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.InterestAdjustment, interestAdjustment.Id);
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.BankAdministration, interestAdjustment.Id);
             foreach (var cashMutation in cashMutations)
             {
                 _repository.Delete(cashMutation);

@@ -63,9 +63,13 @@ namespace WebView.Controllers
                              model.NoBukti,
                              model.CashBankId,
                              CashBank = model.CashBank.Name,
-                             Amount = model.Amount * (model.IsExpense ? -1 : 1),
-                             TaxAmount = model.TaxAmount * (model.IsExpense ? 1 : -1),
                              model.ExchangeRateAmount,
+                             model.BiayaAdminAmount,
+                             model.BiayaBungaAmount,
+                             model.PendapatanJasaAmount,
+                             model.PendapatanBungaAmount,
+                             model.PengembalianPiutangAmount,
+                             model.Description,
                              model.InterestDate,
                              model.ConfirmationDate,
                              model.CreatedAt,
@@ -105,9 +109,13 @@ namespace WebView.Controllers
                             model.Code,
                             model.NoBukti,
                             model.CashBank,
-                            model.Amount,
-                            model.TaxAmount,
                             model.ExchangeRateAmount,
+                            model.BiayaAdminAmount,
+                            model.BiayaBungaAmount,
+                            model.PendapatanJasaAmount,
+                            model.PendapatanBungaAmount,
+                            model.PengembalianPiutangAmount,
+                            model.Description,
                             model.InterestDate,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -138,10 +146,14 @@ namespace WebView.Controllers
                 model.NoBukti,
                 model.CashBankId,
                 CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
-                model.Amount,
-                model.TaxAmount,
                 model.ExchangeRateAmount,
-                model.IsExpense,
+                model.BiayaAdminAmount,
+                model.BiayaBungaAmount,
+                model.PendapatanJasaAmount,
+                model.PendapatanBungaAmount,
+                model.PengembalianPiutangAmount,
+                model.Description,
+                //model.IsExpense,
                 model.InterestDate,
                 model.ConfirmationDate,
                 model.Errors
@@ -175,10 +187,14 @@ namespace WebView.Controllers
                 data.CashBankId = model.CashBankId;
                 data.InterestDate = model.InterestDate;
                 data.NoBukti = model.NoBukti;
-                data.Amount = model.Amount;
                 data.ExchangeRateAmount = model.ExchangeRateAmount;
-                data.TaxAmount = model.TaxAmount;
-                data.IsExpense = model.IsExpense;
+                data.BiayaAdminAmount = model.BiayaAdminAmount;
+                data.BiayaBungaAmount = model.BiayaBungaAmount;
+                data.PendapatanJasaAmount = model.PendapatanJasaAmount;
+                data.PendapatanBungaAmount = model.PendapatanBungaAmount;
+                data.PengembalianPiutangAmount = model.PengembalianPiutangAmount;
+                data.Description = model.Description;
+                //data.IsExpense = model.IsExpense;
                 model = _interestAdjustmentService.UpdateObject(data,_cashBankService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)

@@ -135,7 +135,7 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.Currency, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.ExchangeRate, Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Constant.MenuName.InterestAdjustment, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.BankAdministration, Constant.MenuGroupName.Transaction);
 
             _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PurchaseOrder, Constant.MenuGroupName.Transaction);

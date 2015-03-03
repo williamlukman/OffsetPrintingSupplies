@@ -35,7 +35,7 @@ namespace Data.Context
                 var obj = CashBankAdjustments.Where(x => x.Id == Id).FirstOrDefault();
                 nobukti = obj != null ? obj.Code ?? idstr : idstr;
             }
-            else if (tbl == Constant.GeneralLedgerSource.InterestAdjustment.ToUpper())
+            else if (tbl == Constant.GeneralLedgerSource.BankAdministration.ToUpper())
             {
                 var obj = InterestAdjustments.Where(x => x.Id == Id).FirstOrDefault();
                 nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;

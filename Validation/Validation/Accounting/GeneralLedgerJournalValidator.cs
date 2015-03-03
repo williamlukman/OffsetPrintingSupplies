@@ -17,7 +17,7 @@ namespace Validation.Validation
 
             if (!generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankMutation) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.InterestAdjustment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BankAdministration) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Memorial) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentRequest) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentVoucher) &&

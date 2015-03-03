@@ -22,7 +22,7 @@ namespace Core.Constants
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
             public static string Closing = "Closing";
-            public static string InterestAdjustment = "InterestAdjustment";
+            public static string BankAdministration = "BankAdministration";
             public static string Memorial = "Memorial";
             public static string PaymentRequest = "PaymentRequest";
             public static string PaymentVoucher = "PaymentVoucher";
@@ -123,6 +123,7 @@ namespace Core.Constants
             public static string ExchangeGain = "42";
 
             public static string Revenue = "5";
+            public static string PendapatanJasaGiro = "71010001";
             public static string PendapatanBungaBank = "71010002";
         }
 
@@ -185,6 +186,7 @@ namespace Core.Constants
             public static string ExchangeGain = "E42";
 
             public static string Revenue = "R5";
+            public static string PendapatanJasaGiro = "R71010001";
             public static string PendapatanBungaBank = "R71010002";
         }
         #endregion

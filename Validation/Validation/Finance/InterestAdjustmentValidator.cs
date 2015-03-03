@@ -49,25 +49,41 @@ namespace Validation.Validation
 
         public InterestAdjustment VPositiveAmount(InterestAdjustment interestAdjustment)
         {
-            if (interestAdjustment.Amount <= 0)
+            if (interestAdjustment.BiayaAdminAmount < 0)
             {
-                interestAdjustment.Errors.Add("Amount", "Harus lebih besar dari 0");
+                interestAdjustment.Errors.Add("BiayaAdminAmount", "Harus lebih besar atau sama dengan 0");
+            }
+            else if (interestAdjustment.BiayaBungaAmount < 0)
+            {
+                interestAdjustment.Errors.Add("BiayaBungaAmount", "Harus lebih besar atau sama dengan 0");
+            }
+            else if (interestAdjustment.PendapatanJasaAmount < 0)
+            {
+                interestAdjustment.Errors.Add("PendapatanJasaAmount", "Harus lebih besar atau sama dengan 0");
+            }
+            else if (interestAdjustment.PendapatanBungaAmount < 0)
+            {
+                interestAdjustment.Errors.Add("PendapatanBungaAmount", "Harus lebih besar atau sama dengan 0");
+            }
+            else if (interestAdjustment.PengembalianPiutangAmount < 0)
+            {
+                interestAdjustment.Errors.Add("PengembalianPiutangAmount", "Harus lebih besar atau sama dengan 0");
             }
             return interestAdjustment;
         }
 
-        public InterestAdjustment VIsValidTaxAmount(InterestAdjustment interestAdjustment)
-        {
-            if (interestAdjustment.TaxAmount < 0)
-            {
-                interestAdjustment.Errors.Add("TaxAmount", "Harus lebih besar atau sama dengan 0");
-            }
-            else if (interestAdjustment.TaxAmount >= interestAdjustment.Amount)
-            {
-                interestAdjustment.Errors.Add("TaxAmount", "Harus lebih kecil dari Amount");
-            }
-            return interestAdjustment;
-        }
+        //public InterestAdjustment VIsValidTaxAmount(InterestAdjustment interestAdjustment)
+        //{
+        //    if (interestAdjustment.TaxAmount < 0)
+        //    {
+        //        interestAdjustment.Errors.Add("TaxAmount", "Harus lebih besar atau sama dengan 0");
+        //    }
+        //    else if (interestAdjustment.TaxAmount >= interestAdjustment.Amount)
+        //    {
+        //        interestAdjustment.Errors.Add("TaxAmount", "Harus lebih kecil dari Amount");
+        //    }
+        //    return interestAdjustment;
+        //}
 
         public InterestAdjustment VIsValidExchangeRateAmount(InterestAdjustment interestAdjustment)
         {
@@ -81,19 +97,11 @@ namespace Validation.Validation
         public InterestAdjustment VNonNegativeNorZeroCashBankAmount(InterestAdjustment interestAdjustment, ICashBankService _cashBankService, bool CaseConfirm)
         {
             CashBank cashBank = _cashBankService.GetObjectById(interestAdjustment.CashBankId);
-            if (CaseConfirm && ((interestAdjustment.Amount - interestAdjustment.TaxAmount) * (interestAdjustment.IsExpense ? -1 : 1)) < 0)
+            decimal Amount = (interestAdjustment.PendapatanJasaAmount + interestAdjustment.PendapatanBungaAmount + interestAdjustment.PengembalianPiutangAmount) -
+                (interestAdjustment.BiayaAdminAmount + interestAdjustment.BiayaBungaAmount) * (CaseConfirm ? 1 : -1);
+            if (cashBank.Amount + Amount < 0)
             {
-                if (cashBank.Amount + ((interestAdjustment.Amount - interestAdjustment.TaxAmount) * (interestAdjustment.IsExpense ? -1 : 1)) < 0)
-                {
-                    interestAdjustment.Errors.Add("Generic", "Final CashBank Amount tidak boleh kurang dari 0");
-                }
-            }
-            else if (!CaseConfirm && ((interestAdjustment.Amount - interestAdjustment.TaxAmount) * (interestAdjustment.IsExpense ? -1 : 1)) > 0)
-            {
-                if (cashBank.Amount - ((interestAdjustment.Amount - interestAdjustment.TaxAmount) * (interestAdjustment.IsExpense ? -1 : 1)) < 0)
-                {
-                    interestAdjustment.Errors.Add("Generic", "Amount (minus Tax Amount) tidak boleh lebih besar dari CashBank Amount");
-                }
+                interestAdjustment.Errors.Add("Generic", "Final CashBank Amount tidak boleh kurang dari 0");
             }
             return interestAdjustment;
         }
@@ -113,12 +121,12 @@ namespace Validation.Validation
             if (!isValid(interestAdjustment)) { return interestAdjustment; }
             VHasCashBank(interestAdjustment, _cashBankService);
             if (!isValid(interestAdjustment)) { return interestAdjustment; }
-            VPositiveAmount(interestAdjustment);
-            if (!isValid(interestAdjustment)) { return interestAdjustment; }
-            VIsValidTaxAmount(interestAdjustment);
-            if (!isValid(interestAdjustment)) { return interestAdjustment; }
             VIsValidExchangeRateAmount(interestAdjustment);
             if (!isValid(interestAdjustment)) { return interestAdjustment; }
+            VPositiveAmount(interestAdjustment);
+            if (!isValid(interestAdjustment)) { return interestAdjustment; }
+            //VIsValidTaxAmount(interestAdjustment);
+            //if (!isValid(interestAdjustment)) { return interestAdjustment; }
             VNonNegativeNorZeroCashBankAmount(interestAdjustment, _cashBankService, true);
             return interestAdjustment;
         }

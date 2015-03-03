@@ -23,16 +23,21 @@
     $("#list").jqGrid({
         url: base_url + 'InterestAdjustment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'No Bukti', 'CashBank', 'Amount', 'Tax Amount', 'Exchange Rate',
-                   'Interest Date', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'No Bukti', 'CashBank', 'Exchange Rate', 'Biaya Admin', 'Biaya Bunga',
+                    'Pendapatan Jasa', 'Pendapatan Bunga', 'Pengembalian Piutang', 'Catatan',
+                   'Administration Date', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'code', index: 'code', width: 80 },
                   { name: 'nobukti', index: 'nobukti', width: 80 },
                   { name: 'cashbank', index: 'cashbank', width: 150 },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'taxamount', index: 'taxamount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'ExchangeRateAmount', index: 'ExchangeRateAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'BiayaAdminAmount', index: 'BiayaAdminAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'BiayaBungaAmount', index: 'BiayaBungaAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'PendapatanJasaAmount', index: 'PendapatanJasaAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'PendapatanBungaAmount', index: 'PendapatanBungaAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'PengembalianPiutangAmount', index: 'PengembalianPiutangAmount', width: 100, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'description', index: 'description', width: 150 },
                   { name: 'interestdate', index: 'interestdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search:false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -128,17 +133,21 @@
                             $('#NoBukti').val(result.NoBukti);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#Amount').numberbox('setValue', (result.Amount));
-                            $('#TaxAmount').numberbox('setValue', (result.TaxAmount));
+                            $('#Description').val(result.Description);
                             $('#ExchangeRateAmount').numberbox('setValue', (result.ExchangeRateAmount));
+                            $('#BiayaAdminAmount').numberbox('setValue', (result.BiayaAdminAmount));
+                            $('#BiayaBungaAmount').numberbox('setValue', (result.BiayaBungaAmount));
+                            $('#PendapatanJasaAmount').numberbox('setValue', (result.PendapatanJasaAmount));
+                            $('#PendapatanBungaAmount').numberbox('setValue', (result.PendapatanBungaAmount));
+                            $('#PengembalianPiutangAmount').numberbox('setValue', (result.PengembalianPiutangAmount));
                             $('#InterestDate').datebox('setValue', dateEnt(result.InterestDate));
-                            var e = document.getElementById("IsExpense");
-                            if (result.IsExpense == true) {
-                                e.selectedIndex = 1;
-                            }
-                            else {
-                                e.selectedIndex = 0;
-                            }
+                            //var e = document.getElementById("IsExpense");
+                            //if (result.IsExpense == true) {
+                            //    e.selectedIndex = 1;
+                            //}
+                            //else {
+                            //    e.selectedIndex = 0;
+                            //}
                             $('#form_div').dialog('open');
                         }
                     }
@@ -304,17 +313,19 @@
             submitURL = base_url + 'InterestAdjustment/Insert';
         }
 
-        var e = document.getElementById("IsExpense");
-        var IsExp = e.options[e.selectedIndex].value;
+        //var e = document.getElementById("IsExpense");
+        //var IsExp = e.options[e.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, CashBankId: $("#CashBankId").val(), InterestDate: $('#InterestDate').datebox('getValue'),
-                Amount: $("#Amount").numberbox('getValue'), TaxAmount: $("#TaxAmount").numberbox('getValue'),
-                ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'), IsExpense: IsExp, NoBukti: $("#NoBukti").val()
+                Id: id, CashBankId: $("#CashBankId").val(), InterestDate: $('#InterestDate').datebox('getValue'), Description: $("#Description").val(),
+                ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'), NoBukti: $("#NoBukti").val(), //IsExpense: IsExp,
+                BiayaAdminAmount: $("#BiayaAdminAmount").numberbox('getValue'), BiayaBungaAmount: $("#BiayaBungaAmount").numberbox('getValue'),
+                PendapatanJasaAmount: $("#PendapatanJasaAmount").numberbox('getValue'), PendapatanBungaAmount: $("#PendapatanBungaAmount").numberbox('getValue'),
+                PengembalianPiutangAmount: $("#PengembalianPiutangAmount").numberbox('getValue'), 
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {

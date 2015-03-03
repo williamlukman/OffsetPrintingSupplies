@@ -11,13 +11,18 @@ namespace Core.DomainModel
         public int CashBankId { get; set; }
 
         public DateTime InterestDate { get; set; }
-        public decimal Amount { get; set; }
-        public decimal TaxAmount { get; set; }
+        public decimal PendapatanJasaAmount { get; set; }
+        public decimal PendapatanBungaAmount { get; set; }
+        //public decimal PajakPendapatanBungaAmount { get; set; }
+        public decimal BiayaBungaAmount { get; set; }
+        public decimal BiayaAdminAmount { get; set; }
+        public decimal PengembalianPiutangAmount { get; set; }
         public string Code { get; set; }
         public string NoBukti { get; set; }
         public decimal ExchangeRateAmount { get; set; }
         public Nullable<int> ExchangeRateId { get; set; }
-        public bool IsExpense { get; set; }
+        //public bool IsExpense { get; set; }
+        public string Description { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

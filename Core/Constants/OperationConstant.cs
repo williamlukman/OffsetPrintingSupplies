@@ -35,7 +35,7 @@ namespace Core.Constants
             public static string CashBankAdjustment = "CashBankAdjustment";
             public static string CoreIdentification = "CoreIdentification";
             public static string DeliveryOrder = "DeliveryOrder";
-            public static string InterestAdjustment = "InterestAdjustment";
+            public static string BankAdministration = "BankAdministration";
             public static string PaymentVoucher = "PaymentVoucher";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseAllowance = "PurchaseAllowance";
@@ -157,7 +157,7 @@ namespace Core.Constants
             public static string SalesAllowance = "Sales Allowance";
             public static string SalesDownPayment = "Sales Down Payment";
             public static string SalesDPAllocation = "Sales DP Allocation";
-            public static string InterestAdjustment = "Interest Adjustment";
+            public static string BankAdministration = "Bank Administration";
 
             public static string Blanket = "Blanket";
             public static string BlendingRecipe = "Blending Recipe";

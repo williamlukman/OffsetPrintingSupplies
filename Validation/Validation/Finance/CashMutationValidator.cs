@@ -35,7 +35,7 @@ namespace Validation.Validation
         public CashMutation VSourceDocumentType(CashMutation cashMutation)
         {
             if (!cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.CashBankAdjustment) &&
-                !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.InterestAdjustment) &&
+                !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.BankAdministration) &&
                 !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.PaymentVoucher) &&
                 !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.ReceiptVoucher))
             {
