@@ -27,14 +27,15 @@
     $("#list").jqGrid({
         url: base_url + 'MstCashBank/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Amount', 'Currency','Bank', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Amount', 'Currency','Is Bank', 'Code', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
                   { name: 'description', index: 'description', width: 200 },
                   { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
 				  { name: 'currency', index: 'currency', width: 100 },
-                  { name: 'isbank', index: 'isbank', width: 40 },
+                  { name: 'isbank', index: 'isbank', width: 50 },
+                  { name: 'code', index: 'code', width: 60 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -113,6 +114,7 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
+                            $('#Code').val(result.Code);
                             $('#Name').val(result.Name);
                             $('#Description').val(result.Description);
                             $('#Amount').numberbox('setValue', (result.Amount));
@@ -218,7 +220,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Description: $("#Description").val(), IsBank: bank,CurrencyId : currency
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val(), Code: $("#Code").val(), IsBank: bank, CurrencyId: currency
             }),
             async: false,
             cache: false,

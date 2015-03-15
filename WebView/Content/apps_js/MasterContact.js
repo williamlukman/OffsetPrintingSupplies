@@ -41,13 +41,14 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetListCustomer',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Payment Term (Days)', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'DefaultPaymentTerm', index: 'DefaultPaymentTerm', width: 130 },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'npwp', index: 'npwp', width: 100 },
                   { name: 'contact', index: 'contactno', width: 150 },
@@ -85,6 +86,12 @@
 		              rowIsTaxable = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { istaxable: rowIsTaxable });
+
+		          rowTerm = $(this).getRowData(cl).DefaultPaymentTerm;
+		          if (rowTerm == "0") {
+		              rowTerm = "0 (CASH)";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { DefaultPaymentTerm: rowTerm });
 
 		      }
 		      //var ids = $(this).jqGrid('getDataIDs');
@@ -153,6 +160,7 @@
                             $('#NamaFakturPajak').val(result.NamaFakturPajak);
                             $('#Address').val(result.Address);
                             $('#DeliveryAddress').val(result.DeliveryAddress);
+                            $('#DefaultPaymentTerm').val(result.DefaultPaymentTerm);
                             $('#NPWP').val(result.NPWP);
                             $('#Description').val(result.Description);
                             $('#ContactNo').val(result.ContactNo);
@@ -267,6 +275,7 @@
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), NamaFakturPajak: $("#NamaFakturPajak").val(),
                 Address: $("#Address").val(), DeliveryAddress: $("#DeliveryAddress").val(),
+                DefaultPaymentTerm: $("#DefaultPaymentTerm").val(),
                 NPWP: $("#NPWP").val(), Description: $("#Description").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',

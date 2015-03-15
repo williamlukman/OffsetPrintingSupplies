@@ -10,6 +10,8 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using System.Data.Objects;
+using System.Data.Objects.SqlClient;
 
 namespace WebView.Controllers
 {
@@ -61,6 +63,7 @@ namespace WebView.Controllers
                              model.NamaFakturPajak,
                              model.Address,
                              model.DeliveryAddress,
+                             //model.DefaultPaymentTerm,
                              model.Description,
                              model.ContactNo,
                              model.PIC,
@@ -109,6 +112,7 @@ namespace WebView.Controllers
                             model.NamaFakturPajak,
                             model.Address,
                             model.DeliveryAddress,
+                            //model.DefaultPaymentTerm,
                             model.Description,
                             model.ContactNo,
                             model.PIC,
@@ -126,6 +130,68 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetShortList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.NamaFakturPajak,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.NamaFakturPajak,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetListCustomer(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
@@ -135,7 +201,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Supplier");
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType.ToLower() != "supplier");
 
             var query = (from model in q
                          select new
@@ -145,6 +211,7 @@ namespace WebView.Controllers
                              model.NamaFakturPajak,
                              model.Address,
                              model.DeliveryAddress,
+                             model.DefaultPaymentTerm,
                              model.Description,
                              model.NPWP,
                              model.ContactNo,
@@ -194,6 +261,7 @@ namespace WebView.Controllers
                             model.NamaFakturPajak,
                             model.Address,
                             model.DeliveryAddress,
+                            model.DefaultPaymentTerm,
                             model.Description,
                             model.NPWP,
                             model.ContactNo,
@@ -221,7 +289,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Customer");
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType.ToLower() != "customer");
 
             var query = (from model in q
                          select new
@@ -318,6 +386,7 @@ namespace WebView.Controllers
                  model.NamaFakturPajak,
                  model.Address,
                  model.DeliveryAddress,
+                 model.DefaultPaymentTerm,
                  model.Description,
                  model.NPWP,
                  model.ContactNo,
@@ -362,6 +431,7 @@ namespace WebView.Controllers
                 data.NamaFakturPajak = model.NamaFakturPajak;
                 data.Address = model.Address;
                 data.DeliveryAddress = model.DeliveryAddress;
+                data.DefaultPaymentTerm = model.DefaultPaymentTerm;
                 data.Description = model.Description;
                 data.NPWP = model.NPWP;
                 data.ContactNo = model.ContactNo;

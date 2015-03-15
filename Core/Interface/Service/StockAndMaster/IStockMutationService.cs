@@ -23,6 +23,7 @@ namespace Core.Interface.Service
          StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
          StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
          bool DeleteObject(int Id);
+         StockMutation CreateStockMutationForPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, Item item, decimal Quantity);
          StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);
          int DeleteStockMutations(IList<StockMutation> stockMutations); 
          IList<StockMutation> GetStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);

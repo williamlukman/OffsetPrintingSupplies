@@ -240,7 +240,7 @@ namespace Validation.Validation
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
                 if (warehouseItem.Quantity < 1)
                 {
-                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang mau dimutasikan");
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang di warehouse tidak boleh kurang dari stock yang mau dimutasikan (SKU: " + item.Sku + ")");
                 }
             }
             return coreIdentificationDetail;
@@ -258,7 +258,7 @@ namespace Validation.Validation
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
                 if (warehouseItem.Quantity < 1)
                 {
-                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang mau dimutasikan");
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang di warehouse tidak boleh kurang dari stock yang mau dimutasikan (SKU: " + item.Sku + ")");
                 }
             }
             return coreIdentificationDetail;
@@ -277,7 +277,7 @@ namespace Validation.Validation
                 CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
                 if (customerItem.Quantity < 1)
                 {
-                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang customer tidak boleh kurang dari stock yang mau dimutasikan");
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang customer tidak boleh kurang dari stock yang mau dimutasikan (SKU: " + item.Sku + ")");
                 }
             }
             return coreIdentificationDetail;

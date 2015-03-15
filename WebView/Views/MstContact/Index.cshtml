@@ -38,34 +38,34 @@
                 @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                     <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
                         <tr nowrap>
-                            <td width="139" nowrap style="width: 100px">
+                            <td width="140" nowrap >
                                 <label>ID</label></td>
-                            <td width="226">
+                            <td>
                                 <input id="id" type="text" size="10" disabled="disabled"/></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="200" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="50" maxlength="150" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Nama Faktur</label></td>
                             <td colspan="3">
-                                <input id="NamaFakturPajak" name="NamaFakturPajak" type="text" size="60" maxlength="200" align="left" /></td>
+                                <input id="NamaFakturPajak" name="NamaFakturPajak" type="text" size="50" maxlength="150" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label for="IsTaxable">Taxable </label></td>
                             <td>
-                                <input type="checkbox" id="IsTaxable" name="IsTaxable" value="value" onchange="onIsTaxable()"></td>
-                        </tr>
-                        <tr>
+                            <table cellpadding="0" cellspacing="0">
+                            <tr>
+                            <td><input type="checkbox" id="IsTaxable" name="IsTaxable" value="value" onchange="onIsTaxable()"></td>
                             <td>
                                 <label>Tax Code</label>
                             </td>
-                            <td colspan="3">
+                            <td>
                                 <select id="TaxCode">
                                     <option value="01">01 - Pajak 10%</option>
                                     <option value="02">02 - Pajak 10%</option>
@@ -78,19 +78,32 @@
                                     <option value="09">09 - Pajak 0%</option>
                                 </select>
                             </td>
+                            </tr>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Default Payment Term</label></td>
+                            <td colspan="3">
+                                <input id="DefaultPaymentTerm" name="DefaultPaymentTerm" type="number" size="60" maxlength="60" align="left" value="0" min="0" /> Days (0 = CASH)
+                            </td>
                         </tr>
                         <tr>
                             <td valign="top">
                                 <label>Address</label></td>
                             <td colspan="3">
-                              <textarea name="Address" id="Address" cols="60" rows="3"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
+                             <table cellpadding="0" cellspacing="0">
+                             <tr>
+                              <td><textarea name="Address" id="Address" cols="60" rows="3"></textarea></td>
+                        
+                            <td valign="top" width="140">
                                 <label>DeliveryAddress</label></td>
                             <td colspan="3">
                               <textarea name="DeliveryAddress" id="DeliveryAddress" cols="60" rows="3"></textarea>
+                            </td>
+                            </tr>
+                            </table>
                             </td>
                         </tr>
                         <tr>
@@ -98,40 +111,40 @@
                                 <label>Contact No</label></td>
                             <td colspan="3">
                                 @*<input id="ContactNo" name="ContactNo" type="text" size="60" maxlength="60" align="left" />*@
-                                <textarea name="ContactNo" id="ContactNo" cols="60" rows="2"></textarea>
+                                <textarea name="ContactNo" id="ContactNo" cols="60" rows="3"></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td valign="top">
                                 <label>Description</label></td>
                             <td colspan="3"><label>
-                              <textarea name="Description" id="Description" cols="60" rows="2"></textarea>
+                              <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
                             </label></td>
                         </tr>
                         <tr>
                             <td valign="top">
                                 <label>NPWP</label></td>
                             <td colspan="3">
-                              <input name="NPWP" id="NPWP" type="text" size="60" maxlength="60" align="left" />
+                              <input name="NPWP" id="NPWP" type="text" size="50" maxlength="60" align="left" />
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>PIC</label></td>
                             <td colspan="3">
-                                <input id="PIC" name="PIC" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="PIC" name="PIC" type="text" size="50" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>PIC Contact No</label></td>
                             <td colspan="3">
-                                <input id="PICContactNo" name="PICContactNo" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="PICContactNo" name="PICContactNo" type="text" size="50" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Email</label></td>
                             <td colspan="3">
-                                <input id="Email" name="Email" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Email" name="Email" type="text" size="50" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
                             <td>

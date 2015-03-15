@@ -46,6 +46,15 @@ namespace Validation.Validation
             return contact;
         }
 
+        public Contact VIsValidPaymentTerm(Contact contact)
+        {
+            if (contact.DefaultPaymentTerm < 0)
+            {
+                contact.Errors.Add("DefaultPaymentTerm", "Harus lebih besar atau sama dengan 0");
+            }
+            return contact;
+        }
+
         public Contact VHasContactNo(Contact contact)
         {
             if (String.IsNullOrEmpty(contact.ContactNo) || contact.ContactNo.Trim() == "")
@@ -148,6 +157,8 @@ namespace Validation.Validation
             VHasTaxCode(contact);
             if (!isValid(contact)) { return contact; }
             VHasUniqueName(contact, _contactService);
+            if (!isValid(contact)) { return contact; }
+            VIsValidPaymentTerm(contact);
             //if (!isValid(contact)) { return contact; }
             //VHasAddress(contact);
             //if (!isValid(contact)) { return contact; }

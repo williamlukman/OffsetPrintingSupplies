@@ -31,6 +31,16 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
+        public PurchaseOrderDetail VAllowEditOrPurchaseOrderHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
+        {
+            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
+            if (purchaseOrder.IsConfirmed && !purchaseOrder.AllowEditDetail)
+            {
+                purchaseOrderDetail.Errors.Add("Generic", "Sudah terkonfirmasi");
+            }
+            return purchaseOrderDetail;
+        }
+
         public PurchaseOrderDetail VPurchaseReceivalHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
             IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetQueryable().Where(x => x.PurchaseOrderDetailId == purchaseOrderDetail.Id).ToList();
@@ -62,6 +72,11 @@ namespace Validation.Validation
             {
                 purchaseOrderDetail.Errors.Add("Quantity", "Tidak boleh kurang dari 0");
             }
+            else if (purchaseOrderDetail.PendingReceivalQuantity < 0)
+            {
+                purchaseOrderDetail.Errors.Add("Generic", "Pending Receival Quantity tidak boleh menjadi negatif");
+            }
+
             return purchaseOrderDetail;
         }
 
@@ -101,7 +116,7 @@ namespace Validation.Validation
         {
             if (!purchaseOrderDetail.IsConfirmed)
             {
-                purchaseOrderDetail.Errors.Add("Generic", "Belum selesai");
+                purchaseOrderDetail.Errors.Add("Generic", "Belum dikonfirmasi");
             }
             return purchaseOrderDetail;
         }
@@ -110,7 +125,7 @@ namespace Validation.Validation
         {
             if (purchaseOrderDetail.IsConfirmed)
             {
-                purchaseOrderDetail.Errors.Add("Generic", "Sudah selesai");
+                purchaseOrderDetail.Errors.Add("Generic", "Sudah terkonfirmasi");
             }
             return purchaseOrderDetail;
         }
@@ -164,8 +179,11 @@ namespace Validation.Validation
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetailService, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            //User is allowed to edit price so long the Purchase Receival is not yet confirmed
+            // User is allowed to edit price/qty so long the Purchase Receival is not yet confirmed
             VPurchaseReceivalHasNotBeenConfirmed(purchaseOrderDetail, _purchaseReceivalService, _purchaseReceivalDetailService);
+            // Allow Editing
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VAllowEditOrPurchaseOrderHasNotBeenConfirmed(purchaseOrderDetail, _purchaseOrderService);
             return purchaseOrderDetail;
         }
 

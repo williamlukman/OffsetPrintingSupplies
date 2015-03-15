@@ -28,8 +28,8 @@ namespace Core.Interface.Service
         IList<CashMutation> SoftDeleteCashMutationForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank);
         CashMutation CreateCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        CashMutation CreateCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank);
-        IList<CashMutation> SoftDeleteCashMutationForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank);
+        CashMutation CreateCashMutationForBankAdministration(BankAdministration bankAdministration, CashBank cashBank);
+        IList<CashMutation> SoftDeleteCashMutationForBankAdministration(BankAdministration bankAdministration, CashBank cashBank);
         IList<CashMutation> CreateCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
         IList<CashMutation> SoftDeleteCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
         void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService, ICurrencyService _currencyService);

@@ -284,6 +284,7 @@ namespace WebView.Controllers
                 model.CurrencyId,
                 model.PurchaseDate,
                 ConfirmationDate = model.ConfirmationDate,
+                model.AllowEditDetail,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -310,6 +311,7 @@ namespace WebView.Controllers
                 model.Quantity,
                 model.Price,
                 model.PurchaseOrder.IsConfirmed,
+                model.PurchaseOrder.AllowEditDetail,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -358,11 +360,15 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseOrderService.GetObjectById(model.Id);
-                data.ContactId = model.ContactId;
-                data.PurchaseDate = model.PurchaseDate;
-                data.NomorSurat = model.NomorSurat;
-                data.CurrencyId = model.CurrencyId;
-                data.Description = model.Description;
+                if (!data.IsConfirmed)
+                {
+                    data.ContactId = model.ContactId;
+                    data.PurchaseDate = model.PurchaseDate;
+                    data.NomorSurat = model.NomorSurat;
+                    data.CurrencyId = model.CurrencyId;
+                    data.Description = model.Description;
+                }
+                data.AllowEditDetail = model.AllowEditDetail;
                 model = _purchaseOrderService.UpdateObject(data,_contactService);
             }
             catch (Exception ex)
@@ -423,11 +429,17 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseOrderDetailService.GetObjectById(model.Id);
-                data.ItemId = model.ItemId;
+                var newpending = data.PendingReceivalQuantity + (model.Quantity - data.Quantity);
+                var pendingdiff = newpending - data.PendingReceivalQuantity;
+                data.PendingReceivalQuantity = newpending; // model.Quantity;
                 data.Quantity = model.Quantity;
-                data.PendingReceivalQuantity = model.Quantity;
+                if (!data.IsConfirmed)
+                {
+                    data.ItemId = model.ItemId;
+                }
                 data.Price = model.Price;
-                model = _purchaseOrderDetailService.UpdateObject(data,_purchaseOrderService,_itemService, _purchaseReceivalService, _purchaseReceivalDetailService);
+                model = _purchaseOrderDetailService.UpdateObject(data,pendingdiff,_purchaseOrderService,_itemService, _purchaseReceivalService, _purchaseReceivalDetailService,
+                                                                  _stockMutationService, _blanketService, _warehouseItemService);
             }
             catch (Exception ex)
             {

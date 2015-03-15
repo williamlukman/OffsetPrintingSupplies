@@ -101,7 +101,7 @@ namespace Service.Service
                 purchaseInvoice = _repository.UpdateObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival,
-                                             _accountService, _gLNonBaseCurrencyService, _currencyService);
+                                             _accountService, _gLNonBaseCurrencyService, _currencyService, _purchaseInvoiceDetailService);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
                 Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id,purchaseInvoice.CurrencyId, purchaseInvoice.AmountPayable,purchaseInvoice.ExchangeRateAmount, purchaseInvoice.DueDate);
@@ -125,7 +125,7 @@ namespace Service.Service
                 }
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival, _accountService,
-                                             _gLNonBaseCurrencyService, _currencyService);
+                                             _gLNonBaseCurrencyService, _currencyService, _purchaseInvoiceDetailService);
                 _repository.UnconfirmObject(purchaseInvoice);
                 _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id);
@@ -142,7 +142,7 @@ namespace Service.Service
             {
                 AmountPayable += detail.Amount;
             }
-            decimal Discount = purchaseInvoice.Discount / 100 * AmountPayable;
+            decimal Discount = AmountPayable * purchaseInvoice.Discount / 100.0m;
             decimal TaxableAmount = AmountPayable - Discount;
             decimal Tax = purchaseInvoice.Tax / 100 * TaxableAmount;
             purchaseInvoice.AmountPayable = TaxableAmount + Tax;

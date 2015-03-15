@@ -2734,7 +2734,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public ActionResult PrintoutPurchaseOrderLokal(int Id = 0, decimal Rate = 1, string Remark = "", string Note = "")
+        public ActionResult PrintoutPurchaseOrderLokal(int Id = 0, decimal Rate = 1, string CC = "", string Remark = "", string Note = "")
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -2777,7 +2777,7 @@ namespace WebView.Controllers
                 rd.SetParameterValue("OrderNo", obj.PurchaseOrder.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
                 rd.SetParameterValue("Personnel", user ?? ""); //obj.RecoveryOrder.Employee.Name
                 rd.SetParameterValue("Customer", obj.PurchaseOrder.Contact.Name ?? "");
-                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC ?? ""); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
                 rd.SetParameterValue("ContactAddr", obj.PurchaseOrder.Contact.Address ?? "");
                 rd.SetParameterValue("ContactNo", obj.PurchaseOrder.Contact.ContactNo ?? "");
                 rd.SetParameterValue("Remark", Encoding.UTF8.GetString(Convert.FromBase64String(Remark)) ?? ""); //obj.PurchaseOrder.Description
@@ -2799,7 +2799,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public ActionResult PrintoutPurchaseOrderImport(int Id = 0, decimal Rate = 1, string Remark = "", string Note = "")
+        public ActionResult PrintoutPurchaseOrderImport(int Id = 0, decimal Rate = 1, string CC = "", string Remark = "", string Note = "")
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -2842,12 +2842,12 @@ namespace WebView.Controllers
                 rd.SetParameterValue("OrderNo", obj.PurchaseOrder.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
                 rd.SetParameterValue("Personnel", user ?? ""); //obj.RecoveryOrder.Employee.Name
                 rd.SetParameterValue("Customer", obj.PurchaseOrder.Contact.Name ?? "");
-                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("ContactPerson", obj.PurchaseOrder.Contact.PIC ?? ""); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
                 rd.SetParameterValue("ContactAddr", obj.PurchaseOrder.Contact.Address ?? "");
                 rd.SetParameterValue("ContactNo", obj.PurchaseOrder.Contact.ContactNo ?? "");
                 rd.SetParameterValue("Remark", Encoding.UTF8.GetString(Convert.FromBase64String(Remark)) ?? ""); //obj.PurchaseOrder.Description
                 rd.SetParameterValue("Note", Encoding.UTF8.GetString(Convert.FromBase64String(Note)) ?? "");
-                rd.SetParameterValue("Cc", "");
+                rd.SetParameterValue("Cc", Encoding.UTF8.GetString(Convert.FromBase64String(CC)) ?? "");
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");
@@ -3687,13 +3687,13 @@ namespace WebView.Controllers
         }
         #endregion
 
-        #region InterestAdjustment
-        public ActionResult InterestAdjustment()
+        #region BankAdministration
+        public ActionResult BankAdministration()
         {
             return View();
         }
 
-        public ActionResult PrintoutInterestAdjustment(int Id = 0)
+        public ActionResult PrintoutBankAdministration(int Id = 0)
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -3701,92 +3701,107 @@ namespace WebView.Controllers
                 string user = AuthenticationModel.GetUserName();
                 //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
 
-                var q = db.InterestAdjustments.Include(x => x.CashBank).Include(x => x.ExchangeRate)
-                                                              .Where(x => !x.IsDeleted && x.Id == Id).ToList();
+                var q = db.BankAdministrationDetails.Include(x => x.BankAdministration).Include(x => x.Account)
+                                                              .Where(x => !x.IsDeleted && x.BankAdministrationId == Id && !x.BankAdministration.IsDeleted).ToList();
 
                 var obj = q.FirstOrDefault();
 
                 var query = new List<object>();
 
-                decimal Total = (obj.PendapatanJasaAmount + obj.PendapatanBungaAmount + obj.PengembalianPiutangAmount) - 
-                                (obj.BiayaAdminAmount + obj.BiayaBungaAmount);
+                //decimal Total = (obj.PendapatanJasaAmount + obj.PendapatanBungaAmount + obj.PengembalianPiutangAmount) - 
+                //                (obj.BiayaAdminAmount + obj.BiayaBungaAmount);
+                decimal Total = obj.BankAdministration.Amount;
+
+                var CurCode = (obj.BankAdministration.CashBank.Currency.Name == "Rupiah") ? "IDR" :
+                              (obj.BankAdministration.CashBank.Currency.Name == "Euro") ? "EUR" : obj.BankAdministration.CashBank.Currency.Name;
 
                 foreach (var det in q)
                 {
-                    var CurCode = (det.CashBank.Currency.Name == "Rupiah") ? "IDR" :
-                                    (det.CashBank.Currency.Name == "Euro") ? "EUR" : det.CashBank.Currency.Name;
-                    //if (det.Id == obj.Id) netAmount -= (obj.ReceiptVoucher.BiayaBank + (obj.ReceiptVoucher.StatusPembulatan == Constant.GeneralLedgerStatus.Credit ? obj.ReceiptVoucher.Pembulatan : -obj.ReceiptVoucher.Pembulatan));
+                    if (det.Amount > 0)
+                    {
+                        decimal Amount = (Total < 0) ? det.Amount * (det.Account.Group == Constant.AccountGroup.Expense || det.Account.Group == Constant.AccountGroup.Asset ? (det.Status == Constant.GeneralLedgerStatus.Credit ? -1 : 1) : (det.Status == Constant.GeneralLedgerStatus.Credit ? -1 : 1)) :
+                                                       det.Amount * (det.Account.Group == Constant.AccountGroup.Expense || det.Account.Group == Constant.AccountGroup.Asset ? (det.Status == Constant.GeneralLedgerStatus.Credit ? 1 : -1) : (det.Status == Constant.GeneralLedgerStatus.Credit ? 1 : -1));
+                        query.Add(new
+                        {
+                            Code = det.Account.Code,
+                            Amount = Amount,
+                            AmountIDR = Math.Round(Amount * obj.BankAdministration.ExchangeRateAmount, 2),
+                            Name = det.Account.Name,
+                            Status = det.Status == Constant.GeneralLedgerStatus.Credit ? "K" : "D" , //det.Account.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                            ContactName = "",
+                        });
+                    }
 
-                    if (det.BiayaAdminAmount > 0)
-                    {
-                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaAdminBank).FirstOrDefault();
-                        decimal Amount = (Total < 0) ? det.BiayaAdminAmount : -det.BiayaAdminAmount;
-                        query.Add(new
-                        {
-                            Code = acc.Code,
-                            Amount = Amount,
-                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
-                            Name = acc.Name,
-                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
-                            ContactName = "",
-                        });
-                    }
-                    if (det.BiayaBungaAmount > 0)
-                    {
-                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.InterestExpense).FirstOrDefault();
-                        decimal Amount = (Total < 0) ? det.BiayaBungaAmount : -det.BiayaBungaAmount;
-                        query.Add(new
-                        {
-                            Code = acc.Code,
-                            Amount = Amount,
-                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
-                            Name = acc.Name,
-                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
-                            ContactName = "",
-                        });
-                    }
-                    if (det.PendapatanJasaAmount > 0)
-                    {
-                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanJasaGiro).FirstOrDefault();
-                        decimal Amount = (Total >= 0) ? det.PendapatanJasaAmount : -det.PendapatanJasaAmount;
-                        query.Add(new
-                        {
-                            Code = acc.Code,
-                            Amount = Amount,
-                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
-                            Name = acc.Name,
-                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
-                            ContactName = "",
-                        });
-                    }
-                    if (det.PendapatanBungaAmount > 0)
-                    {
-                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanBungaBank).FirstOrDefault();
-                        decimal Amount = (Total >= 0) ? det.PendapatanBungaAmount : -det.PendapatanBungaAmount;
-                        query.Add(new
-                        {
-                            Code = acc.Code,
-                            Amount = Amount,
-                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
-                            Name = acc.Name,
-                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
-                            ContactName = "",
-                        });
-                    }
-                    if (det.PengembalianPiutangAmount > 0)
-                    {
-                        var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PiutangLainLain).FirstOrDefault();
-                        decimal Amount = (Total >= 0) ? det.PengembalianPiutangAmount : -det.PengembalianPiutangAmount;
-                        query.Add(new
-                        {
-                            Code = acc.Code,
-                            Amount = Amount,
-                            AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
-                            Name = acc.Name,
-                            Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
-                            ContactName = "",
-                        });
-                    }
+                    //if (det.BiayaAdminAmount > 0)
+                    //{
+                    //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.BiayaAdminBank).FirstOrDefault();
+                    //    decimal Amount = (Total < 0) ? det.BiayaAdminAmount : -det.BiayaAdminAmount;
+                    //    query.Add(new
+                    //    {
+                    //        Code = acc.Code,
+                    //        Amount = Amount,
+                    //        AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                    //        Name = acc.Name,
+                    //        Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                    //        ContactName = "",
+                    //    });
+                    //}
+                    //if (det.BiayaBungaAmount > 0)
+                    //{
+                    //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.InterestExpense).FirstOrDefault();
+                    //    decimal Amount = (Total < 0) ? det.BiayaBungaAmount : -det.BiayaBungaAmount;
+                    //    query.Add(new
+                    //    {
+                    //        Code = acc.Code,
+                    //        Amount = Amount,
+                    //        AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                    //        Name = acc.Name,
+                    //        Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                    //        ContactName = "",
+                    //    });
+                    //}
+                    //if (det.PendapatanJasaAmount > 0)
+                    //{
+                    //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanJasaGiro).FirstOrDefault();
+                    //    decimal Amount = (Total >= 0) ? det.PendapatanJasaAmount : -det.PendapatanJasaAmount;
+                    //    query.Add(new
+                    //    {
+                    //        Code = acc.Code,
+                    //        Amount = Amount,
+                    //        AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                    //        Name = acc.Name,
+                    //        Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                    //        ContactName = "",
+                    //    });
+                    //}
+                    //if (det.PendapatanBungaAmount > 0)
+                    //{
+                    //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PendapatanBungaBank).FirstOrDefault();
+                    //    decimal Amount = (Total >= 0) ? det.PendapatanBungaAmount : -det.PendapatanBungaAmount;
+                    //    query.Add(new
+                    //    {
+                    //        Code = acc.Code,
+                    //        Amount = Amount,
+                    //        AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                    //        Name = acc.Name,
+                    //        Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                    //        ContactName = "",
+                    //    });
+                    //}
+                    //if (det.PengembalianPiutangAmount > 0)
+                    //{
+                    //    var acc = db.Accounts.Where(x => /*!x.IsDeleted &&*/ x.LegacyCode == Constant.AccountLegacyCode.PiutangLainLain).FirstOrDefault();
+                    //    decimal Amount = (Total >= 0) ? det.PengembalianPiutangAmount : -det.PengembalianPiutangAmount;
+                    //    query.Add(new
+                    //    {
+                    //        Code = acc.Code,
+                    //        Amount = Amount,
+                    //        AmountIDR = Math.Round(Amount * obj.ExchangeRateAmount, 2),
+                    //        Name = acc.Name,
+                    //        Status = acc.Group == Constant.AccountGroup.Expense ? "D" : "K",
+                    //        ContactName = "",
+                    //    });
+                    //}
                 }
 
                 //if (obj.ReceiptVoucher.Pembulatan != 0)
@@ -3816,7 +3831,7 @@ namespace WebView.Controllers
                         Desc = m.Description,
                     }).ToList();
 
-                if (!obj.CashBank.IsBank)
+                if (!obj.BankAdministration.CashBank.IsBank)
                 {
                     banklist = banklist.Take(0).ToList();
                 }
@@ -3840,17 +3855,17 @@ namespace WebView.Controllers
                 rd.Subreports["BankList"].SetDataSource(banklist);
 
                 // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
-                var currency = (obj.CashBank.Currency.Name == "Rupiah") ? "IDR" :
-                                    (obj.CashBank.Currency.Name == "Euro") ? "EUR" : obj.CashBank.Currency.Name;
-                rd.SetParameterValue("No", obj.NoBukti ?? "");
+                var currency = (obj.BankAdministration.CashBank.Currency.Name == "Rupiah") ? "IDR" :
+                                    (obj.BankAdministration.CashBank.Currency.Name == "Euro") ? "EUR" : obj.BankAdministration.CashBank.Currency.Name;
+                rd.SetParameterValue("No", obj.BankAdministration.NoBukti ?? "");
                 rd.SetParameterValue("Tgl", obj.ConfirmationDate.GetValueOrDefault());
                 rd.SetParameterValue("CurSym", (currency == "USD" || currency == "SGD") ? "$" : (currency == "EUR") ? "€" : (currency == "GBP") ? "£" : (currency == "JPY") ? "¥" : (currency == "IDR") ? "Rp" : currency);
-                rd.SetParameterValue("Rate", obj.ExchangeRateAmount);
-                rd.SetParameterValue("IsBank", obj.CashBank.IsBank);
-                rd.SetParameterValue("NoRek", obj.CashBank.Description ?? "");
+                rd.SetParameterValue("Rate", obj.BankAdministration.ExchangeRateAmount);
+                rd.SetParameterValue("IsBank", obj.BankAdministration.CashBank.IsBank);
+                rd.SetParameterValue("NoRek", obj.BankAdministration.CashBank.Description ?? "");
                 rd.SetParameterValue("NoCek", "");
-                rd.SetParameterValue("Catatan", obj.Description ?? "");
-                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Math.Abs(Total), true, obj.CashBank.Currency.Name, "Sen"));
+                rd.SetParameterValue("Catatan", obj.BankAdministration.Description ?? "");
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWordsIndo(Math.Abs(Total), true, obj.BankAdministration.CashBank.Currency.Name, "Sen"));
                 rd.SetParameterValue("CompanyName", company.Name ?? "");
                 rd.SetParameterValue("Disiapkan", "");
                 rd.SetParameterValue("Diterima", "");

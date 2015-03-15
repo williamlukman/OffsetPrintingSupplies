@@ -37,7 +37,7 @@ namespace Data.Context
             }
             else if (tbl == Constant.GeneralLedgerSource.BankAdministration.ToUpper())
             {
-                var obj = InterestAdjustments.Where(x => x.Id == Id).FirstOrDefault();
+                var obj = BankAdministrations.Where(x => x.Id == Id).FirstOrDefault();
                 nobukti = obj != null ? obj.NoBukti ?? idstr : idstr;
             }
             else if (tbl == Constant.GeneralLedgerSource.CashBankMutation.ToUpper())
@@ -181,7 +181,7 @@ namespace Data.Context
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "SubType", "ItemType", "UoM", "ContactDetail", "Employee", "Contact", "ContactGroup", "RollerType", "Machine", "Company" };
             IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "InterestAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
+                                          "CashMutation", "CashBankAdjustment", "BankAdministrationDetail", "BankAdministration", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -203,6 +203,8 @@ namespace Data.Context
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             modelBuilder.Configurations.Add(new AccountMapping());
+            modelBuilder.Configurations.Add(new BankAdministrationMapping());
+            modelBuilder.Configurations.Add(new BankAdministrationDetailMapping());
             modelBuilder.Configurations.Add(new BlanketMapping());
             modelBuilder.Configurations.Add(new BlanketOrderMapping());
             modelBuilder.Configurations.Add(new BlanketOrderDetailMapping());
@@ -231,7 +233,6 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new EmployeeMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
-            modelBuilder.Configurations.Add(new InterestAdjustmentMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
@@ -317,6 +318,8 @@ namespace Data.Context
         }
 
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<BankAdministration> BankAdministrations { get; set; }
+        public DbSet<BankAdministrationDetail> BankAdministrationDetails { get; set; }
         public DbSet<Blanket> Blankets { get; set; }
         public DbSet<BlanketOrder> BlanketOrders { get; set; }
         public DbSet<BlanketOrderDetail> BlanketOrderDetails { get; set; }
@@ -345,7 +348,6 @@ namespace Data.Context
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
-        public DbSet<InterestAdjustment> InterestAdjustments { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }

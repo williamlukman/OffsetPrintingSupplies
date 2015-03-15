@@ -61,7 +61,8 @@
     <Compile Include="Service\Finance\CashMutationService.cs" />
     <Compile Include="Service\Finance\CashBankAdjustmentService.cs" />
     <Compile Include="Service\Finance\CashBankMutationService.cs" />
-    <Compile Include="Service\Finance\InterestAdjustmentService.cs" />
+    <Compile Include="Service\Finance\BankAdministrationService.cs" />
+    <Compile Include="Service\Finance\BankAdministrationDetailService.cs" />
     <Compile Include="Service\Finance\ReceiptRequestDetailService.cs" />
     <Compile Include="Service\Finance\ReceiptRequestService.cs" />
     <Compile Include="Service\Finance\ExchangeRateService.cs" />

@@ -53,6 +53,7 @@ namespace WebView.Controllers
                              model.Amount,
                              currency = model.Currency.Name,
                              model.IsBank,
+                             model.Code,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -92,6 +93,7 @@ namespace WebView.Controllers
                             item.Amount,
                             item.currency,
                             item.IsBank,
+                            item.Code,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -116,6 +118,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
+                model.Code,
                 model.Name,
                 model.Description,
                 model.Amount,
@@ -150,6 +153,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankService.GetObjectById(model.Id);
+                data.Code = model.Code;
                 data.Name = model.Name;
                 data.Description = model.Description;
                 data.CurrencyId = model.CurrencyId;

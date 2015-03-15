@@ -8,7 +8,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/interestadjustment.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/bankadministration.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
@@ -16,6 +16,7 @@
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
+        <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add/Edit Detail</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
@@ -62,13 +63,14 @@
                                <input id="NoBukti" type="text" size="10" />
                             </td>
                         </tr>
-                        <tr>
-                         <td>
-                             <label>Administration Date</label></td>
-                         <td>
-                             <input id="InterestDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                          </td>
-                         </tr>
+                         <tr>
+                            <td>
+                                <label>Administration Date</label></td>
+                            <td>
+                                <div id="AdministrationDateDiv"><input id="AdministrationDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="AdministrationDateDiv2"><input id="AdministrationDate2" type="text" size="10" disabled="disabled"/></div>
+                            </td>
+                        </tr>
                          <tr>
                             <td>
                                 <label>CashBank</label></td>
@@ -94,39 +96,46 @@
                                </select>
                             </td>
                          </tr>
-                         <tr>
+                         <tr hidden>
                             <td>
                                 <label>Biaya Admin</label></td>
                             <td colspan="3">
                                 <input type="text" id="BiayaAdminAmount" name="BiayaAdminAmount"  class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" size="20" maxlength="30" />
                             </td>
                         </tr>
-                        <tr>
+                        <tr hidden>
                             <td >
                                 <label>Biaya Bunga</label></td>
                             <td colspan="3">
                                <input id="BiayaBungaAmount" name="BiayaBungaAmount" type="text" size="20" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                             </td>     
                         </tr> 
-                        <tr>
+                        <tr hidden>
                             <td >
                                 <label>Pendapatan Jasa</label></td>
                             <td colspan="3">
                                <input id="PendapatanJasaAmount" name="PendapatanJasaAmount" type="text" size="20" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                             </td>     
                         </tr> 
-                        <tr>
+                        <tr hidden>
                             <td >
                                 <label>Pendapatan Bunga</label></td>
                             <td colspan="3">
                                <input id="PendapatanBungaAmount" name="PendapatanBungaAmount" type="text" size="20" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                             </td>     
                         </tr> 
-                        <tr>
+                        <tr hidden>
                             <td >
                                 <label>Pengembalian Piutang</label></td>
                             <td colspan="3">
                                <input id="PengembalianPiutangAmount" name="PengembalianPiutangAmount" type="text" size="20" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
+                            </td>     
+                        </tr>
+                        <tr>
+                            <td >
+                                <label>Total Amount</label></td>
+                            <td colspan="3">
+                               <input id="TotalAmount" name="Amount" type="text" size="20" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled />
                             </td>     
                         </tr> 
                         <tr>
@@ -137,11 +146,63 @@
                             </label></td>
                         </tr>
                     </table>
+                    <div id="tabledetail_div">
+                        <div id="toolbardetail" class="grid_toolbar">
+                            <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+                            <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
+                            <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+                        </div>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
+                    </div>
                 @*</fieldset>*@
             </form>
         </div>
     </div>
 <!-- End Dialog Box -->
+
+   <!-- Dialog Box  Item-->
+    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
+        data-options="modal:true" title=".: Input Account :.">
+
+        <div id="item_toolbar" class="form_toolbar">
+            <a id="item_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="item_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="item_info">
+              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                  <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Account
+                      </td>
+                      <td>
+                         <input id="AccountId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="btnAccount" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                         <input id="Account" name="AccountId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                         <input id="BankAdministrationId" name="BankAdministrationId" type="text" size ="10" hidden="hidden" />
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td>
+                        <select id="Status">
+                            <option value="1" selected="selected">Debit</option>
+                            <option value="2">Credit</option>
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        Amount
+                    </td>
+                    <td>
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
+                    </td>
+                  </tr>
+              </table>
+        </div>
+    </div>
+    <!-- End Dialog Box Item-->
 
  <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
@@ -206,6 +267,19 @@
     </div>
 <!-- END Look Up CashBank -->
 
+<!-- Look Up account -->
+    <div id="lookup_div_account" class="easyui-dialog" title="List Account" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_account" class="grid_toolbar">
+            <a id="lookup_btn_add_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_account" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_account" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up account -->
 
   </div>
 

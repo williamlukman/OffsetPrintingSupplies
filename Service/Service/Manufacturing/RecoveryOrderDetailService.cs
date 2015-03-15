@@ -546,12 +546,12 @@ namespace Service.Service
 
             if (coreIdentification.IsInHouse)
             {
-                TotalCost = Core.AvgPrice + (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+                TotalCost = Core.AvgPrice + recoveryOrderDetail.CompoundCost + AccessoriesCost; //(Compound.AvgPrice * recoveryOrderDetail.CompoundUsage)+
                 recoveryOrderDetail.CoreCost = Core.AvgPrice;
             }
             else
             {
-                TotalCost = (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+                TotalCost = recoveryOrderDetail.CompoundCost  + AccessoriesCost; //(Compound.AvgPrice * recoveryOrderDetail.CompoundUsage)+
                 recoveryOrderDetail.CoreCost = 0;
             }
             recoveryOrderDetail.TotalCost = TotalCost;

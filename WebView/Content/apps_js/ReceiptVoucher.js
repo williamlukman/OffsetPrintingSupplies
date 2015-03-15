@@ -62,9 +62,9 @@
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'contact', index: 'contact', width: 150 },
                   { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
+                  { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'receiptdate', index: 'receiptdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'gbch_no', index: 'gbch_no', width: 100 },
@@ -236,7 +236,7 @@
                             }
                             $('#CurrencyCashBank').val(result.Currency);
                             $('#RateToIDR').attr('disabled', true);
-                            $('#RateToIDR').val(result.RateToIDR);
+                            $('#RateToIDR').numberbox('setValue', result.RateToIDR);
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -327,7 +327,7 @@
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#CurrencyId').val(result.CurrencyId);
-                            $('#RateToIDR').numberbox('setValue',result.RateToIDR);
+                            $('#RateToIDR').numberbox('setValue', result.RateToIDR);
                             $('#CurrencyId').removeAttr('disabled');
                             $('#RateToIDR').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
@@ -853,7 +853,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetListCustomer';
+        var lookUpURL = base_url + 'MstContact/GetShortList'; //GetListCustomer
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -865,11 +865,15 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
+        colNames: ['ID', 'Name', 'Nama Faktur Pajak','Group ID', 'Contact Group', 'Contact Type'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'name', index: 'name', width: 250 },
+                  { name: 'NamaFakturPajak', index: 'NamaFakturPajak', width: 250 },
+                  { name: 'contactgroupid', index: 'contactgroupid', width: 60, align: "center", hidden: true },
+				  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'contacttype', index: 'contacttype', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -922,7 +926,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name','Description','Amount','Currency',
+        colNames: ['ID', 'Name','Description','Amount','Currency', 'Is Bank', 'Code'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
@@ -930,6 +934,8 @@
                   { name: 'description', index: 'description', width: 200 },
                   { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,hidden : true},
 				  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'isbank', index: 'isbank', width: 50 },
+                  { name: 'code', index: 'code', width: 60 },
         ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
@@ -959,6 +965,7 @@
 
             $('#CashBankId').val(ret.id).data("kode", id);
             $('#CashBank').val(ret.name);
+            $('#NoBukti').val(ret.code);
             $('#CurrencyCashBank').val(ret.currency);
             $('#lookup_div_cashbank').dialog('close');
         } else {

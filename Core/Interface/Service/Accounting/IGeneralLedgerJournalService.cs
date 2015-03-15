@@ -70,10 +70,10 @@ namespace Core.Interface.Service
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
-        IList<GeneralLedgerJournal> CreateConfirmationJournalForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank,
-                                    IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
-        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForInterestAdjustment(InterestAdjustment interestAdjustment, CashBank cashBank, IAccountService _accountService,
-                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForBankAdministration(BankAdministration bankAdministration, CashBank cashBank,
+                                    IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, IBankAdministrationDetailService _bankAdministrationDetailService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBankAdministration(BankAdministration bankAdministration, CashBank cashBank, IAccountService _accountService,
+                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, IBankAdministrationDetailService _bankAdministrationDetailService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService,
                                     ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService,
@@ -92,9 +92,9 @@ namespace Core.Interface.Service
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseReceival(PurchaseReceival purchaseReceival, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateJournalForPurchaseInvoiceMigration(PurchaseInvoiceMigration purchaseInvoiceMigration, IAccountService _accountService,  ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival, IAccountService _accountService,
-                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
+                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival, IAccountService _accountService,
-                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
+                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         GeneralLedgerJournal CreateConfirmationJournalForDeliveryOrderDetail(DeliveryOrder deliveryOrder, int AccountId, decimal COGS, IAccountService _accountService);
         GeneralLedgerJournal CreateUnconfirmationJournalForDeliveryOrderDetail(DeliveryOrder deliveryOrder, int AccountId, decimal COGS, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForDeliveryOrder(DeliveryOrder deliveryOrder, IAccountService _accountService);

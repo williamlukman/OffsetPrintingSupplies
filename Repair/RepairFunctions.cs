@@ -2327,5 +2327,122 @@ namespace Repair
             }
             return 0;
         }
+
+        public int RepairUnbalancedROD(Nullable<DateTime> startDate, Nullable<DateTime> endDate)
+        {
+            //var list = new List<int>();
+            var db = new OffsetPrintingSuppliesEntities();
+            using (db)
+            {
+                // Resetting wrong avgcost calculation on servicecost
+                foreach (var srvCost in db.ServiceCosts.ToList())
+                {
+                    srvCost.AvgPrice = 0;
+                    srvCost.Quantity = 0;
+                    db.Entry(srvCost).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+
+                // Fix GL & AvgPrice
+                foreach (var objID in db.GeneralLedgerJournals.Where(x => x.SourceDocument == Constant.GeneralLedgerSource.RecoveryOrderDetail).GroupBy(x => x.SourceDocumentId).Select(x => x.Key).ToList())
+                {
+                    var rod = db.RecoveryOrderDetails.Where(x => x.Id == objID && !x.IsDeleted).Include(x => x.CoreIdentificationDetail).Include(x => x.RecoveryOrder).Include(x => x.CompoundUnderLayer).Include(x => x.RollerBuilder).FirstOrDefault();
+                    
+                    var diff = (rod.AccessoriesCost + rod.CompoundCost + rod.CoreCost) - rod.TotalCost;
+
+                    // Recalculating wrong avgcost calculation on servicecost
+                    if (rod.IsFinished && !rod.CoreIdentificationDetail.CoreIdentification.IsInHouse)
+                    {
+                        ServiceCost serviceCost = _serviceCostService.GetObjectByRollerBuilderId(rod.RollerBuilderId);
+                        //var oldavg = serviceCost.AvgPrice;
+                        //_serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, -1, rod.TotalCost);
+                        _serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, 1, rod.TotalCost + diff);
+                        Console.WriteLine("            ServiceCost [" + serviceCost.Id + "]: " + serviceCost.AvgPrice);
+                    }
+
+                    if (diff > 0)
+                    {
+                        Console.WriteLine("ROD [" + rod.Id + "]: Diff=" + diff);
+                        if (rod.IsFinished)
+                        {
+                            if (rod.CompoundUnderLayerId != null)
+                            {
+                                GeneralLedgerJournal debitfinishedroller = new GeneralLedgerJournal()
+                                {
+                                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Roller).AccountId.GetValueOrDefault(),
+                                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                                    SourceDocumentId = rod.Id,
+                                    TransactionDate = (DateTime)rod.FinishedDate,
+                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Amount = Math.Round(diff, 2)
+                                };
+                                debitfinishedroller = _generalLedgerJournalService.CreateObject(debitfinishedroller, _accountService);
+                            }
+
+                            Item roller = (rod.CoreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
+                            _rollerBuilderService.GetRollerNewCore(rod.RollerBuilderId) : _rollerBuilderService.GetRollerUsedCore(rod.RollerBuilderId);
+                            WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(rod.RecoveryOrder.WarehouseId, roller.Id);
+                            if (rod.CoreIdentificationDetail.CoreIdentification.IsInHouse)
+                            {
+                                IList<StockMutation> stockMutationRollers = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseRoller.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, rod.Id);
+                                foreach (var stockMutationRoller in stockMutationRollers)
+                                {
+                                    var oldavg = roller.AvgPrice;
+                                    _itemService.CalculateAndUpdateAvgPrice(roller, (-1) * stockMutationRoller.Quantity, rod.TotalCost);
+                                    _itemService.CalculateAndUpdateAvgPrice(roller, (1) * stockMutationRoller.Quantity, rod.TotalCost + diff);
+                                    Console.WriteLine("            Roller [" + roller.Id + "]: Avg=" + oldavg + " -> " + roller.AvgPrice);
+                                }
+                            }
+                            else
+                            {
+                                CustomerItem customerRoller = _customerItemService.FindOrCreateObject(rod.CoreIdentificationDetail.CoreIdentification.ContactId.GetValueOrDefault(), warehouseRoller.Id);
+                                IList<CustomerStockMutation> customerStockMutationRollers = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerRoller.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, rod.Id);
+                                foreach (var customerStockMutationRoller in customerStockMutationRollers)
+                                {
+                                    var oldavg = roller.CustomerAvgPrice;
+                                    _itemService.CalculateAndUpdateCustomerAvgPrice(roller, (-1) * customerStockMutationRoller.Quantity, rod.TotalCost);
+                                    _itemService.CalculateAndUpdateCustomerAvgPrice(roller, (1) * customerStockMutationRoller.Quantity, rod.TotalCost + diff);
+                                    Console.WriteLine("            Roller [" + roller.Id + "]: CustAvg=" + oldavg + " -> " + roller.CustomerAvgPrice);
+                                }
+                            }
+
+                            //if (!rod.CoreIdentificationDetail.CoreIdentification.IsInHouse)
+                            //{
+                            //    ServiceCost serviceCost = _serviceCostService.GetObjectByRollerBuilderId(rod.RollerBuilderId);
+                            //    var oldavg = serviceCost.AvgPrice;
+                            //    _serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, -1, rod.TotalCost);
+                            //    _serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, 1, rod.TotalCost + diff);
+                            //    Console.WriteLine("            ServiceCost [" + serviceCost.Id + "]: Avg=" + oldavg + " -> " + serviceCost.AvgPrice);
+                            //}
+
+                        }
+                        else if (rod.IsRejected)
+                        {
+                            if (rod.CompoundUnderLayerId != null)
+                            {
+                                GeneralLedgerJournal debitrecoveryexpense = new GeneralLedgerJournal()
+                                {
+                                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ManufacturingExpense).Id,
+                                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                                    SourceDocumentId = rod.Id,
+                                    TransactionDate = (DateTime)rod.RejectedDate,
+                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Amount = Math.Round(diff, 2)
+                                };
+                                debitrecoveryexpense = _generalLedgerJournalService.CreateObject(debitrecoveryexpense, _accountService);
+                            }
+                        }
+                        rod.TotalCost += diff; //rod.TotalCost = rod.AccessoriesCost + rod.CompoundCost + rod.CoreCost;
+                        db.Entry(rod).State = EntityState.Modified;
+                    }
+
+                }
+                
+                db.SaveChanges();
+            }
+            return 0;
+        }
+
+
     }
 }

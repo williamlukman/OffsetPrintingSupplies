@@ -36,18 +36,18 @@ namespace Repair
                 //return;
             }
 
-            //for (int i = 1; i < 400; i++) Console.WriteLine(i);
-            //Console.ReadLine();
             RepairFunctions rb = new RepairFunctions();
-            Console.WriteLine("Delete ByProducts...");
-            rb.DeleteByProducts(null, null);
+            //Console.WriteLine("Delete ByProducts...");
+            //rb.DeleteByProducts(null, null);
             //Console.WriteLine("BackUp...");
             //rb.BackUp(null, null);
             //Console.WriteLine("Delete Original...");
             //rb.DeleteOriginal(null, null);
             //rb.masterDatas.Reverse();
-            Console.WriteLine("Reconfirm...");
-            rb.ReConfirm(null, null);
+            //Console.WriteLine("Reconfirm...");
+            //rb.ReConfirm(null, null);
+            Console.WriteLine("Repairing Unbalanced RecoveryOrderDetail...");
+            rb.RepairUnbalancedROD(null, null);
             Console.WriteLine("Done");
 
             // Restore original Console

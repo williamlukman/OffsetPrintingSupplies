@@ -371,10 +371,10 @@ namespace WebView.Controllers
             if (closing == null) { return Content(Constant.ControllerOutput.ErrorPageHasNoClosingDate); }
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
-                                                    .Where(x => x.ClosingId == closing.Id && 
-                                                           //(x.Account.Group == Constant.AccountGroup.Asset ||
-                                                           // x.Account.Group == Constant.AccountGroup.Liability ||
-                                                           // x.Account.Group == Constant.AccountGroup.Equity) && 
+                                                    .Where(x => x.ClosingId == closing.Id &&
+                                                           (x.Account.Group == Constant.AccountGroup.Asset ||
+                                                            x.Account.Group == Constant.AccountGroup.Liability ||
+                                                            x.Account.Group == Constant.AccountGroup.Equity) && 
                                                            (x.Account.Level == 2 || (x.Account.Level == 1 && x.Account.IsLeaf)));
 
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();

@@ -110,8 +110,9 @@ namespace Validation.Validation
         public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
             VCreateObject(purchaseOrder, _purchaseOrderService, _contactService);
-            if (!isValid(purchaseOrder)) { return purchaseOrder; }
-            VHasNotBeenConfirmed(purchaseOrder);
+            //if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            //// Allow Changing AllowEditDetailQtyAfterConfirm anytime
+            //VHasNotBeenConfirmed(purchaseOrder);
             return purchaseOrder;
         }
 

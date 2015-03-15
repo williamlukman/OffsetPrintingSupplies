@@ -91,6 +91,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><label for="AllowEditDetail">Allow Edit Detail's Quantity After Confirmed </label></td>
+                            <td><input type="checkbox" id="AllowEditDetail" name="AllowEditDetail" value="value" onchange="onAllowEditDetail()"></td>
+                        </tr>
+                        <tr>
                             <td>
                                 <label>Description</label>
                             </td>
@@ -140,10 +144,18 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>No. Surat:</label>
+                                <label>No. Surat :</label>
                             </td>
                             <td>
                                 <input id="print_NomorSurat" name="NomorSurat" type="text" size="25" disabled/>
+                            </td>
+                        </tr>
+                        <tr id="cc">
+                            <td>
+                                <label>CC : </label>
+                            </td>
+                            <td>
+                                <textarea name="cc" id="print_CC" cols="60" rows="3"></textarea>
                             </td>
                         </tr>
                         <tr id="currency">

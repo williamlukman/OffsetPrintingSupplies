@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public int CurrencyId { get; set; }
         public string Description { get; set; }
 
+        public bool AllowEditDetail { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsReceivalCompleted { get; set; }

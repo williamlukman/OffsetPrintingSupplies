@@ -69,7 +69,7 @@ namespace Service.Service
         {
             decimal NewQuantity = serviceCost.Quantity + AdditionalQuantity;
             decimal NewAvgPrice = (serviceCost.Quantity + AdditionalQuantity == 0) ? 0 :
-                ((serviceCost.Quantity * serviceCost.AvgPrice) + (AdditionalQuantity * AdditionalCost) / NewQuantity);
+                (((serviceCost.Quantity * serviceCost.AvgPrice) + (AdditionalQuantity * AdditionalCost)) / NewQuantity);
             serviceCost.Quantity = NewQuantity;
             serviceCost.AvgPrice = NewAvgPrice;
             _repository.UpdateObject(serviceCost);

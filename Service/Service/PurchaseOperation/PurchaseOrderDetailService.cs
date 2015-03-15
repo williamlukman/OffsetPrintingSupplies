@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Service.Service
 {
@@ -64,11 +65,23 @@ namespace Service.Service
             }
         }
 
-        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
-                                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, decimal PendingDiff, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                                IStockMutationService _stockMutationService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
-            return (_validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService, _purchaseReceivalService, _purchaseReceivalDetailService) ?
-                     _repository.UpdateObject(purchaseOrderDetail) : purchaseOrderDetail);
+            if (_validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService, _purchaseReceivalService, _purchaseReceivalDetailService))
+            {
+                if (PendingDiff != 0 && purchaseOrderDetail.IsConfirmed)
+                {
+                    var item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
+                    StockMutation stockMutation = _stockMutationService.CreateStockMutationForPurchaseOrderDetail(purchaseOrderDetail, item, PendingDiff);
+                    //item.PendingReceival += PendingDiff;
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+
+                }
+                _repository.UpdateObject(purchaseOrderDetail);
+            }
+            return purchaseOrderDetail;
         }
 
         public PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail)

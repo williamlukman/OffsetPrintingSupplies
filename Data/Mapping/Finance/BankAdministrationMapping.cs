@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Data.Mapping
 {
-    public class InterestAdjustmentMapping : EntityTypeConfiguration<InterestAdjustment>
+    public class BankAdministrationMapping : EntityTypeConfiguration<BankAdministration>
     {
-        public InterestAdjustmentMapping()
+        public BankAdministrationMapping()
         {
             HasKey(cba => cba.Id);
             HasRequired(cba => cba.CashBank)
@@ -20,6 +20,9 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(cba => cba.ExchangeRateId)
                 .WillCascadeOnDelete(false);
+            HasMany(pr => pr.BankAdministrationDetails)
+                .WithRequired(prd => prd.BankAdministration)
+                .HasForeignKey(prd => prd.BankAdministrationId);
             Ignore(cba => cba.Errors);
         }
     }

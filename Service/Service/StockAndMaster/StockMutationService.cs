@@ -97,6 +97,21 @@ namespace Service.Service
             return count;
         }
 
+        public StockMutation CreateStockMutationForPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, Item item, decimal Quantity)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = item.Id;
+            stockMutation.Quantity = Math.Abs(Quantity);
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseOrder;
+            stockMutation.SourceDocumentId = purchaseOrderDetail.PurchaseOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseOrderDetail;
+            stockMutation.SourceDocumentDetailId = purchaseOrderDetail.Id;
+            stockMutation.ItemCase = Constant.ItemCase.PendingReceival;
+            stockMutation.Status = Quantity < 0 ? Constant.MutationStatus.Deduction : Constant.MutationStatus.Addition;
+            stockMutation.MutationDate = (DateTime)purchaseOrderDetail.ConfirmationDate;
+            return _repository.CreateObject(stockMutation);
+        }
+
         public StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item)
         {
             StockMutation stockMutation = new StockMutation();
