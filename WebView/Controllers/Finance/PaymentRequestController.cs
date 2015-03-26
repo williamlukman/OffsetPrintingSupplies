@@ -24,6 +24,7 @@ namespace WebView.Controllers
         private IPurchaseReceivalService _purchaseReceivalService;
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPayableService _payableService;
+        private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IItemService _itemService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
@@ -42,6 +43,7 @@ namespace WebView.Controllers
             _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
@@ -513,7 +515,7 @@ namespace WebView.Controllers
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _accountService, 
-                    _generalLedgerJournalService, _closingService,_gLNonBaseCurrencyService, _currencyService);
+                    _generalLedgerJournalService, _closingService,_gLNonBaseCurrencyService, _currencyService, _paymentVoucherDetailService);
             }
             catch (Exception ex)
             {

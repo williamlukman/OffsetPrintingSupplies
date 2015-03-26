@@ -59,7 +59,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'RollerIdentification Id', 'RIF', 'WarehouseFrom Id',
                     'WarehouseFrom Code', 'From', 'WarehouseTo Id', 'WarehouseTo Code',
-                    'To','QTY','Is Confirmed','Confirmation Date','Created At','Updated At'
+                    'To','QTY','Mutation Date','Is Confirmed','Confirmation Date','Created At','Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -73,6 +73,7 @@
                   { name: 'warehousetocode', index: 'warehousetocode', width: 100, hidden: true },
                   { name: 'warehouseto', index: 'warehouseto', width: 180 },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

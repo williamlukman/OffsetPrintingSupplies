@@ -120,12 +120,16 @@ namespace Service.Service
 
         public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                              IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
+                                              IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
-            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
+            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService, _payableService, _paymentVoucherDetailService))
             {
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
-                _payableService.DeleteObject(payable.Id);
+                if (payable != null)
+                {
+                    //_payableService.DeleteObject(payable.Id);
+                    _payableService.SoftDeleteObject(payable);
+                }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService,
                                              _gLNonBaseCurrencyService, _currencyService);
                 _repository.UnconfirmObject(paymentRequest);

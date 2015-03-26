@@ -63,8 +63,14 @@ namespace Service.Service
         public BlanketOrderDetail CreateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors = new Dictionary<String, String>();
-            return (blanketOrderDetail = _validator.ValidCreateObject(blanketOrderDetail, _blanketOrderService, _blanketService) ?
-                                          _repository.CreateObject(blanketOrderDetail) : blanketOrderDetail);
+            if (_validator.ValidCreateObject(blanketOrderDetail, _blanketOrderService, _blanketService)) 
+            {
+                _repository.CreateObject(blanketOrderDetail);
+                var bo = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
+                bo.QuantityReceived++;
+                _blanketOrderService.UpdateObject(bo, this);
+            }
+            return blanketOrderDetail;
         }
 
         public BlanketOrderDetail UpdateObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IBlanketService _blanketService)
@@ -75,8 +81,14 @@ namespace Service.Service
 
         public BlanketOrderDetail SoftDeleteObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
-            return (blanketOrderDetail = _validator.ValidDeleteObject(blanketOrderDetail, _blanketOrderService) ?
-                                          _repository.SoftDeleteObject(blanketOrderDetail) : blanketOrderDetail);
+            if(_validator.ValidDeleteObject(blanketOrderDetail, _blanketOrderService))
+            {
+                _repository.SoftDeleteObject(blanketOrderDetail);
+                var bo = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
+                bo.QuantityReceived--;
+                _blanketOrderService.UpdateObject(bo, this);
+            }
+            return blanketOrderDetail;
         }
 
         public BlanketOrderDetail CutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)

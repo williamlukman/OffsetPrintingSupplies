@@ -9,7 +9,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'BlanketWorkProcess/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'BlanketWorkProcess/GetList' }).trigger("reloadGrid");
     }
 
 
@@ -47,7 +47,7 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkProcess/GetList',
         datatype: "json",
-        colNames: ['ID','Blanket Order ID', 'Code', 'Production No', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
+        colNames: ['ID','Blanket Order ID', 'Code', 'Production No', 'Contact', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
                    'Sku', 'Bar 2 Name','C', 'SS', 'BP',
                    'ATA','Roll Blanket QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
@@ -57,6 +57,7 @@
     			  { name: 'blanketorderid', index: 'blanketorderid', width: 80, align: 'center', hidden: true },
                   { name: 'blanketordercode', index: 'blanketordercode', width: 50, align: 'center', hidden: true },
                   { name: 'blanketorderproductionno', index: 'blanketorderproductionno', width: 80, align: 'center' },
+                  { name: 'contact', index: 'contact', width: 100 },
                   { name: 'blanketid', index: 'blanketid', width: 100, sortable: false, hidden: true },
                   { name: 'sku', index: 'sku', width: 50, sortable: false, align: 'right' },
                   { name: 'blanketname', index: 'blanketname', width: 400, sortable: false },
@@ -90,6 +91,8 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "DESC",
+        //multiselect: true,
+        //multiboxonly: true,
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -273,6 +276,7 @@
     $('#btn_unfinish').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
+            var IDs = $("#list").jqGrid('getCol', 'id'); // also get id from current/visible page
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $.messager.confirm('Confirm', 'Are you sure you want to unfinish record?', function (r) {
                 if (r) {
@@ -310,8 +314,9 @@
     $('#finished_btn_submit').click(function () {
         ClearErrorMessage();
         ClickableButton($("#finished_btn_submit"), false);
+        var IDs = $("#list").jqGrid('getCol', 'id'); // also get id from current/visible page
         $.ajax({
-            url: base_url + "BlanketWorkProcess/Finish",
+            url: base_url + "BlanketWorkProcess/Finish", //+ '&IDs='+JSON.stringify(ids)
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({

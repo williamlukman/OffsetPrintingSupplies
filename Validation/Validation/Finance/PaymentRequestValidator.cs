@@ -74,6 +74,20 @@ namespace Validation.Validation
             return paymentRequest;
         }
 
+        public PaymentRequest VHasNoVoucher(PaymentRequest paymentRequest, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            var payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
+            if (payable != null)
+            {
+                var vouchers = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id);
+                if (vouchers.Any())
+                {
+                    paymentRequest.Errors.Add("Generic", "Tidak boleh terasosiasi dengan PaymentVoucher Details (PaymentVoucher ID : "+vouchers.FirstOrDefault().PaymentVoucherId+")");
+                }
+            }
+            return paymentRequest;
+        }
+
         public PaymentRequest VHasConfirmationDate(PaymentRequest obj)
         {
             if (obj.ConfirmationDate == null)
@@ -130,11 +144,13 @@ namespace Validation.Validation
             return paymentRequest;
         }
 
-        public PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
+        public PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             VHasBeenConfirmed(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenDeleted(paymentRequest);
+            if (!isValid(paymentRequest)) { return paymentRequest; }
+            VHasNoVoucher(paymentRequest, _payableService, _paymentVoucherDetailService);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService);
             return paymentRequest;
@@ -167,10 +183,10 @@ namespace Validation.Validation
             return isValid(paymentRequest);
         }
 
-        public bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
+        public bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             paymentRequest.Errors.Clear();
-            VUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService);
+            VUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService, _payableService, _paymentVoucherDetailService);
             return isValid(paymentRequest);
         }
 

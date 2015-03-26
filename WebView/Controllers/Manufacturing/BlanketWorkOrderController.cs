@@ -369,9 +369,11 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(BlanketOrderDetail model)
         {
+            var QuantityReceived = 0;
             try
             {
                 model = _blanketOrderDetailService.CreateObject(model,_blanketOrderService,_blanketService);
+                QuantityReceived = _blanketOrderService.GetObjectById(model.BlanketOrderId).QuantityReceived;
             }
             catch (Exception ex)
             {
@@ -381,12 +383,14 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model.Errors
+                model.Errors,
+                QuantityReceived
             });
         }
 
         public dynamic CopyDetail(int BlanketId, int BlanketOrderId, int TotalCopy)
         {
+            var QuantityReceived = 0;
             IDictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
@@ -399,6 +403,7 @@ namespace WebView.Controllers
                         Errors.Add("Generic", model.Errors.ElementAtOrDefault(0).Value);
                     }
                 }
+                QuantityReceived = _blanketOrderService.GetObjectById(BlanketOrderId).QuantityReceived;
             }
             catch (Exception ex)
             {
@@ -408,7 +413,8 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                Errors
+                Errors,
+                QuantityReceived
             });
         }
 
@@ -422,7 +428,7 @@ namespace WebView.Controllers
                 {
                     data.ContactId = model.ContactId;
                     data.WarehouseId = model.WarehouseId;
-                    data.QuantityReceived = model.QuantityReceived;
+                    //data.QuantityReceived = model.QuantityReceived;
                 }
                 data.Code = model.Code;
                 data.ProductionNo = model.ProductionNo;
@@ -467,10 +473,12 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(BlanketOrderDetail model)
         {
+            decimal QuantityReceived = 0;
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.SoftDeleteObject(data,_blanketOrderService);
+                QuantityReceived = _blanketOrderService.GetObjectById(model.BlanketOrderId).QuantityReceived;
                  
             }
             catch (Exception ex)
@@ -481,18 +489,21 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model.Errors
+                model.Errors,
+                QuantityReceived
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(BlanketOrderDetail model)
         {
+            var QuantityReceived = 0;
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 data.BlanketId = model.BlanketId;
                 model = _blanketOrderDetailService.UpdateObject(data,_blanketOrderService,_blanketService);
+                QuantityReceived = _blanketOrderService.GetObjectById(model.BlanketOrderId).QuantityReceived;
             }
             catch (Exception ex)
             {
@@ -502,7 +513,8 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model.Errors
+                model.Errors,
+                QuantityReceived
             });
         }
 

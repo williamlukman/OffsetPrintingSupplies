@@ -385,8 +385,8 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
-                             model.Name,
                              model.Sku,
+                             model.Name,
                              model.Description,
                              model.Quantity,
                              model.PendingReceival,
@@ -427,8 +427,8 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
                             model.Sku,
+                            model.Name,
                             model.Description,
                             model.Quantity,
                             model.PendingReceival,

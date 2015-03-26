@@ -210,8 +210,8 @@ namespace Validation.Validation
         public BlanketOrder VCreateObject(BlanketOrder blanketOrder, IBlanketOrderService _blanketOrderService)
         {
             VHasUniqueCode(blanketOrder, _blanketOrderService);
-            if (!isValid(blanketOrder)) { return blanketOrder; }
-            VHasQuantityReceived(blanketOrder);
+            //if (!isValid(blanketOrder)) { return blanketOrder; }
+            //VHasQuantityReceived(blanketOrder);
             return blanketOrder;
         }
 
@@ -266,7 +266,7 @@ namespace Validation.Validation
             if (!isValid(blanketOrder)) { return blanketOrder; }
             VHasNotBeenCompleted(blanketOrder);
             if (!isValid(blanketOrder)) { return blanketOrder; }
-            VAllDetailsHaveBeenFinishedOrRejected(blanketOrder, _blanketOrderDetailService);
+            VAllDetailsHaveNotBeenFinishedNorRejected(blanketOrder, _blanketOrderDetailService);
             return blanketOrder;
         }
 

@@ -27,7 +27,7 @@ namespace Core.Interface.Service
                                      ICurrencyService _currencyService);
         PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                       IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currentService);
+                                       IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currentService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentRequest CalculateTotalAmount(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService);
     }
 }

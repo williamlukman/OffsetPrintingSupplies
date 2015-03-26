@@ -162,13 +162,14 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Payment Term (Days)', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'DefaultPaymentTerm', index: 'DefaultPaymentTerm', width: 130 },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'npwp', index: 'npwp', width: 100 },
                   { name: 'contact', index: 'contactno', width: 100 },
@@ -199,6 +200,27 @@
         ondblClickRow: function (rowid) {
             $("#lookup_btn_add_contact").trigger("click");
         },
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsTaxable = $(this).getRowData(cl).istaxable;
+		          if (rowIsTaxable == 'true') {
+		              rowIsTaxable = "YES"; // + $(this).getRowData(cl).taxcode;
+		          } else {
+		              rowIsTaxable = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { istaxable: rowIsTaxable });
+
+		          rowTerm = $(this).getRowData(cl).DefaultPaymentTerm;
+		          if (rowTerm == "0") {
+		              rowTerm = "0 (CASH)";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { DefaultPaymentTerm: rowTerm });
+
+		      }
+		  },
     });
     $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });

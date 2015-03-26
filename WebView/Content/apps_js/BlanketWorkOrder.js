@@ -129,7 +129,7 @@
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
         $('#ProductionNo').removeAttr('disabled');
-        $('#QuantityReceived').removeAttr('disabled');
+        //$('#QuantityReceived').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
@@ -158,8 +158,9 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
-                            $('#BlanketOrderId').val(result.Code);
-                            $('#BlanketId').val(result.ContactId);
+                            $('#Code').val(result.Code);
+                            $('#ProductionNo').val(result.ProductionNo);
+                            $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
@@ -243,7 +244,7 @@
                             else {
                                 $('#btnContact').removeAttr('disabled');
                                 $('#btnWarehouse').removeAttr('disabled');
-                                $('#QuantityReceived').removeAttr('disabled');
+                                //$('#QuantityReceived').removeAttr('disabled');
                             }
                         }
                     }
@@ -428,7 +429,7 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                ProductionNo: $("#ProductionNo").val(), QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                ProductionNo: $("#ProductionNo").val(), //QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
                 DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
             success: function (result) {
@@ -574,6 +575,7 @@
                                 }
                             }
                             else {
+                                $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                                 ReloadGridDetail('first');
                                 $("#delete_confirm_div").dialog('close');
                             }
@@ -654,6 +656,7 @@
                     }
                 }
                 else {
+                    $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                     ReloadGridDetail('last');
                     $("#copy_div").dialog('close')
                 }
@@ -702,6 +705,7 @@
                     }
                 }
                 else {
+                    $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                     ReloadGridDetail(currentpagedetail);
                     $("#item_div").dialog('close')
                 }
@@ -749,7 +753,7 @@
         height: $("#lookup_div_warehouse").height() - 110,
     });
     $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouse').click(function () {
@@ -806,7 +810,7 @@
         height: $("#lookup_div_contact").height() - 110,
     });
     $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {

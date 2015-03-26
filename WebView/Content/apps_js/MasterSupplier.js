@@ -157,7 +157,7 @@
                             $('#Description').val(result.Description);
                             $('#ContactGroupId').val(result.ContactGroupId);
                             $('#ContactGroup').val(result.ContactGroup);
-                            $('#btnContactGroup').attr('disabled', true);
+                            //$('#btnContactGroup').attr('disabled', true);
                             document.getElementById("ContactType").selectedIndex = 0;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
@@ -303,7 +303,7 @@
     }
 
     // -------------------------------------------------------Look Up contactgroup-------------------------------------------------------
-    $('#btnContact').click(function () {
+    $('#btnContactGroup').click(function () {
         var lookUpURL = base_url + 'ContactGroup/GetList';
         var lookupGrid = $('#lookup_table_contactgroup');
         lookupGrid.setGridParam({

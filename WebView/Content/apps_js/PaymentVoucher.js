@@ -325,10 +325,10 @@
                             $('#PaymentDate2').val(dateEnt(result.PaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#PaymentDateDiv2').show();
-                            $('#PaymentDateDiv').hide();
-                            $('#DueDateDiv2').show();
-                            $('#DueDateDiv').hide();
+                            $('#PaymentDateDiv').show();
+                            $('#PaymentDateDiv2').hide();
+                            $('#DueDateDiv').show();
+                            $('#DueDateDiv2').hide();
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#RateToIDR').numberbox('setValue', result.RateToIDR);
                             $('#CurrencyId').removeAttr('disabled');
