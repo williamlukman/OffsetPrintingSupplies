@@ -142,6 +142,8 @@
                             $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
+                            $('#SubTypeId').val(result.SubTypeId);
+                            $('#SubTypeName').val(result.SubType);
                             var f = document.getElementById("IsTradeable");
                             if (result.IsTradeable == true) {
                                 f.selectedIndex = 0;
