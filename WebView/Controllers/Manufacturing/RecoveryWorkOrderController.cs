@@ -382,6 +382,7 @@ namespace WebView.Controllers
                             model.CoreIdentificationDetailId,
                             model.MaterialCase,
                             model.RollerBuilderId,
+                            model.RollerBuilderBaseSku,
                             model.RollerBuilder,
                             model.CoreTypeCase,
                             model.CoreBuilder,
@@ -621,7 +622,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.ConfirmObject(data,model.ConfirmationDate.Value
+                model = _recoveryOrderService.ConfirmObject(data,model.ConfirmationDate.GetValueOrDefault()
                    ,_coreIdentificationDetailService,_coreIdentificationService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
                    _coreBuilderService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_warehouseService);
             }

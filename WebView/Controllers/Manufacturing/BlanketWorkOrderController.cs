@@ -74,8 +74,11 @@ namespace WebView.Controllers
                              model.QuantityReceived,
                              model.QuantityFinal,
                              model.QuantityRejected,
+                             model.OrderDate,
                              model.DueDate,
                              model.ConfirmationDate,
+                             model.Notes,
+                             model.IsCompleted,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -117,8 +120,11 @@ namespace WebView.Controllers
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
+                            model.OrderDate,
                             model.DueDate,
                             model.ConfirmationDate,
+                            model.Notes,
+                            model.IsCompleted,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -148,8 +154,10 @@ namespace WebView.Controllers
                              model.QuantityReceived,
                              model.QuantityFinal,
                              model.QuantityRejected,
+                             model.OrderDate,
                              model.DueDate,
                              model.ConfirmationDate,
+                             model.Notes,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -191,8 +199,10 @@ namespace WebView.Controllers
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
+                            model.OrderDate,
                             model.DueDate,
                             model.ConfirmationDate,
+                            model.Notes,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -277,6 +287,82 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListDetailFinished(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
+                                              .Include("Item").Where(x => x.BlanketOrderId == id && !x.IsDeleted && x.IsFinished);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.BlanketId,
+                             BlanketSku = model.Blanket.Sku,
+                             Blanket = model.Blanket.Name,
+                             model.Blanket.RollBlanketItemId,
+                             RollBlanketItemSku = model.Blanket.RollBlanketItem.Sku,
+                             RollBlanketItem = model.Blanket.RollBlanketItem.Name,
+                             model.Blanket.LeftBarItemId,
+                             LeftBarItemSku = model.Blanket.LeftBarItem.Sku,
+                             LeftBarItem = model.Blanket.LeftBarItem.Name,
+                             model.Blanket.RightBarItemId,
+                             RightBarItemSku = model.Blanket.RightBarItem.Sku,
+                             RightBarItem = model.Blanket.RightBarItem.Name,
+                             model.RejectedDate,
+                             model.FinishedDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                             model.Id,
+                             model.BlanketSku,
+                             model.Blanket,
+                             model.RollBlanketItemSku,
+                             model.RollBlanketItem,
+                             model.LeftBarItemSku,
+                             model.LeftBarItem,
+                             model.RightBarItemSku,
+                             model.RightBarItem,
+                             model.RejectedDate,
+                             model.FinishedDate
+                        }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
 
         public dynamic GetInfo(int Id)
         {
@@ -302,9 +388,12 @@ namespace WebView.Controllers
                 WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
                 model.QuantityReceived,
+                model.OrderDate,
                 model.HasDueDate,
                 model.DueDate,
                 model.IsConfirmed,
+                model.ConfirmationDate,
+                model.Notes,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -432,6 +521,8 @@ namespace WebView.Controllers
                 }
                 data.Code = model.Code;
                 data.ProductionNo = model.ProductionNo;
+                data.Notes = model.Notes;
+                data.OrderDate = model.OrderDate;
                 data.HasDueDate = model.HasDueDate;
                 data.DueDate = model.DueDate;
                 model = data.IsConfirmed ? _blanketOrderService.UpdateAfterConfirmObject(data,_blanketOrderDetailService) :
@@ -524,7 +615,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _blanketOrderService.GetObjectById(model.Id);
-                model = _blanketOrderService.ConfirmObject(data,model.ConfirmationDate.Value
+                model = _blanketOrderService.ConfirmObject(data,model.ConfirmationDate.GetValueOrDefault()
                    ,_blanketOrderDetailService,_blanketService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)

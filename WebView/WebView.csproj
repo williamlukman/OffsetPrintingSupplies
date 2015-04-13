@@ -297,6 +297,7 @@
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlendingWorkOrderController.cs" />
+    <Compile Include="Controllers\Manufacturing\BlanketWarehouseMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\RepackingController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
@@ -371,6 +372,7 @@
     <Content Include="Content\apps_js\ContactGroup.js" />
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
+    <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
     <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
@@ -1533,6 +1535,7 @@
     <Content Include="Views\FinanceReport\NeracaSaldo.cshtml" />
     <Content Include="Views\FinanceReport\BalanceSheetDetail.cshtml" />
     <Content Include="Views\BankAdministration\Index.cshtml" />
+    <Content Include="Views\BlanketWarehouseMutation\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

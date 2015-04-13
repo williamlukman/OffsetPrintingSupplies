@@ -468,7 +468,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _coreIdentificationService.GetObjectById(model.Id);
-                model = _coreIdentificationService.ConfirmObject(data, model.ConfirmationDate.Value
+                model = _coreIdentificationService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault()
                     ,_coreIdentificationDetailService,_stockMutationService,_recoveryOrderService
                     ,_recoveryOrderDetailService,_coreBuilderService,_itemService
                     ,_warehouseItemService,_blanketService, 

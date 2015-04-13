@@ -80,6 +80,8 @@
     <Compile Include="Mapping\Finance\PurchaseDownPaymentAllocationDetailMapping.cs" />
     <Compile Include="Mapping\Finance\PurchaseDownPaymentMapping.cs" />
     <Compile Include="Mapping\Manufacturing\BlendingWorkOrderMapping.cs" />
+    <Compile Include="Mapping\Manufacturing\BlanketWarehouseMutationMapping.cs" />
+    <Compile Include="Mapping\Manufacturing\BlanketWarehouseMutationDetailMapping.cs" />
     <Compile Include="Mapping\Manufacturing\RepackingMapping.cs" />
     <Compile Include="Mapping\Manufacturing\CoreAccessoryDetailMapping.cs" />
     <Compile Include="Mapping\Finance\PayableMapping.cs" />
@@ -193,6 +195,8 @@
     <Compile Include="Repository\Manufacturing\BlanketOrderDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlanketOrderRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlendingWorkOrderRepository.cs" />
+    <Compile Include="Repository\Manufacturing\BlanketWarehouseMutationRepository.cs" />
+    <Compile Include="Repository\Manufacturing\BlanketWarehouseMutationDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\RepackingRepository.cs" />
     <Compile Include="Repository\Manufacturing\CoreAccessoryDetailRepository.cs" />
     <Compile Include="Repository\Finance\PayableRepository.cs" />

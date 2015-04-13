@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Core.DomainModel
+{
+    public partial class BlanketWarehouseMutation
+    {
+        public int Id { get; set; }
+        public int BlanketOrderId { get; set; }
+        public string Code { get; set; }
+
+        public int WarehouseFromId { get; set; }
+        public int WarehouseToId { get; set; }
+        public DateTime MutationDate { get; set; }
+
+        public decimal Quantity { get; set; }
+
+        public bool IsConfirmed { get; set; }
+        public Nullable<DateTime> ConfirmationDate { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public Nullable<DateTime> UpdatedAt { get; set; }
+        public Nullable<DateTime> DeletedAt { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
+
+        public virtual Warehouse WarehouseTo { get; set; }
+        public virtual Warehouse WarehouseFrom { get; set; }
+        public virtual BlanketOrder BlanketOrder { get; set; }
+        public virtual ICollection<BlanketWarehouseMutationDetail> BlanketWarehouseMutationDetails { get; set; }
+    }
+}

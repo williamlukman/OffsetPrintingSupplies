@@ -72,6 +72,15 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
+        public BlanketOrderDetail VHasValidRollBlanketDefectAmount(BlanketOrderDetail blanketOrderDetail)
+        {
+            if (blanketOrderDetail.RollBlanketDefect < 0)
+            {
+                blanketOrderDetail.Errors.Add("Generic", "Roll Blanket Defect Amount tidak boleh kurang dari 0");
+            }
+            return blanketOrderDetail;
+        }
+
         public BlanketOrderDetail VHasBeenAdhesiveTapeApplied(BlanketOrderDetail blanketOrderDetail)
         {
             if (!blanketOrderDetail.IsAdhesiveTapeApplied)
@@ -358,6 +367,8 @@ namespace Validation.Validation
         {
             VHasRollBlanketAmount(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VHasValidRollBlanketDefectAmount(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenAdhesiveTapeApplied(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             if (HasBar(blanketOrderDetail, _blanketService)) { VHasBeenBarPrepared(blanketOrderDetail); }
@@ -452,6 +463,8 @@ namespace Validation.Validation
             VHasNotBeenRejected(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasRollBlanketAmount(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VHasValidRollBlanketDefectAmount(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VRollBlanketIsInStock(blanketOrderDetail, _blanketService, _blanketOrderService, _itemService, _warehouseItemService);
             return blanketOrderDetail;

@@ -47,15 +47,15 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkProcess/GetList',
         datatype: "json",
-        colNames: ['ID','Blanket Order ID', 'Code', 'Production No', 'Contact', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
+        colNames: ['ID','Blanket Order ID', 'Order No', 'Production No', 'Contact', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
                    'Sku', 'Bar 2 Name','C', 'SS', 'BP',
-                   'ATA','Roll Blanket QTY', 'BM', 'BHP', 'BPOT',
+                   'ATA', 'Roll Blanket QTY', 'Roll Blanket Defect', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 50, align: "center" },
     			  { name: 'blanketorderid', index: 'blanketorderid', width: 80, align: 'center', hidden: true },
-                  { name: 'blanketordercode', index: 'blanketordercode', width: 50, align: 'center', hidden: true },
+                  { name: 'blanketordercode', index: 'blanketordercode', width: 60, align: 'center' },
                   { name: 'blanketorderproductionno', index: 'blanketorderproductionno', width: 80, align: 'center' },
                   { name: 'contact', index: 'contact', width: 100 },
                   { name: 'blanketid', index: 'blanketid', width: 100, sortable: false, hidden: true },
@@ -71,7 +71,8 @@
                   { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
                   { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
-                  { name: 'rollblanketusage', index: 'rollblanketusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'rollblanketusage', index: 'rollblanketusage', align: 'right', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'rollblanketdefect', index: 'rollblanketdefect', align: 'right', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
                   { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
                   { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
@@ -237,6 +238,7 @@
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
                             $('#ViewRollBlanketUsage').val(result.RollBlanketUsage);
+                            $('#ViewRollBlanketDefect').val(result.RollBlanketDefect);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -320,7 +322,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageFinish').numberbox('getValue')
+                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageFinish').numberbox('getValue'), RollBlanketDefect: $('#RollBlanketDefectFinish').numberbox('getValue')
             }),
             success: function (result) {
                 ClickableButton($("#finished_btn_submit"), true);

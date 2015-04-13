@@ -69,6 +69,8 @@ namespace Core.Interface.Service
          IList<StockMutation> GetStockMutationForRepackingTarget(BlendingRecipe blendingRecipe, WarehouseItem warehouseItem);
          IList<StockMutation> CreateStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          IList<StockMutation> GetStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
+         IList<StockMutation> CreateStockMutationForBlanketWarehouseMutation(BlanketWarehouseMutationDetail blanketWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
+         IList<StockMutation> GetStockMutationForBlanketWarehouseMutation(BlanketWarehouseMutationDetail blanketWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          IList<StockMutation> CreateStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          IList<StockMutation> GetStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);

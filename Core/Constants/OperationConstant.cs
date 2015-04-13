@@ -48,6 +48,7 @@ namespace Core.Constants
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
+            public static string BlanketWarehouseMutation = "BlanketWarehouseMutation";
             public static string SalesDownPayment = "SalesDownPayment";
             public static string SalesAllowance = "SalesAllowance";
             public static string SalesOrder = "SalesOrder";
@@ -73,6 +74,7 @@ namespace Core.Constants
             public static string RetailPurchaseInvoiceDetail = "RetailPurchaseInvoiceDetail";
             public static string RetailSalesInvoiceDetail = "RetailSalesInvoiceDetail";
             public static string RollerWarehouseMutationDetail = "RollerWarehouseMutationDetail";
+            public static string BlanketWarehouseMutationDetail = "BlanketWarehouseMutationDetail";
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string VirtualOrderDetail = "VirtualOrderDetail";
             public static string TemporaryDeliveryOrderDetail = "TemporaryDeliveryOrderDetail";
@@ -177,6 +179,7 @@ namespace Core.Constants
 
             public static string BlanketWorkOrder = "Blanket Work Order";
             public static string BlanketWorkProcess = "Blanket Work Process";
+            public static string BlanketWarehouseMutation = "Blanket Warehouse Mutation";
             public static string BlendingWorkOrder = "Blending Work Order";
             public static string RollerIdentification = "Roller Identification";
             public static string RollerAccessoryDetail = "Roller Accessory Detail";

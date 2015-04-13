@@ -12,6 +12,8 @@ namespace Core.DomainModel
         public int WarehouseId { get; set; }
         public string Code { get; set; }
         public string ProductionNo { get; set; }
+        public Nullable<DateTime> OrderDate { get; set; }
+        public string Notes { get; set; }
 
         public int QuantityReceived { get; set; }
         public int QuantityRejected { get; set; }
@@ -31,5 +33,6 @@ namespace Core.DomainModel
         public virtual Contact Contact { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual ICollection<BlanketOrderDetail> BlanketOrderDetails { get; set; }
+        public virtual ICollection<BlanketWarehouseMutation> BlanketWarehouseMutations { get; set; }
     }
 }

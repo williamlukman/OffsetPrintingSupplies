@@ -85,7 +85,7 @@ namespace Validation.Validation
             IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
             if (rollerWarehouseMutation.Quantity != details.Count())
             {
-                rollerWarehouseMutation.Errors.Add("Generic", "jumlah Quantity " + rollerWarehouseMutation.Quantity + "harus sama dengan jumlah detail " + details.Count());
+                rollerWarehouseMutation.Errors.Add("Generic", "jumlah Quantity " + rollerWarehouseMutation.Quantity + " harus sama dengan jumlah detail " + details.Count());
             }
             return rollerWarehouseMutation;
         }

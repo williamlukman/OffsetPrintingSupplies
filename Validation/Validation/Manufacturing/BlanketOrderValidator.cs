@@ -210,6 +210,10 @@ namespace Validation.Validation
         public BlanketOrder VCreateObject(BlanketOrder blanketOrder, IBlanketOrderService _blanketOrderService)
         {
             VHasUniqueCode(blanketOrder, _blanketOrderService);
+            if (!isValid(blanketOrder)) { return blanketOrder; }
+            VHasOrderDate(blanketOrder);
+            if (!isValid(blanketOrder)) { return blanketOrder; }
+            VHasDueDate(blanketOrder);
             //if (!isValid(blanketOrder)) { return blanketOrder; }
             //VHasQuantityReceived(blanketOrder);
             return blanketOrder;
@@ -235,6 +239,24 @@ namespace Validation.Validation
             if (!isValid(blanketOrder)) { return blanketOrder; }
             VAllDetailsHaveNotBeenFinishedNorRejected(blanketOrder, _blanketOrderDetailService);
             return blanketOrder;
+        }
+
+        public BlanketOrder VHasOrderDate(BlanketOrder obj)
+        {
+            if (obj.OrderDate == null)
+            {
+                obj.Errors.Add("OrderDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
+        public BlanketOrder VHasDueDate(BlanketOrder obj)
+        {
+            if (obj.HasDueDate && obj.DueDate == null)
+            {
+                obj.Errors.Add("DueDate", "Tidak boleh kosong");
+            }
+            return obj;
         }
 
         public BlanketOrder VHasConfirmationDate(BlanketOrder obj)

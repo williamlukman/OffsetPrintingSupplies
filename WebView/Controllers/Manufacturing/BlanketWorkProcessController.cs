@@ -86,6 +86,7 @@ namespace WebView.Controllers
                              model.IsBarPrepared,
                              model.IsAdhesiveTapeApplied,
                              model.RollBlanketUsage,
+                             model.RollBlanketDefect,
                              model.IsBarMounted,
                              model.IsBarHeatPressed,
                              model.IsBarPullOffTested,
@@ -147,6 +148,7 @@ namespace WebView.Controllers
                             model.IsBarPrepared,
                             model.IsAdhesiveTapeApplied,
                             model.RollBlanketUsage,
+                            model.RollBlanketDefect,
                             model.IsBarMounted,
                             model.IsBarHeatPressed,
                             model.IsBarPullOffTested,
@@ -200,6 +202,7 @@ namespace WebView.Controllers
                 model.IsBarPrepared,
                 model.IsAdhesiveTapeApplied,
                 model.RollBlanketUsage,
+                model.RollBlanketDefect,
                 model.IsBarMounted,
                 model.IsBarHeatPressed,
                 model.IsBarPullOffTested,
@@ -222,6 +225,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 data.RollBlanketUsage = model.RollBlanketUsage;
+                data.RollBlanketDefect = model.RollBlanketDefect;
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
                     , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }

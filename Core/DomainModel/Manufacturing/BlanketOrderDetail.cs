@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public int BlanketId { get; set; }
 
         public decimal RollBlanketUsage { get; set; }
+        public decimal RollBlanketDefect { get; set; }
         public decimal TotalCost { get; set; }
         public decimal BarCost { get; set; }
         public decimal AdhesiveCost { get; set; }

@@ -790,12 +790,12 @@
         colNames: ['RIF Id', 'Detail Id', 'Material', 'RollerBuilder Id', 'Roller Sku', 'Roller'
         ],
         colModel: [
-                  { name: 'detailid', index: 'detailid', width: 40, sortable: false, align: 'right' },
+                  { name: 'detailid', index: 'detailid', width: 40, align: 'right' },
                   { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 80, sortable: false, hidden: true },
-                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
-                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 100, sortable: false },
+                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60 },
+                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_recoveryworkorderdetail'),
@@ -824,7 +824,7 @@
             var ret = jQuery("#lookup_table_recoveryworkorderdetail").jqGrid('getRowData', id);
 
             $('#RecoveryWorkOrderDetailId').val(ret.detailid).data("kode", id);
-            $('#RecoveryWorkOrderDetail').val(ret.rollerbuildername);
+            $('#RecoveryWorkOrderDetail').val(ret.rollerbuilder);
 
             $('#lookup_div_recoveryworkorderdetail').dialog('close');
         } else {

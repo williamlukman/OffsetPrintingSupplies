@@ -318,7 +318,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _blendingWorkOrderService.GetObjectById(model.Id);
-                model = _blendingWorkOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _blendingRecipeService, _blendingRecipeDetailService,
+                model = _blendingWorkOrderService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _blendingRecipeService, _blendingRecipeDetailService,
                             _stockMutationService,_blanketService,_itemService, _itemTypeService, _warehouseItemService,
                             _generalLedgerJournalService, _accountService, _closingService);
             }

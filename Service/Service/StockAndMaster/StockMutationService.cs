@@ -751,6 +751,56 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public IList<StockMutation> CreateStockMutationForBlanketWarehouseMutation(BlanketWarehouseMutationDetail blanketWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo)
+        {
+            IList<StockMutation> stockMutations = new List<StockMutation>();
+
+            StockMutation stockMutationFrom = new StockMutation();
+            stockMutationFrom.ItemId = warehouseItemFrom.ItemId;
+            stockMutationFrom.WarehouseId = warehouseItemFrom.WarehouseId;
+            stockMutationFrom.WarehouseItemId = warehouseItemFrom.Id;
+            stockMutationFrom.Quantity = 1;
+            stockMutationFrom.SourceDocumentType = Constant.SourceDocumentType.BlanketWarehouseMutation;
+            stockMutationFrom.SourceDocumentId = blanketWarehouseMutationDetail.BlanketWarehouseMutationId;
+            stockMutationFrom.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlanketWarehouseMutationDetail;
+            stockMutationFrom.SourceDocumentDetailId = blanketWarehouseMutationDetail.Id;
+            stockMutationFrom.ItemCase = Constant.ItemCase.Ready;
+            stockMutationFrom.Status = Constant.MutationStatus.Deduction;
+            stockMutationFrom.MutationDate = (DateTime)blanketWarehouseMutationDetail.ConfirmationDate;
+            stockMutationFrom = _repository.CreateObject(stockMutationFrom);
+
+            StockMutation stockMutationTo = new StockMutation();
+            stockMutationTo.ItemId = warehouseItemTo.ItemId;
+            stockMutationTo.WarehouseId = warehouseItemTo.WarehouseId;
+            stockMutationTo.WarehouseItemId = warehouseItemTo.Id;
+            stockMutationTo.Quantity = 1;
+            stockMutationTo.SourceDocumentType = Constant.SourceDocumentType.BlanketWarehouseMutation;
+            stockMutationTo.SourceDocumentId = blanketWarehouseMutationDetail.BlanketWarehouseMutationId;
+            stockMutationTo.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlanketWarehouseMutationDetail;
+            stockMutationTo.SourceDocumentDetailId = blanketWarehouseMutationDetail.Id;
+            stockMutationTo.ItemCase = Constant.ItemCase.Ready;
+            stockMutationTo.Status = Constant.MutationStatus.Addition;
+            stockMutationTo.MutationDate = (DateTime)blanketWarehouseMutationDetail.ConfirmationDate;
+            stockMutationTo = _repository.CreateObject(stockMutationTo);
+
+            stockMutations.Add(stockMutationFrom);
+            stockMutations.Add(stockMutationTo);
+            return stockMutations;
+        }
+
+        public IList<StockMutation> GetStockMutationForBlanketWarehouseMutation(BlanketWarehouseMutationDetail blanketWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo)
+        {
+            IList<StockMutation> stockMutations = new List<StockMutation>();
+
+            IList<StockMutation> stockMutationFrom = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemFrom.Id, Constant.SourceDocumentDetailType.BlanketWarehouseMutationDetail, blanketWarehouseMutationDetail.Id);
+            stockMutationFrom.ToList().ForEach(x => stockMutations.Add(x));
+
+            IList<StockMutation> stockMutationTo = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemTo.Id, Constant.SourceDocumentDetailType.BlanketWarehouseMutationDetail, blanketWarehouseMutationDetail.Id);
+            stockMutationTo.ToList().ForEach(x => stockMutations.Add(x));
+
+            return stockMutations;
+        }
+
         public IList<StockMutation> CreateStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo)
         {
             IList<StockMutation> stockMutations = new List<StockMutation>();

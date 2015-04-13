@@ -334,6 +334,8 @@
                                                     {<li><a href="@Url.Action("Index", "BlanketWorkOrder")">Blanket Work Order</a></li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlanketWorkProcess, Core.Constants.Constant.MenuGroupName.Manufacturing))
                                                     {<li><a href="@Url.Action("Index", "BlanketWorkProcess")">Blanket Work Process</a></li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BlanketWarehouseMutation, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                    {<li><a href="@Url.Action("Index", "BlanketWarehouseMutation")">Blanket Warehouse Mutation</a></li>}
                                                 </ul>
                                             </li>
                                            <li><a href="#">Roller Recovery</a>

@@ -70,7 +70,7 @@
                   { name: 'rollBlanketname', index: 'rollBlanketname', width: 90 },
                   { name: 'leftbaritemname', index: 'leftbaritemname', width: 90 },
                   { name: 'rightbaritemname', index: 'rightbaritemname', width: 90 },
-                  { name: 'contactname', index: 'contactname', width: 130 },
+                  { name: 'contact', index: 'contact', width: 130 },
                   { name: 'applicationcase', index: 'applicationcase', width: 65 },
                   { name: 'croppingtype', index: 'croppingtype', width: 60 },
                   { name: 'leftoverac', index: 'leftoverac', width: 40, align: 'right', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

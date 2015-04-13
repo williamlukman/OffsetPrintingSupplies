@@ -161,6 +161,7 @@ namespace Data.Context
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                           "CoreAccessoryDetail", "CoreIdentificationDetail", "CoreIdentification",
+                                          "BlanketWarehouseMutationDetail", "BlanketWarehouseMutation",
                                           "BlanketOrderDetail", "BlanketOrder", "BlendingWorkOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PurchaseDownPaymentAllocationDetail", "PurchaseDownPaymentAllocation", "PaymentVoucherDetail",
@@ -208,6 +209,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new BlanketMapping());
             modelBuilder.Configurations.Add(new BlanketOrderMapping());
             modelBuilder.Configurations.Add(new BlanketOrderDetailMapping());
+            modelBuilder.Configurations.Add(new BlanketWarehouseMutationMapping());
+            modelBuilder.Configurations.Add(new BlanketWarehouseMutationDetailMapping());
             modelBuilder.Configurations.Add(new BlendingRecipeMapping());
             modelBuilder.Configurations.Add(new BlendingRecipeDetailMapping());
             modelBuilder.Configurations.Add(new BlendingWorkOrderMapping());
@@ -323,6 +326,8 @@ namespace Data.Context
         public DbSet<Blanket> Blankets { get; set; }
         public DbSet<BlanketOrder> BlanketOrders { get; set; }
         public DbSet<BlanketOrderDetail> BlanketOrderDetails { get; set; }
+        public DbSet<BlanketWarehouseMutationDetail> BlanketWarehouseMutationDetails { get; set; }
+        public DbSet<BlanketWarehouseMutation> BlanketWarehouseMutations { get; set; }
         public DbSet<BlendingRecipe> BlendingRecipes { get; set; }
         public DbSet<BlendingRecipeDetail> BlendingRecipeDetails { get; set; }
         public DbSet<BlendingWorkOrder> BlendingWorkOrders { get; set; }

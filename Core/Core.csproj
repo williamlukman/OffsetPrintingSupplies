@@ -77,6 +77,8 @@
     <Compile Include="DomainModel\Finance\PurchaseDownPaymentAllocation.cs" />
     <Compile Include="DomainModel\Finance\PurchaseDownPaymentAllocationDetail.cs" />
     <Compile Include="DomainModel\Manufacturing\BlendingWorkOrder.cs" />
+    <Compile Include="DomainModel\Manufacturing\BlanketWarehouseMutation.cs" />
+    <Compile Include="DomainModel\Manufacturing\BlanketWarehouseMutationDetail.cs" />
     <Compile Include="DomainModel\Manufacturing\Repacking.cs" />
     <Compile Include="DomainModel\Manufacturing\CoreAccessoryDetail.cs" />
     <Compile Include="DomainModel\Finance\Payable.cs" />
@@ -184,6 +186,8 @@
     <Compile Include="Interface\Repository\Finance\ICashBankMutationRepository.cs" />
     <Compile Include="Interface\Repository\Finance\IPurchaseDownPaymentAllocationDetailRepository.cs" />
     <Compile Include="Interface\Repository\Finance\IPurchaseDownPaymentRepository.cs" />
+    <Compile Include="Interface\Repository\Manufacturing\IBlanketWarehouseMutationDetailRepository.cs" />
+    <Compile Include="Interface\Repository\Manufacturing\IBlanketWarehouseMutationRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRepackingRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IBlendingWorkOrderRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\ICoreAccessoryDetailRepository.cs" />
@@ -295,6 +299,8 @@
     <Compile Include="Interface\Service\Finance\ICashBankService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankAdjustmentService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankMutationService.cs" />
+    <Compile Include="Interface\Service\Manufacturing\IBlanketWarehouseMutationDetailService.cs" />
+    <Compile Include="Interface\Service\Manufacturing\IBlanketWarehouseMutationService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRepackingService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IBlendingWorkOrderService.cs" />
     <Compile Include="Interface\Service\Manufacturing\ICoreAccessoryDetailService.cs" />
@@ -404,6 +410,8 @@
     <Compile Include="Interface\Validation\Finance\ICashMutationValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankAdjustmentValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankMutationValidator.cs" />
+    <Compile Include="Interface\Validation\Manufacturing\IBlanketWarehouseMutationDetailValidator.cs" />
+    <Compile Include="Interface\Validation\Manufacturing\IBlanketWarehouseMutationValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRepackingValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IBlendingWorkOrderValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\ICoreAccessoryDetailValidator.cs" />

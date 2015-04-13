@@ -122,6 +122,7 @@ namespace WebView
 
             _userMenuService.CreateObject(Constant.MenuName.BlanketWorkOrder, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.BlanketWorkProcess, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.BlanketWarehouseMutation, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.BlendingWorkOrder, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RollerIdentification, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RollerAccessoryDetail, Constant.MenuGroupName.Manufacturing);

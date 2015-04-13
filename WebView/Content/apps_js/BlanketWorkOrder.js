@@ -63,7 +63,7 @@
         url: base_url + 'BlanketWorkOrder/GetList',
         datatype: "json",
         colNames: ['ID', 'Order No.', 'Production No', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
-                    'QTY Rejected', 'Due Date', 'Confirmation Date', 'Created At', 'Updated At'
+                    'QTY Rejected', 'Order Date', 'Due Date', 'Confirmation Date', 'Notes', 'Is Completed', 'Created At', 'Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -71,12 +71,15 @@
                   { name: 'productionno', index: 'productionno', width: 75 },
 	              { name: 'contact', index: 'contact', width: 200 },
                   { name: 'warehouse', index: 'warehouse', width: 100 },
-                  { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'quantityrejected', index: 'quantityrejected', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'quantityrejected', index: 'quantityrejected', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'orderdate', index: 'orderdate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'notes', index: 'notes', width: 150 },
+                  { name: 'iscompleted', index: 'iscompleted', width: 100 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: currentpage,
@@ -121,6 +124,9 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#OrderDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#OrderDateDiv').show();
+        $('#OrderDateDiv2').hide();
         $('#HasDueDate').removeAttr('disabled');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDateDiv').hide();
@@ -129,6 +135,7 @@
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
         $('#ProductionNo').removeAttr('disabled');
+        $('#Notes').removeAttr('disabled');
         //$('#QuantityReceived').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#form_btn_save').show();
@@ -160,6 +167,7 @@
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
                             $('#ProductionNo').val(result.ProductionNo);
+                            $('#Notes').val(result.Notes);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
@@ -170,8 +178,13 @@
                             $('#btnWarehouse').attr('disabled', true);
                             $('#Code').attr('disabled', true);
                             $('#ProductionNo').attr('disabled', true);
+                            $('#Notes').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
+                            $('#OrderDate').datebox('setValue', dateEnt(result.OrderDate));
+                            $('#OrderDate2').val(dateEnt(result.OrderDate));
+                            $('#OrderDateDiv').hide();
+                            $('#OrderDateDiv2').show();
                             $('#HasDueDate').attr('disabled', true);
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
@@ -214,6 +227,7 @@
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
                             $('#ProductionNo').val(result.ProductionNo);
+                            $('#Notes').val(result.Notes);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
@@ -221,6 +235,7 @@
                             $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                             $('#Code').removeAttr('disabled');
                             $('#ProductionNo').removeAttr('disabled');
+                            $('#Notes').removeAttr('disabled');
                             $('#HasDueDate').removeAttr('disabled');
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -233,6 +248,10 @@
                                 $('#DueDateDiv').hide();
                                 $('#DueDateDiv2').show();
                             }
+                            $('#OrderDate').datebox('setValue', dateEnt(result.OrderDate));
+                            $('#OrderDate2').val(dateEnt(result.OrderDate));
+                            $('#OrderDateDiv').show();
+                            $('#OrderDateDiv2').hide();
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -430,7 +449,8 @@
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
                 ProductionNo: $("#ProductionNo").val(), //QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
-                DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
+                DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked,
+                OrderDate: $('#OrderDate').datebox('getValue'), Notes: $('#Notes').val(),
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {

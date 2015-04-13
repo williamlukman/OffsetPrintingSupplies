@@ -74,6 +74,8 @@
     <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlendingWorkOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlanketWarehouseMutationValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlanketWarehouseMutationDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\RepackingValidator.cs" />
     <Compile Include="Validation\Manufacturing\CoreAccessoryDetailValidator.cs" />
     <Compile Include="Validation\Finance\PayableValidator.cs" />
