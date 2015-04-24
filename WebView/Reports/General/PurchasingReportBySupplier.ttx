@@ -1,0 +1,7 @@
+SupplierName	String	255	
+Currency	String	100
+PONO	String	100
+PurchaseDate	DateTime	
+Quantity	Number	
+Rate	Number
+AmountIDR	Number		
