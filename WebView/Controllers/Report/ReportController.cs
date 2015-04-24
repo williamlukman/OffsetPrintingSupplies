@@ -3875,6 +3875,72 @@ namespace WebView.Controllers
             }
         }
         #endregion
+        #region PurchasingBySupplier
+        public ActionResult PurchasingBySupplier()
+             {
+            return View();
+        }
+
+        public ActionResult ReportPurchasingBySupplier(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.PurchaseOrderDetails.Include(x => x.PurchaseOrder)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.PurchaseOrder.PurchaseDate >= startDate && x.PurchaseOrder.PurchaseDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    SupplierName = m.PurchaseOrder.Contact.Name,
+                    Currency = (m.PurchaseOrder.Currency.Name == "Rupiah") ? "IDR" : m.PurchaseOrder.Currency.Name,
+                    PONO = m.PurchaseOrder.NomorSurat,
+                    PurchaseDate = m.PurchaseOrder.PurchaseDate,
+                    Rate = (decimal?)db.ExchangeRates.Where(x => x.CurrencyId == m.PurchaseOrder.CurrencyId && m.PurchaseOrder.PurchaseDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate ?? 0,//m.PurchaseOrder.ExchangeRateAmount,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                }).Select(g => new
+                {
+                    SupplierName = g.Key.SupplierName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = g.Key.Currency,
+                    PONO = g.Key.PONO,
+                    PurchaseDate = g.Key.PurchaseDate,
+                    Rate = g.Key.Rate,
+                    //Amount = g.Key.Amount,
+                    Quantity = g.Where(x => (x.PurchaseOrder.PurchaseDate == g.Key.PurchaseDate)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    AmountIDR = g.Where(x => (x.PurchaseOrder.PurchaseDate == g.Key.PurchaseDate)).Sum(x => (Decimal?)(x.Quantity * x.Price * g.Key.Rate)) ?? 0,
+                }).OrderBy(x => x.SupplierName).ThenBy(x => x.PurchaseDate).ThenBy(x => x.PONO).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/PurchasingReportBySupplier.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
 
         #region PurchaseByItem
         public ActionResult PurchaseByItem()
@@ -3933,6 +3999,7 @@ namespace WebView.Controllers
 
         #endregion
 
+       
 
     }
 }

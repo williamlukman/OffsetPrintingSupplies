@@ -58,7 +58,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -459,7 +459,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
@@ -728,8 +728,8 @@
         colNames: ['Id', 'Account Code', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy', 'CashBank', 'Legacy Code'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true },
-				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col", hidden: true },
-                  { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" }, 
+                  { name: 'parsecode', index: 'parsecode', hidden:true, width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'group', index: 'group', width: 90 },
                   { name: 'level', index: 'level', width: 50 },

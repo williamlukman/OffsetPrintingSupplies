@@ -1316,6 +1316,8 @@
     <Content Include="Reports\Printout\RCN.ttx" />
     <Content Include="Reports\Printout\ReceiptVoucherBank.rpt" />
     <Content Include="Reports\Printout\ReceiptVoucherBank.ttx" />
+    <Content Include="Reports\General\PurchasingReportByItem.rpt" />
+    <Content Include="Reports\General\PurchasingReportByItem.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Reports\General\zentrum_logo.png" />

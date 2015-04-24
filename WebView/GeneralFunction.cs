@@ -1060,7 +1060,7 @@ namespace WebView
                         string[] split = conditions[i].TrimEnd().TrimStart().Split(' ');
                         string actualtext = conditions[i].Substring(split[0].Length + split[1].Length + 2);
                         string actualcut = actualtext.Trim().Substring(2, actualtext.Trim().Length - 4);
-                        string compare = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                        string compare = temp[2].Trim().Substring(2, Math.Max(0,temp[2].Trim().Length - 4));
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -1108,7 +1108,7 @@ namespace WebView
                         else
                         {
                             //filterValues.Add(filterValue);
-                            filter += temp[0].Trim() + ".ToLower().Contains(\"" + filterValue.ToLower() + "\")";
+                            filter += temp[0].Trim() + ".ToLower().Contains(\"" + filterValue.ToLower().Replace("%", "").Replace("*", "") + "\")";
                         }
 
                         if (i < conditions.Length - 1)

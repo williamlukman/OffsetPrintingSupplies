@@ -230,8 +230,7 @@ namespace WebView.Controllers
                               IsCashBankAccount = model.IsCashBankAccount,
                               LegacyCode = model.LegacyCode,
 
-                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
-
+                          }).Where(filter).OrderBy(sidx + " " + sord);
 
              var list = query.AsEnumerable();
 

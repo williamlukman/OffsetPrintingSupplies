@@ -962,10 +962,11 @@
         var id = jQuery("#lookup_table_cashbank").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
+            var codeRV = ret.code.substr(0, 2) + "T" + ret.code.substr(3); //Karakter ke-3 harus T sbg kode Penerimaan, K untuk Pengeluaran
 
             $('#CashBankId').val(ret.id).data("kode", id);
             $('#CashBank').val(ret.name);
-            $('#NoBukti').val(ret.code);
+            $('#NoBukti').val(codeRV);
             $('#CurrencyCashBank').val(ret.currency);
             $('#lookup_div_cashbank').dialog('close');
         } else {
