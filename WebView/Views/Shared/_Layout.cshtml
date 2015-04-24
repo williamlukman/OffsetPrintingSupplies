@@ -521,6 +521,18 @@
 
                                                 </ul>
                                             </li>
+                                            <li><a href="#">Purchase Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("PurchaseByItem", "Report")">By Item</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">By Supplier</a></li>}
+                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">By Value</a></li>}
+                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">By Payment Due Date</a></li>}
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li id="menu-item-51"><a href="#">Setting</a>

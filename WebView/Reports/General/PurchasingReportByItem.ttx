@@ -1,0 +1,10 @@
+PurchaseOrderDate	Datetime			
+PurchaseOrdeNo	String	255	
+Supplier	String	255	
+Local	String	255	
+Sku	String	255	
+ItemDescription	String	255	
+Quantity	Number		
+QuantityShipped	Number		
+QuantityPending	Number	
+Uom	String	255

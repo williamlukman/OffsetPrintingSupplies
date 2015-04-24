@@ -373,6 +373,7 @@
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
+    <Content Include="Content\apps_js\ReportPurchaseByItem.js" />
     <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
@@ -1536,6 +1537,7 @@
     <Content Include="Views\FinanceReport\BalanceSheetDetail.cshtml" />
     <Content Include="Views\BankAdministration\Index.cshtml" />
     <Content Include="Views\BlanketWarehouseMutation\Index.cshtml" />
+    <Content Include="Views\Report\PurchaseByItem.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
