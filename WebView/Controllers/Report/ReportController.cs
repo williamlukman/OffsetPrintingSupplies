@@ -3953,8 +3953,8 @@ namespace WebView.Controllers
             DateTime endDay = endDate.AddDays(1);
             var company = _companyService.GetQueryable().FirstOrDefault();
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
-            var q = _purchaseOrderDetailService.GetQueryable().Where(x=> !x.IsDeleted && x.IsConfirmed && 
-                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate <= endDate) && x.ItemId == ItemId);
+            var q = _purchaseOrderDetailService.GetQueryable().Where(x=> !x.IsDeleted && x.IsConfirmed &&
+                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate <= endDate) && (ItemId == 0 || x.ItemId == ItemId));
             string user = AuthenticationModel.GetUserName();
 
             var query = q.Select(g => new

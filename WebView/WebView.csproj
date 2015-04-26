@@ -375,6 +375,7 @@
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
     <Content Include="Content\apps_js\ReportPurchaseByItem.js" />
     <Content Include="Content\apps_js\ReportNeracaSaldo.js" />
+    <Content Include="Content\apps_js\ReportPurchasingBySupplier.js" />
     <Content Include="Content\apps_js\ReportTransactionList.js" />
     <Content Include="Content\apps_js\ReportSerahTerima.js" />
     <Content Include="Content\apps_js\ValidCombIncomeStatement.js" />
@@ -1540,6 +1541,9 @@
     <Content Include="Views\BankAdministration\Index.cshtml" />
     <Content Include="Views\BlanketWarehouseMutation\Index.cshtml" />
     <Content Include="Views\Report\PurchaseByItem.cshtml" />
+    <Content Include="Views\Report\PurchasingBySupplier.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

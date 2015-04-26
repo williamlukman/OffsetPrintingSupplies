@@ -246,16 +246,20 @@
     jQuery("#lookup_table_item").jqGrid({
         url: base_url + 'Item/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Contact No', 'Email', 'Address', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'Customer QTY', 'UoM', 'Price', 'Avg Price'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 60, align: "center" },
-				  { name: 'name', index: 'name', width: 180 },
-                  { name: 'contact', index: 'contactno', width: 100 },
-                  { name: 'email', index: 'email', width: 150 },
-                  { name: 'address', index: 'address', width: 250 },
-                  { name: 'description', index: 'description', width: 250 },
-                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'sku', index: 'sku', width: 70 },
+				  { name: 'name', index: 'name', width: 240 },
+                  { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'customerquantity', index: 'customerquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'uom', index: 'uom', width: 40 },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
+                  { name: 'avgprice', index: 'avgprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),
@@ -270,7 +274,7 @@
         height: $("#lookup_div_item").height() - 110,
     });
     $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_item').click(function () {
