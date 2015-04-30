@@ -483,5 +483,70 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
 
+        #region ARCustomerPayment
+        public ActionResult ARCustomerPayment()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+            return View(); 
+        }
+
+        public ActionResult ReportARCustomerPayment(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.ReceiptVoucherDetails.Include(x => x.ReceiptVoucher).Include(x => x.Receivable)
+                                                  .Where(x => !x.IsDeleted && x.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice && (
+                                                            (x.ReceiptVoucher.ReceiptDate >= startDate && x.ReceiptVoucher.ReceiptDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.Select(g => new
+                {
+                    CustomerName = g.ReceiptVoucher.Contact.Name??"", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = g.Receivable.Currency.Name == "Rupiah" ? "IDR" : g.Receivable.Currency.Name,
+                    RefNo = g.ReceiptVoucher.NoBukti,
+                    PaymentDate = g.ReceiptVoucher.ReceiptDate,
+                    Amount = g.Amount,
+                    //InvoiceId = g.Receivable.ReceivableSourceId,
+                    InvoiceCode = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat??"",
+                    InvoiceDate = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().InvoiceDate,
+                    Discount = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().Discount, //g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
+                }).OrderBy(x => x.PaymentDate).ThenBy(x => x.CustomerName).ThenBy(x => x.PaymentDate).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/ARCustomerPayment.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+
     }
 }

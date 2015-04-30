@@ -446,7 +446,7 @@
                                     </li>
                                     <li><a href="#">Report</a>
                                         <ul>
-                                            <li><a href="#">Finance Report</a>
+                                            <li><a href="#">Accounting/Finance Report</a>
                                                 <ul>
 													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
@@ -458,6 +458,10 @@
                                                     {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Daftar Transaksi</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("NeracaSaldo", "FinanceReport")">Ringkasan Neraca Saldo</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("KartuBukuBesar", "FinanceReport")">Kartu Buku Besar</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARCustomerPayment", "FinanceReport")">AR Customer Payment</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Customer Sales Report</a>
