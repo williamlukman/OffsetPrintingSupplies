@@ -550,6 +550,73 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region APVendorPayment
+        public ActionResult APVendorPayment()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+            return View();
+        }
+
+        public ActionResult ReportAPVendorPayment(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.PaymentVoucherDetails.Include(x => x.PaymentVoucher).Include(x => x.Payable)
+                                                  .Where(x => !x.IsDeleted && !x.PaymentVoucher.IsDeleted && (
+                                                            (x.PaymentVoucher.PaymentDate >= startDate && x.PaymentVoucher.PaymentDate < endDay)
+                                                        ) && (
+                                                            (x.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ||
+                                                            (x.Payable.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.Select(g => new
+                {
+                    ContactName = g.PaymentVoucher.Contact.Name ?? "", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = (g.Payable.Currency.Name == "Rupiah") ? "IDR" : (g.Payable.Currency.Name == "Euro") ? "EUR" : g.Payable.Currency.Name,
+                    RefNo = g.PaymentVoucher.NoBukti,
+                    PaymentDate = g.PaymentVoucher.PaymentDate,
+                    Amount = g.Amount,
+                    //InvoiceId = g.Receivable.ReceivableSourceId,
+                    InvoiceCode = (g.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == g.Payable.PayableSourceId).FirstOrDefault().NomorSurat ?? "" : db.PurchaseInvoiceMigrations.Where(x => x.Id == g.Payable.PayableSourceId).FirstOrDefault().NomorSurat ?? "",
+                    InvoiceDate = (g.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == g.Payable.PayableSourceId).FirstOrDefault().InvoiceDate : db.PurchaseInvoiceMigrations.Where(x => x.Id == g.Payable.PayableSourceId).FirstOrDefault().InvoiceDate,
+                    Discount = (g.Payable.PayableSource == Constant.PayableSource.PurchaseInvoice) ? db.PurchaseInvoices.Where(x => x.Id == g.Payable.PayableSourceId).FirstOrDefault().Discount : 0, //g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
+                }).OrderBy(x => x.PaymentDate).ThenBy(x => x.ContactName).ThenBy(x => x.InvoiceDate).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/APVendorPayment.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
     }
 }

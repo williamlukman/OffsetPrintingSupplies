@@ -1,0 +1,10 @@
+ContactName	String	255	
+ContactGroup	String	255	
+Currency	String	100
+Discount	Number
+RefNo	String	255
+PaymentDate	DateTime		
+Rate	Number
+Amount	Number		
+InvoiceDate	DateTime
+InvoiceCode	String	255
