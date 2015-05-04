@@ -617,6 +617,99 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region ARMutation
+        public ActionResult ARMutation()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+            return View();
+        }
+
+        public ActionResult ReportARMutation(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime startDay = startDate.Date;
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                string user = AuthenticationModel.GetUserName();
+                var q = db.Receivables.Include(x => x.Contact).Include(x => x.Currency)
+                                                  .Where(x => !x.IsDeleted);
+
+                var query1 = q.Select(g => new
+                {
+                    //Id = g.Id,
+                    ContactID = g.ContactId,
+                    CustomerName = g.Contact.Name ?? "", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = (g.Currency.Name == "Rupiah") ? "IDR" : (g.Currency.Name == "Euro") ? "EUR" : g.Currency.Name,
+                    Rate = g.Rate,
+                    Amount = g.Amount,
+                    DocumentDate = EntityFunctions.TruncateTime((g.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().InvoiceDate : //.ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().InvoiceDate :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesDownPayment) ? db.SalesDownPayments.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().DownPaymentDate : //.ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesDownPaymentAllocationDetail) ? db.SalesDownPaymentAllocationDetails.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.PurchaseDownPayment) ? db.PurchaseDownPayments.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().DownPaymentDate :
+                                   (g.ReceivableSource == Constant.ReceivableSource.ReceiptRequest) ? db.ReceiptRequests.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().RequestedDate : g.CreatedAt),
+                    
+                });
+
+                var query2 = db.ReceiptVoucherDetails.Where(x => !x.IsDeleted && x.IsConfirmed && !x.ReceiptVoucher.IsDeleted && x.ReceiptVoucher.IsConfirmed).Join(q, outer => outer.ReceivableId, inner => inner.Id, (outer, inner) => new
+                {
+                    //Id = inner.Id,
+                    ContactID = inner.ContactId,
+                    CustomerName = inner.Contact.Name ?? "", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = (inner.Currency.Name == "Rupiah") ? "IDR" : (inner.Currency.Name == "Euro") ? "EUR" : inner.Currency.Name,
+                    Rate = inner.Rate,
+                    Amount = -outer.Amount,
+                    DocumentDate = EntityFunctions.TruncateTime(outer.ReceiptVoucher.ReceiptDate),
+                });
+
+                var query3 = query1.Concat(query2);
+                var query = query3.GroupBy(m => new 
+                {
+                    m.ContactID,
+                    m.CustomerName,
+                    m.Currency,
+                }).Select(h => new
+                {
+                    h.Key.ContactID,
+                    h.Key.CustomerName,
+                    h.Key.Currency,
+                    StartAmount = h.Where(x => x.DocumentDate < startDay).Sum(x => (decimal?)x.Amount)??0,
+                    DebitAmount = h.Where(x => x.DocumentDate >= startDay && x.DocumentDate < endDay && x.Amount >= 0).Sum(x => (decimal?)x.Amount) ?? 0,
+                    CreditAmount = h.Where(x => x.DocumentDate >= startDay && x.DocumentDate < endDay && x.Amount < 0).Sum(x => (decimal?)-x.Amount) ?? 0,
+                }).OrderBy(x => x.Currency).ThenBy(x => x.CustomerName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/ARMutation.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
 
     }
 }

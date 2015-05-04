@@ -464,6 +464,8 @@
                                                     {<li><a href="@Url.Action("APVendorPayment", "FinanceReport")">AP Vendor Payment</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ARCustomerPayment", "FinanceReport")">AR Customer Payment</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARMutation", "FinanceReport")">AR Mutation</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Customer Sales Report</a>
