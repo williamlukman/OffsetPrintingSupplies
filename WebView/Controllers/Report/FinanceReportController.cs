@@ -501,23 +501,26 @@ namespace WebView.Controllers
                 var company = _companyService.GetQueryable().FirstOrDefault();
                 //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
                 var q = db.ReceiptVoucherDetails.Include(x => x.ReceiptVoucher).Include(x => x.Receivable)
-                                                  .Where(x => !x.IsDeleted && x.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice && (
+                                                  .Where(x => !x.IsDeleted && !x.ReceiptVoucher.IsDeleted && (
                                                             (x.ReceiptVoucher.ReceiptDate >= startDate && x.ReceiptVoucher.ReceiptDate < endDay)
+                                                        ) && (
+                                                            (x.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ||
+                                                            (x.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration)
                                                         ));
                 string user = AuthenticationModel.GetUserName();
 
                 var query = q.Select(g => new
                 {
                     CustomerName = g.ReceiptVoucher.Contact.Name??"", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
-                    Currency = g.Receivable.Currency.Name == "Rupiah" ? "IDR" : g.Receivable.Currency.Name,
+                    Currency = (g.Receivable.Currency.Name == "Rupiah") ? "IDR" : (g.Receivable.Currency.Name == "Euro") ? "EUR" : g.Receivable.Currency.Name,
                     RefNo = g.ReceiptVoucher.NoBukti,
                     PaymentDate = g.ReceiptVoucher.ReceiptDate,
                     Amount = g.Amount,
                     //InvoiceId = g.Receivable.ReceivableSourceId,
-                    InvoiceCode = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat??"",
-                    InvoiceDate = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().InvoiceDate,
-                    Discount = db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().Discount, //g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
-                }).OrderBy(x => x.PaymentDate).ThenBy(x => x.CustomerName).ThenBy(x => x.PaymentDate).ToList();
+                    InvoiceCode = (g.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "" : db.SalesInvoiceMigrations.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "",
+                    InvoiceDate = (g.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().InvoiceDate : db.SalesInvoiceMigrations.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().InvoiceDate,
+                    Discount = (g.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.Receivable.ReceivableSourceId).FirstOrDefault().Discount : 0, //g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
+                }).OrderBy(x => x.PaymentDate).ThenBy(x => x.CustomerName).ThenBy(x => x.InvoiceDate).ToList();
 
                 if (!query.Any())
                 {
