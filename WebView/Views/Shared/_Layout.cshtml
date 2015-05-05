@@ -465,6 +465,8 @@
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ARCustomerPayment", "FinanceReport")">AR Customer Payment</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARAgingSchedule", "FinanceReport")">AR Aging Schedule</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ARAgingSummary", "FinanceReport")">AR Aging Summary</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ARMutation", "FinanceReport")">AR Mutation</a></li>}

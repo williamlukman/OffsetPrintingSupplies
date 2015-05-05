@@ -773,18 +773,18 @@ namespace WebView.Controllers
                     h.Key.CustomerName,
                     //h.Key.Currency,
                     Group = "1", //dummy group
-                    AmountUSD30 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountEUR30 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountIDR30 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountUSD60 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 60 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountEUR60 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 60 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountIDR60 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 60 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountUSD90 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 90 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountEUR90 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 90 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountIDR90 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) <= 90 && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountUSD = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountEUR = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
-                    AmountIDR = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(endDay, x.DocumentDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD30 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR30 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR30 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD60 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR60 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR60 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD90 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR90 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR90 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
                 }).OrderBy(x => x.CustomerName).ToList();
 
                 if (!query.Any())
@@ -796,6 +796,125 @@ namespace WebView.Controllers
 
                 //Loading Report
                 rd.Load(Server.MapPath("~/") + "Reports/Finance/ARAgingSummary.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("endDate", endDate);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region ARAgingSchedule
+        public ActionResult ARAgingSchedule()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+            return View();
+        }
+
+        public ActionResult ReportARAgingSchedule(DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                string user = AuthenticationModel.GetUserName();
+                var q = db.Receivables.Include(x => x.Contact).Include(x => x.Currency)
+                                                  .Where(x => !x.IsDeleted);
+
+                var query1 = q.Select(g => new
+                {
+                    //Id = g.Id,
+                    ContactID = g.ContactId,
+                    CustomerName = g.Contact.Name ?? "", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = (g.Currency.Name == "Rupiah") ? "IDR" : (g.Currency.Name == "Euro") ? "EUR" : g.Currency.Name,
+                    Rate = g.Rate,
+                    Amount = g.Amount,
+                    SourceDocument = g.ReceivableSource,
+                    SourceDocumentId = g.ReceivableSourceId,
+                    DocumentDate = EntityFunctions.TruncateTime((g.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().InvoiceDate : //.ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().InvoiceDate :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesDownPayment) ? db.SalesDownPayments.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().DownPaymentDate : //.ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesDownPaymentAllocationDetail) ? db.SalesDownPaymentAllocationDetails.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.PurchaseDownPayment) ? db.PurchaseDownPayments.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().DownPaymentDate :
+                                   (g.ReceivableSource == Constant.ReceivableSource.ReceiptRequest) ? db.ReceiptRequests.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().RequestedDate : g.CreatedAt),
+
+                    InvoiceCode = (g.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().NomorSurat??"" : //.ConfirmationDate.Value :
+                                   (g.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == g.ReceivableSourceId).FirstOrDefault().NomorSurat??"" : "",
+
+                });
+
+                var query2 = db.ReceiptVoucherDetails.Where(x => !x.IsDeleted && x.IsConfirmed && !x.ReceiptVoucher.IsDeleted && x.ReceiptVoucher.IsConfirmed).Join(q, outer => outer.ReceivableId, inner => inner.Id, (outer, inner) => new
+                {
+                    //Id = inner.Id,
+                    ContactID = inner.ContactId,
+                    CustomerName = inner.Contact.Name ?? "", //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = (inner.Currency.Name == "Rupiah") ? "IDR" : (inner.Currency.Name == "Euro") ? "EUR" : inner.Currency.Name,
+                    Rate = inner.Rate,
+                    Amount = -outer.Amount,
+                    SourceDocument = outer.Receivable.ReceivableSource,
+                    SourceDocumentId = outer.Receivable.ReceivableSourceId,
+                    DocumentDate = EntityFunctions.TruncateTime(outer.ReceiptVoucher.ReceiptDate),
+
+                    InvoiceCode = (outer.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoice) ? db.SalesInvoices.Where(x => x.Id == outer.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "" : //.ConfirmationDate.Value :
+                                   (outer.Receivable.ReceivableSource == Constant.ReceivableSource.SalesInvoiceMigration) ? db.SalesInvoiceMigrations.Where(x => x.Id == outer.Receivable.ReceivableSourceId).FirstOrDefault().NomorSurat ?? "" : "",
+                });
+
+                var query3 = query1.Concat(query2);
+                var query = query3.GroupBy(m => new
+                {
+                    m.ContactID,
+                    m.CustomerName,
+                    m.SourceDocument,
+                    m.SourceDocumentId,
+                    m.InvoiceCode,
+                    DocumentDate = m.DocumentDate.Value,
+                    //m.Currency,
+                }).Select(h => new
+                {
+                    h.Key.ContactID,
+                    h.Key.CustomerName,
+                    InvoiceCode = h.Key.InvoiceCode,
+                    InvoiceDate = h.Key.DocumentDate,
+                    ReceivedDate = h.Key.DocumentDate,
+                    PaymentDays = EntityFunctions.DiffDays(h.Key.DocumentDate, endDate) ?? -1,
+                    //h.Key.Currency,
+                    AmountUSD30 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR30 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR30 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD60 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR60 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR60 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 60 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 30).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD90 = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR90 = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR90 = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) <= 90 && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 60).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountUSD = h.Where(x => x.Currency == "USD" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountEUR = h.Where(x => x.Currency == "EUR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                    AmountIDR = h.Where(x => x.Currency == "IDR" && EntityFunctions.DiffDays(x.DocumentDate, endDate) > 90).Sum(x => (decimal?)x.Amount) ?? 0,
+                }).OrderBy(x => x.CustomerName).ThenBy(x => x.InvoiceDate).ThenBy(x => x.InvoiceCode).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/ARAgingSchedule.rpt");
 
                 // Setting report data source
                 rd.SetDataSource(query);
