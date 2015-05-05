@@ -1,0 +1,19 @@
+CustomerName	String	255	
+CustomerGroup	String	255	
+Group	String	100
+ContactID	String	100
+PaymentDate	DateTime			
+InvoiceDate	DateTime
+InvoiceCode	String	255
+AmountIDR30	Number
+AmountUSD30	Number
+AmountEUR30	Number
+AmountIDR60	Number
+AmountUSD60	Number
+AmountEUR60	Number
+AmountIDR90	Number
+AmountUSD90	Number
+AmountEUR90	Number
+AmountIDR	Number
+AmountUSD	Number
+AmountEUR	Number

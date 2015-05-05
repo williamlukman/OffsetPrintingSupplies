@@ -458,12 +458,20 @@
                                                     {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Daftar Transaksi</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("NeracaSaldo", "FinanceReport")">Ringkasan Neraca Saldo</a></li>}
+                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("PerincianNeraca", "FinanceReport")">Perincian Neraca</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("KartuBukuBesar", "FinanceReport")">Kartu Buku Besar</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("APVendorPayment", "FinanceReport")">AP Vendor Payment</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ARCustomerPayment", "FinanceReport")">AR Customer Payment</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARAgingSchedule", "FinanceReport")">AR Aging Schedule</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARAgingSummary", "FinanceReport")">AR Aging Summary</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("ARMutation", "FinanceReport")">AR Mutation</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Customer Sales Report</a>

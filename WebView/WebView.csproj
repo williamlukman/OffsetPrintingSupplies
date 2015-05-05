@@ -374,6 +374,9 @@
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
     <Content Include="Content\apps_js\ReportPerincianNeraca.js" />
+    <Content Include="Content\apps_js\ReportARAgingSchedule.js" />
+    <Content Include="Content\apps_js\ReportARAgingSummary.js" />
+    <Content Include="Content\apps_js\ReportARMutation.js" />
     <Content Include="Content\apps_js\ReportAPVendorPayment.js" />
     <Content Include="Content\apps_js\ReportARCustomerPayment.js" />
     <Content Include="Content\apps_js\ReportKartuBukuBesar.js" />
@@ -1323,6 +1326,31 @@
     <Content Include="Reports\Printout\ReceiptVoucherBank.ttx" />
     <Content Include="Reports\General\PurchasingReportByItem.rpt" />
     <Content Include="Reports\General\PurchasingReportByItem.ttx" />
+    <Content Include="Reports\Finance\APVendorPayment.rpt" />
+    <Content Include="Reports\Finance\APVendorPayment.ttx" />
+    <Content Include="Reports\Finance\ARAgingSchedule.rpt" />
+    <Content Include="Reports\Finance\ARAgingSchedule.ttx" />
+    <Content Include="Reports\Finance\ARAgingSummary.rpt" />
+    <Content Include="Reports\Finance\ARAgingSummary.ttx" />
+    <Content Include="Reports\Finance\ARCustomerPayment.rpt" />
+    <Content Include="Reports\Finance\ARCustomerPayment.ttx" />
+    <Content Include="Reports\Finance\ARMutation.rpt" />
+    <Content Include="Reports\Finance\ARMutation.ttx" />
+    <Content Include="Reports\Finance\BalanceSheetDetail.rpt" />
+    <Content Include="Reports\Finance\BalanceSheetDetail.ttx" />
+    <Content Include="Reports\Finance\DaftarTransaksi.rpt" />
+    <Content Include="Reports\Finance\DaftarTransaksi.ttx" />
+    <Content Include="Reports\Finance\IncStt.rpt" />
+    <Content Include="Reports\Finance\IncStt.ttx" />
+    <Content Include="Reports\Finance\JurnalMemorial.ttx" />
+    <Content Include="Reports\Finance\KartuBukuBesar.rpt" />
+    <Content Include="Reports\Finance\KartuBukuBesar.ttx" />
+    <Content Include="Reports\Finance\NeracaSaldo.rpt" />
+    <Content Include="Reports\Finance\NeracaSaldo.ttx" />
+    <Content Include="Reports\Finance\PerincianNeraca.rpt" />
+    <Content Include="Reports\Finance\PerincianNeraca.ttx" />
+    <Content Include="Reports\General\PurchasingReportBySupplier.rpt" />
+    <Content Include="Reports\General\PurchasingReportBySupplier.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Reports\General\zentrum_logo.png" />
@@ -1552,6 +1580,9 @@
     <Content Include="Views\FinanceReport\ARCustomerPayment.cshtml" />
     <Content Include="Views\FinanceReport\APVendorPayment.cshtml" />
     <Content Include="Views\FinanceReport\PerincianNeraca.cshtml" />
+    <Content Include="Views\FinanceReport\ARMutation.cshtml" />
+    <Content Include="Views\FinanceReport\ARAgingSummary.cshtml" />
+    <Content Include="Views\FinanceReport\ARAgingSchedule.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
