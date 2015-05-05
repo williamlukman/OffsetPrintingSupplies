@@ -373,6 +373,7 @@
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
+    <Content Include="Content\apps_js\ReportPerincianNeraca.js" />
     <Content Include="Content\apps_js\ReportAPVendorPayment.js" />
     <Content Include="Content\apps_js\ReportARCustomerPayment.js" />
     <Content Include="Content\apps_js\ReportKartuBukuBesar.js" />
@@ -1550,6 +1551,7 @@
     <Content Include="Views\FinanceReport\KartuBukuBesar.cshtml" />
     <Content Include="Views\FinanceReport\ARCustomerPayment.cshtml" />
     <Content Include="Views\FinanceReport\APVendorPayment.cshtml" />
+    <Content Include="Views\FinanceReport\PerincianNeraca.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

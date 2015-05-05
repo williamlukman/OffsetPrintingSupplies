@@ -304,6 +304,71 @@ namespace WebView.Controllers
                 return File(stream, "application/pdf");
             }
         }
+         
+        public ActionResult PerincianNeraca()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+         
+        public ActionResult ReportPerincianNeraca(DateTime Tgl)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime startDay = Tgl.Date;
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var acl = db.Accounts.Where(x => !x.IsDeleted && x.IsLeaf && x.Level == 5); //.OrderBy(x => x.Code);
+                var cls = db.Closings.Where(x => EntityFunctions.DiffMonths(x.BeginningPeriod, startDay) == 0).FirstOrDefault();
+                var clsId = cls != null ? cls.Id : 0 ;
+                var c = db.ClosingReports.Where(x => x.ClosingId == clsId && 
+                    (x.AccountParentId == 3 || x.AccountParentId == 8 || x.AccountParentId == 14 || x.AccountParentId == 25 || x.AccountParentId == 30 ||
+                     x.AccountParentId == 37 || x.AccountParentId == 45 || x.AccountParentId == 48 || x.AccountParentId == 51 || x.AccountParentId == 54 ||
+                     x.AccountParentId == 57 || x.AccountParentId == 60 || x.AccountParentId == 64 || x.AccountParentId == 177 || x.AccountParentId == 181 ||
+                     x.AccountParentId == 193 || x.AccountParentId == 202 || x.AccountParentId == 213 || x.AccountParentId == 217)
+                     );
+                
+                string user = AuthenticationModel.GetUserName();
+                var query = c.Select(m => new
+                {
+                    AccountParentName = m.AccountParentId == null ? "" : m.Parent.Name,
+                    AccountName = m.Account.Name,
+                    AccountParentId = m.AccountParentId ?? 0,
+                    AccountCode = m.Account.Code,
+                    Amount = m.AmountIDR,
+                    AccountParentNumber = m.AccountParentId ,
+                    ContactName = m.ContactId == null ? "" : m.Contact.Name,
+                    ContactId = m.ContactId ?? 0,
+                }).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/PerincianNeraca.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", Tgl);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
 
         // Revenue - Expense - TaxExpense - Divident = NetEarnings
         public ActionResult ReportIncomeStatement(int period, int yearPeriod)

@@ -1,0 +1,8 @@
+AccountParentName	String	255	
+AccountName	String	255	
+AccountParentId	Number		
+AccountCode	String	255	
+Amount	Currency		
+AccountParentNumber	String	255
+ContactName	String	255
+ContactId	Number	

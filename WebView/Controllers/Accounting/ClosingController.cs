@@ -27,6 +27,7 @@ namespace WebView.Controllers
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
         private IVCNonBaseCurrencyService _vCNonBaseCurrencyService;
         private ICashBankService _cashBankService;
+        private IClosingReportService _closingReportService;
         public ClosingController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
@@ -39,6 +40,7 @@ namespace WebView.Controllers
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
             _vCNonBaseCurrencyService = new VCNonBaseCurrencyService(new VCNonBaseCurrencyRepository(), new VCNonBaseCurrencyValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
+            _closingReportService = new ClosingReportService(new ClosingReportRepository(), new ClosingReportValidator());
         }
 
         public ActionResult Index()
@@ -265,7 +267,7 @@ namespace WebView.Controllers
 
                 var data = _closingService.GetObjectById(model.Id);
                 data.ClosedAt = model.ClosedAt;
-                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService, _validCombIncomeStatementService, _gLNonBaseCurrencyService,_exchangeRateClosingService,_vCNonBaseCurrencyService,_cashBankService);
+                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService, _validCombIncomeStatementService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService, _cashBankService, _closingReportService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -302,7 +304,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.OpenObject(data, _accountService, _validCombService, _validCombIncomeStatementService, _vCNonBaseCurrencyService, _generalLedgerJournalService, _exchangeRateClosingService);
+                model = _closingService.OpenObject(data, _accountService, _validCombService, _validCombIncomeStatementService, _vCNonBaseCurrencyService, _generalLedgerJournalService, _exchangeRateClosingService,_closingReportService);
             }
             catch (Exception ex)
             {

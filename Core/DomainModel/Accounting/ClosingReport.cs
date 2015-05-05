@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Core.DomainModel
+{
+    public partial class ClosingReport
+    { 
+        public int Id { get; set; }
+        public int ClosingId { get; set; }
+        public int AccountId { get; set; }
+        public int? AccountParentId { get; set; }
+        public int? ContactId { get; set; } 
+        public DateTime TransactionDate { get; set; }
+        public decimal AmountIDR { get; set; } 
+        public decimal AmountCurrency { get; set; }
+        public int CurrencyId { get; set; } 
+        public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public Nullable<DateTime> DeletedAt { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
+         
+        public virtual Account Account { get; set; }
+        public virtual Account Parent { get; set; }
+        public virtual Closing Closing { get; set; }
+        public virtual Contact Contact { get; set; }
+        public virtual Currency Currency { get; set; }
+ 
+    }
+}

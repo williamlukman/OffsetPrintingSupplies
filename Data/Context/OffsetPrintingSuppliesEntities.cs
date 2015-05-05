@@ -156,7 +156,7 @@ namespace Data.Context
                                         { "UserMenu", "UserAccount", "UserAccess" };
             IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", 
                                            "PaymentRequest", "ReceiptRequestDetail", "ReceiptRequest", "MemorialDetail", "Memorial", 
-                                           "ValidCombIncomeStatement", "ValidComb", "Closing", "GeneralLedgerJournal" };
+                                           "ValidCombIncomeStatement", "ValidComb", "ClosingReport","Closing", "GeneralLedgerJournal"};
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -219,6 +219,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CashBankMutationMapping());
             modelBuilder.Configurations.Add(new CashMutationMapping());
             modelBuilder.Configurations.Add(new ClosingMapping());
+            modelBuilder.Configurations.Add(new ClosingReportMapping());
             modelBuilder.Configurations.Add(new CompanyMapping());
             modelBuilder.Configurations.Add(new CompoundMapping());
             modelBuilder.Configurations.Add(new ContactMapping());
@@ -335,6 +336,7 @@ namespace Data.Context
         public DbSet<CashBankAdjustment> CashBankAdjustments { get; set; }
         public DbSet<CashBankMutation> CashBankMutations { get; set; }
         public DbSet<CashMutation> CashMutations { get; set; }
+        public DbSet<ClosingReport> ClosingReports { get; set; }
         public DbSet<Closing> Closings { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Compound> Compounds { get; set; }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Data.Entity;
 using Core.Interface.Validation;
 using System.Data.Objects;
+using Data.Context;
 
 namespace Service.Service
 {
@@ -82,14 +83,14 @@ namespace Service.Service
         public Closing CloseObject(Closing closing, IAccountService _accountService,
                                    IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService,IExchangeRateClosingService _exchangeRateClosingService,
-                                   IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService)
+                                   IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService,
+                                   IClosingReportService _closingReportService,ICurrencyService _currencyService)
         {
             if (_validator.ValidCloseObject(closing, this))
             {
                 // Get Last Closing
                 var lastClosing = _repository.GetQueryable().Where(x => EntityFunctions.AddDays(EntityFunctions.TruncateTime(x.EndDatePeriod), 1) == closing.BeginningPeriod).FirstOrDefault();
                 DateTime EndDate = closing.EndDatePeriod.AddDays(1);
-        
                 #region Count ValidComb for each leaf account
                 IList<Account> leafAccounts = _accountService.GetLeafObjects();
                 foreach(var leaf in leafAccounts)
@@ -99,7 +100,6 @@ namespace Service.Service
                                                                  x.TransactionDate >= closing.BeginningPeriod && 
                                                                  x.TransactionDate < EndDate)
                                                           .ToList();
-                  
                     decimal totalAmountInLedgers = 0;
                     decimal totalAmountLast = 0;
                     if (lastClosing != null)
@@ -112,31 +112,113 @@ namespace Service.Service
                                    x.Account.Group == Constant.AccountGroup.Liability ||
                                    x.Account.Group == Constant.AccountGroup.Expense)).FirstOrDefault();
                         totalAmountLast = LastValidComb == null ? 0 : LastValidComb.Amount;
+
                     }
 
-                    foreach(var ledger in ledgers)
+                    int contactId;
+                    using (var db = new OffsetPrintingSuppliesEntities())
                     {
-                        Account account = _accountService.GetObjectById(ledger.AccountId);
-                        if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
-                            (account.Group == Constant.AccountGroup.Asset ||
-                             account.Group == Constant.AccountGroup.Expense)) ||
-                           (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
-                            (account.Group == Constant.AccountGroup.Liability ||
-                             account.Group == Constant.AccountGroup.Equity ||
-                             account.Group == Constant.AccountGroup.Revenue)))
+                        foreach(var ledger in ledgers)
                         {
-                            totalAmountInLedgers += ledger.Amount;
-                        }
-                        else 
-                        {
-                            totalAmountInLedgers -= ledger.Amount;
-                        }
+                            Account account = _accountService.GetObjectById(ledger.AccountId);
+                            if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
+                                (account.Group == Constant.AccountGroup.Asset ||
+                                 account.Group == Constant.AccountGroup.Expense))
+                                 ||
+                               (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
+                                (account.Group == Constant.AccountGroup.Liability ||
+                                 account.Group == Constant.AccountGroup.Equity ||
+                                 account.Group == Constant.AccountGroup.Revenue)))
+                            {
+                                totalAmountInLedgers += ledger.Amount;
+                            }
+                            else 
+                            {
+                                totalAmountInLedgers -= ledger.Amount;
+                            }
+
+                            contactId = (ledger.SourceDocument == Constant.GeneralLedgerSource.SalesInvoice ? db.SalesInvoices.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().DeliveryOrder.SalesOrder.ContactId :
+                                                 ledger.SourceDocument == Constant.ReceivableSource.PurchaseDownPayment ? db.PurchaseDownPayments.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.ReceivableSource.ReceiptRequest ? db.ReceiptRequests.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.ReceivableSource.SalesDownPayment ? db.SalesDownPayments.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.ReceivableSource.SalesInvoiceMigration ? db.SalesInvoiceMigrations.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.GeneralLedgerSource.ReceiptVoucher ? db.ReceiptVouchers.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.PayableSource.PaymentRequest ? db.PaymentRequests.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.PayableSource.PurchaseDownPayment ? db.PurchaseDownPayments.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.PayableSource.PurchaseInvoiceMigration ? db.PurchaseInvoiceMigrations.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 ledger.SourceDocument == Constant.PayableSource.PurchaseInvoice ? db.PurchaseInvoices.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().PurchaseReceival.PurchaseOrder.ContactId :
+                                                 ledger.SourceDocument == Constant.GeneralLedgerSource.PaymentVoucher ? db.PaymentVouchers.Where(x => x.Id == ledger.SourceDocumentId).FirstOrDefault().ContactId :
+                                                 0);
+                            if (contactId != 0)
+                            {
+                                ClosingReport closingReport = _closingReportService.GetQueryable().Where(x => x.ContactId == contactId && x.ClosingId == closing.Id && x.AccountId == ledger.AccountId).FirstOrDefault();
+                                if (closingReport == null)
+                                {
+                                    closingReport = new ClosingReport();
+                                    closingReport.ClosingId = closing.Id;
+                                    closingReport.AccountId = leaf.Id;
+                                    closingReport.ContactId = contactId == 0 ? null : (int?)contactId;
+                                    closingReport.AccountParentId = leaf.ParentId;
+                                    closingReport.TransactionDate = ledger.TransactionDate;
+                                    if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
+                                       (account.Group == Constant.AccountGroup.Asset ||
+                                        account.Group == Constant.AccountGroup.Expense))
+                                        ||
+                                      (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
+                                       (account.Group == Constant.AccountGroup.Liability ||
+                                        account.Group == Constant.AccountGroup.Equity ||
+                                        account.Group == Constant.AccountGroup.Revenue)))
+                                    {
+                                        closingReport.AmountIDR += ledger.Amount;
+                                    }
+                                    else
+                                    {
+                                        closingReport.AmountIDR -= ledger.Amount;
+                                    }
+                                    closingReport.AmountCurrency = 0;
+                                    closingReport.CurrencyId = _currencyService.GetQueryable().Where(x => x.IsBase == true).FirstOrDefault().Id;
+                                    _closingReportService.CreateObject(closingReport, _accountService);
+                                }
+                                else
+                                {
+                                    if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
+                                        (account.Group == Constant.AccountGroup.Asset ||
+                                         account.Group == Constant.AccountGroup.Expense))
+                                         ||
+                                       (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
+                                        (account.Group == Constant.AccountGroup.Liability ||
+                                         account.Group == Constant.AccountGroup.Equity ||
+                                         account.Group == Constant.AccountGroup.Revenue)))
+                                    {
+                                        closingReport.AmountIDR += ledger.Amount;
+                                    }
+                                    else
+                                    {
+                                        closingReport.AmountIDR += ledger.Amount;
+                                    }
+                                    if (lastClosing != null)
+                                    {
+                                        closingReport.AmountIDR += _closingReportService.GetQueryable().Where(x => x.ClosingId == lastClosing.Id && x.ContactId == contactId).FirstOrDefault().AmountIDR;
+                                    }
+
+                                    _closingReportService.UpdateObject(closingReport);
+                                }
+                            }
+                         }
                     }
-
                     totalAmountInLedgers += totalAmountLast;
-
                     ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(leaf.Id, closing.Id);
                     validComb.Amount = totalAmountInLedgers;
+                    ClosingReport closingReport2 = new ClosingReport();
+                    closingReport2.ClosingId = closing.Id;
+                    closingReport2.AccountId = leaf.Id;
+                    closingReport2.ContactId = null;
+                    closingReport2.AccountParentId = leaf.ParentId;
+                    closingReport2.AmountIDR = totalAmountInLedgers;
+                    closingReport2.TransactionDate = closing.EndDatePeriod;
+                    closingReport2.AmountCurrency = 0;
+                    closingReport2.CurrencyId = _currencyService.GetQueryable().Where(x => x.IsBase == true).FirstOrDefault().Id;
+                    _closingReportService.CreateObject(closingReport2, _accountService);
                     _validCombService.UpdateObject(validComb, _accountService, this);
                 }
                 #endregion
@@ -635,7 +717,7 @@ namespace Service.Service
 
         public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
                                   IVCNonBaseCurrencyService _vCNonBaseCurrencyService,IGeneralLedgerJournalService _generalLedgerJournalService,
-                                  IExchangeRateClosingService _exchangeRateClosingService)
+                                  IExchangeRateClosingService _exchangeRateClosingService,IClosingReportService _closingReportService)
         {
             if (_validator.ValidOpenObject(closing))
             {
@@ -657,6 +739,14 @@ namespace Service.Service
                         foreach (var VCNonBaseCurrency in VCNonBaseCurrencies)
                         {
                             _vCNonBaseCurrencyService.DeleteObject(VCNonBaseCurrency.Id);
+                        }
+                    }
+                    IList<ClosingReport> ClosingReports = _closingReportService.GetQueryable().Where(x => x.ClosingId == validComb.ClosingId).ToList();
+                    if (ClosingReports != null)
+                    {
+                        foreach (var ClosingReport in ClosingReports)
+                        {
+                            _closingReportService.DeleteObject(ClosingReport.Id);
                         }
                     }
                 }

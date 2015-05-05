@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Accounting\AccountService.cs" />
     <Compile Include="Service\Accounting\ClosingService.cs" />
+    <Compile Include="Service\Accounting\ClosingReportService.cs" />
     <Compile Include="Service\Accounting\ValidCombIncomeStatementService.cs" />
     <Compile Include="Service\Accounting\GLNonBaseCurrencyService.cs" />
     <Compile Include="Service\Accounting\VCNonBaseCurrencyService.cs" />

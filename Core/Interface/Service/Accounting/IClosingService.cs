@@ -16,11 +16,12 @@ namespace Core.Interface.Service
         Closing GetObjectByPeriodAndYear(int Period, int YearPeriod);
         Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing,IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService, IExchangeRateClosingService _exchangeRateClosingService);
         Closing CloseObject(Closing closing, IAccountService _accountService,
-                            IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
-                            IGLNonBaseCurrencyService _gLNonBaseCurrencyService, IExchangeRateClosingService _exchangeRateClosingService,
-                            IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService);
+                                   IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
+                                   IGLNonBaseCurrencyService _gLNonBaseCurrencyService, IExchangeRateClosingService _exchangeRateClosingService,
+                                   IVCNonBaseCurrencyService _vCNonBaseCurrencyService, ICashBankService _cashBankService,
+                                   IClosingReportService _closingReportService, ICurrencyService _currencyService);
         Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, 
-                           IGeneralLedgerJournalService _generalLedgerJournalService, IExchangeRateClosingService _exchangeRateClosingService);
+                           IGeneralLedgerJournalService _generalLedgerJournalService, IExchangeRateClosingService _exchangeRateClosingService,IClosingReportService _closingReportService);
         Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, IGeneralLedgerJournalService _generalLedgerJournalService);
         bool IsDateClosed(DateTime DateToCheck);
     }
