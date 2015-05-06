@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Purchase Report by Value";
+    ViewBag.Title = "Purchase Report by Item Payment Due Date";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/ReportPurchaseByValue.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/ReportPurchaseByDueDate.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Purchase Report by Value :.">
+    title=".: Purchase Report by Item Payment Due Date :.">
 <div id="toolbar" class="form_toolbar">
         @*<a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>*@
         @*<a id="btn_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add</a>*@
@@ -45,6 +45,15 @@
                             <col width="80"/>
                             <col width="80" />
                         </colgroup>*@
+                        <tr hidden>
+                            <td width="80">
+                                <label>Contact</label></td>
+                            <td width="400">
+                                <input id="ContactId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
                         <tr>
                             <td width="80">
                                 <label>From Date</label></td>
@@ -60,15 +69,6 @@
                             </div>
                              @*<div id="EndDateDiv2"><input id="EndDate2" type="text" size="10" disabled="disabled"/></div>*@
                              </td>
-                        </tr>
-                        <tr>
-                            <td width="80">
-                                <label>Supplier</label></td>
-                            <td width="400">
-                                <input id="ContactId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
-                            </td>
                         </tr>
                         <tr hidden>
                             <td>
@@ -104,7 +104,7 @@
 <!-- End Dialog Box -->
 
  <!-- Look Up contact -->
-    <div id="lookup_div_contact" class="easyui-dialog" title="List Supplier" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_contact" class="grid_toolbar">

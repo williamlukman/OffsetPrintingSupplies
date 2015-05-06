@@ -1,0 +1,9 @@
+PurchaseOrderDate	Datetime			
+PurchaseOrderNo	String	255	
+Supplier	String	255		
+Sku	String	255	
+ItemDescription	String	255	
+DueDate	DateTime
+SubTotal	Number		
+Retur	Number		
+Remaining	Number	

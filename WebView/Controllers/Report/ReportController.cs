@@ -3955,7 +3955,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
             var q = _purchaseOrderDetailService.GetQueryable().Where(x=> !x.IsDeleted && x.IsConfirmed &&
-                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate <= endDate) && (ItemId == 0 || x.ItemId == ItemId));
+                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate < endDay) && (ItemId == 0 || x.ItemId == ItemId));
             string user = AuthenticationModel.GetUserName();
 
             var query = q.Select(g => new
@@ -3965,7 +3965,7 @@ namespace WebView.Controllers
                 Supplier = g.PurchaseOrder.Contact.Name,
                 Local = " ",
                 Sku = g.Item.Sku,
-                ItemDescription = g.Item.Name,
+                ItemDescription = g.Item.Name??"",
                 Quantity = g.Quantity,
                 QuantityShipped = g.Quantity - g.PendingReceivalQuantity,
                 QuantityPending = g.PendingReceivalQuantity,
@@ -3992,7 +3992,7 @@ namespace WebView.Controllers
             rd.SetParameterValue("CompanyName", company.Name);
             rd.SetParameterValue("AsOfDate", DateTime.Today);
             rd.SetParameterValue("startDate", startDate);
-            rd.SetParameterValue("endDate", endDay);
+            rd.SetParameterValue("endDate", endDate);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -4012,7 +4012,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
             var q = _purchaseOrderDetailService.GetQueryable().Where(x => !x.IsDeleted && x.IsConfirmed && !x.PurchaseOrder.IsDeleted && x.PurchaseOrder.IsConfirmed && 
-                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate <= endDate) && (ContactId == 0 || x.PurchaseOrder.ContactId == ContactId));
+                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate < endDay) && (ContactId == 0 || x.PurchaseOrder.ContactId == ContactId));
             string user = AuthenticationModel.GetUserName();
 
             var query = q.Select(g => new
@@ -4022,7 +4022,7 @@ namespace WebView.Controllers
                 Supplier = g.PurchaseOrder.Contact.Name,
                 Local = " ",
                 Sku = g.Item.Sku,
-                ItemDescription = g.Item.Name,
+                ItemDescription = g.Item.Name??"",
                 Quantity = g.Quantity,
                 Uom = g.Item.UoM.Name,
                 UnitPrice = g.Price,
@@ -4050,10 +4050,69 @@ namespace WebView.Controllers
             rd.SetParameterValue("CompanyName", company.Name);
             rd.SetParameterValue("AsOfDate", DateTime.Today);
             rd.SetParameterValue("startDate", startDate);
-            rd.SetParameterValue("endDate", endDay);
+            rd.SetParameterValue("endDate", endDate);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
+        }
+
+        #endregion
+
+        #region PurchaseByDueDate
+        public ActionResult PurchaseByDueDate()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPurchaseByDueDate(DateTime startDate, DateTime endDate)
+        {
+            DateTime endDay = endDate.AddDays(1);
+            string user = AuthenticationModel.GetUserName();
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = db.Companies.FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.PurchaseInvoiceDetails.Where(x => !x.IsDeleted && x.IsConfirmed && !x.PurchaseInvoice.IsDeleted && x.PurchaseInvoice.IsConfirmed &&
+                        (x.PurchaseInvoice.DueDate >= startDate || x.PurchaseInvoice.DueDate < endDay));  
+
+                var query = q.Select(g => new
+                {
+                    PurchaseOrderDate = g.PurchaseInvoice.PurchaseReceival.PurchaseOrder.PurchaseDate,
+                    PurchaseOrderNo = g.PurchaseInvoice.PurchaseReceival.PurchaseOrder.NomorSurat,
+                    Supplier = g.PurchaseInvoice.PurchaseReceival.PurchaseOrder.Contact.Name,
+                    DueDate = g.PurchaseInvoice.DueDate,
+                    Sku = g.PurchaseReceivalDetail.Item.Sku,
+                    ItemDescription = g.PurchaseReceivalDetail.Item.Name ?? "",
+                    SubTotal = db.Payables.Where(x => !x.IsDeleted && x.PayableSource == Constant.PayableSource.PurchaseInvoice && x.PayableSourceId == g.PurchaseInvoiceId).FirstOrDefault().Amount,
+                    Retur = 0,
+                    Remaining = db.Payables.Where(x => !x.IsDeleted && x.PayableSource == Constant.PayableSource.PurchaseInvoice && x.PayableSourceId == g.PurchaseInvoiceId).FirstOrDefault().RemainingAmount,
+                }).OrderBy(x => x.PurchaseOrderDate).ThenBy(x => x.Supplier).ThenBy(x => x.DueDate).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/PurchasingReportByDueDate.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDate);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
         }
 
         #endregion
