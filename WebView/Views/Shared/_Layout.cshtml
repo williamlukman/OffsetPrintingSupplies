@@ -455,11 +455,13 @@
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("BalanceSheetDetail", "FinanceReport")">Balance Sheet Detail</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Daftar Transaksi</a></li>}
+                                                    {<li><a href="@Url.Action("Neraca", "FinanceReport")">Neraca</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("PerincianNeraca", "FinanceReport")">Perincian Neraca</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("NeracaSaldo", "FinanceReport")">Ringkasan Neraca Saldo</a></li>}
-                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("PerincianNeraca", "FinanceReport")">Perincian Neraca</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("TranscationList", "FinanceReport")">Daftar Transaksi</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("KartuBukuBesar", "FinanceReport")">Kartu Buku Besar</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Finance, Core.Constants.Constant.MenuGroupName.Report))

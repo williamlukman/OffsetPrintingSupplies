@@ -373,6 +373,7 @@
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
+    <Content Include="Content\apps_js\ReportNeraca.js" />
     <Content Include="Content\apps_js\ReportPerincianNeraca.js" />
     <Content Include="Content\apps_js\ReportARAgingSchedule.js" />
     <Content Include="Content\apps_js\ReportARAgingSummary.js" />
@@ -1583,6 +1584,7 @@
     <Content Include="Views\FinanceReport\ARMutation.cshtml" />
     <Content Include="Views\FinanceReport\ARAgingSummary.cshtml" />
     <Content Include="Views\FinanceReport\ARAgingSchedule.cshtml" />
+    <Content Include="Views\FinanceReport\Neraca.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

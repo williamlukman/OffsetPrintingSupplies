@@ -1,0 +1,7 @@
+GroupName	String	255	
+ParentName	String	255	
+AccountName	String	255	
+Amount	Number		
+GroupID	Number		
+ParentCode	String	255
+AccountCode	String	255

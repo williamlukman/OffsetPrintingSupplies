@@ -15,6 +15,8 @@ using Core.DomainModel;
 using Core.Constants;
 using Data.Context;
 using System.Data.Objects;
+using System.Globalization;
+using System.Dynamic;
 
 namespace WebView.Controllers
 {
@@ -544,6 +546,96 @@ namespace WebView.Controllers
             rd.SetParameterValue("CompanyName", company.Name);
             rd.SetParameterValue("StartDate", closing.BeginningPeriod.Date);
             rd.SetParameterValue("EndDate", closing.EndDatePeriod.Date);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult Neraca()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Finance, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ControllerOutput.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportNeraca(Nullable<int> closingId)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            Closing closing = _closingService.GetObjectById(closingId.GetValueOrDefault());
+
+            if (closing == null) return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+
+            var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
+                                                    .Where(x => x.ClosingId == closing.Id && x.Account.Level > 2
+                                                    && x.Account.Group != (int)Constant.AccountGroup.Expense && x.Account.Group != (int)Constant.AccountGroup.Revenue
+                                                    );
+
+            //List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
+            var query = balanceValidComb.Where(x => x.Account.Level == 3).Select(m => new
+            {
+                AccountName = m.Account.Name.ToLower(),
+                ParentName = m.Account.Parent.Name.ToLower(),
+                GroupName = m.Account.Parent.Parent.Name.ToLower(),
+                Amount = m.Amount,
+                GroupID = m.Account.Group,
+                AccountCode = m.Account.Code,
+                ParentCode = m.Account.Parent.Code,
+            }).OrderBy(x => x.GroupID).ThenBy(x => x.ParentCode).ThenBy(x => x.AccountCode);
+
+            var query1 = new List<dynamic>();
+            var query2 = new List<dynamic>();
+
+            var list1 = query.Where(x => x.GroupID == Constant.AccountGroup.Asset).ToList();
+            var list2 = query.Where(x => x.GroupID == Constant.AccountGroup.Equity || x.GroupID == Constant.AccountGroup.Liability).ToList();
+
+            foreach (var obj in list1)
+            {
+                dynamic newobj = new //new ExpandoObject();
+                {
+                    Amount = obj.Amount,
+                    GroupID = obj.GroupID,
+                    AccountCode = obj.AccountCode,
+                    ParentCode = obj.ParentCode,
+                    AccountName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(obj.AccountName),
+                    ParentName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(obj.ParentName),
+                    GroupName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(obj.GroupName),
+                };
+                query1.Add(newobj);
+            }
+
+            foreach (var obj in list2)
+            {
+                dynamic newobj = new //new ExpandoObject();
+                {
+                    Amount = obj.Amount,
+                    GroupName = "Kewajiban Dan Ekuitas",
+                    GroupID = Constant.AccountGroup.Equity,
+                    AccountCode = obj.AccountCode,
+                    ParentCode = obj.ParentCode,
+                    ParentName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase((obj.ParentName == "modal") ? "Ekuitas" : obj.ParentName),
+                    AccountName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(obj.AccountName),    
+                };
+                query2.Add(newobj);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/Finance/Neraca.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(new List<object>());
+
+            // Setting subreport data source
+            rd.Subreports["NeracaSub.rpt"].SetDataSource(query1);
+            rd.Subreports["NeracaSub.rpt - 01"].SetDataSource(query2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("Tgl", closing.EndDatePeriod.Date);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
