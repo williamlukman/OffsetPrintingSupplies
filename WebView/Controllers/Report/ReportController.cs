@@ -3961,7 +3961,7 @@ namespace WebView.Controllers
             var query = q.Select(g => new
             {
                 PurchaseOrderDate = g.PurchaseOrder.PurchaseDate,
-                PurchaseOrderNo = g.PurchaseOrder.Code,
+                PurchaseOrderNo = g.PurchaseOrder.NomorSurat,
                 Supplier = g.PurchaseOrder.Contact.Name,
                 Local = " ",
                 Sku = g.Item.Sku,
@@ -3970,7 +3970,7 @@ namespace WebView.Controllers
                 QuantityShipped = g.Quantity - g.PendingReceivalQuantity,
                 QuantityPending = g.PendingReceivalQuantity,
                 Uom = g.Item.UoM.Name,
-            }).OrderBy(x => x.PurchaseOrderDate).ThenBy(x=>x.Sku).ToList();
+            }).OrderBy(x => x.PurchaseOrderDate).ThenBy(x => x.Supplier).ThenBy(x => x.Sku).ToList();
 
             if (!query.Any())
             {
@@ -4000,7 +4000,63 @@ namespace WebView.Controllers
 
         #endregion
 
-       
+        #region PurchaseByValue
+        public ActionResult PurchaseByValue()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPurchaseByValue(DateTime startDate, DateTime endDate, int ContactId = 0)
+        {
+            DateTime endDay = endDate.AddDays(1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _purchaseOrderDetailService.GetQueryable().Where(x => !x.IsDeleted && x.IsConfirmed && !x.PurchaseOrder.IsDeleted && x.PurchaseOrder.IsConfirmed && 
+                    (x.PurchaseOrder.PurchaseDate >= startDate || x.PurchaseOrder.PurchaseDate <= endDate) && (ContactId == 0 || x.PurchaseOrder.ContactId == ContactId));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.Select(g => new
+            {
+                PurchaseOrderDate = g.PurchaseOrder.PurchaseDate,
+                PurchaseOrderNo = g.PurchaseOrder.NomorSurat,
+                Supplier = g.PurchaseOrder.Contact.Name,
+                Local = " ",
+                Sku = g.Item.Sku,
+                ItemDescription = g.Item.Name,
+                Quantity = g.Quantity,
+                Uom = g.Item.UoM.Name,
+                UnitPrice = g.Price,
+                Currency = g.PurchaseOrder.Currency.Name,
+                Disc = 0, //g.PurchaseOrder.Discount,
+            }).OrderBy(x => x.PurchaseOrderDate).ThenBy(x => x.Supplier).ThenBy(x => x.Sku).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/PurchasingReportByValue.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("startDate", startDate);
+            rd.SetParameterValue("endDate", endDay);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        #endregion
 
     }
 }

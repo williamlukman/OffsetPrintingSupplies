@@ -543,9 +543,9 @@
                                                     {<li><a href="@Url.Action("PurchaseByItem", "Report")">By Item</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("PurchasingBySupplier", "Report")">By Supplier</a></li>}
-                                                     @*@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("PurchaseByValue", "Report")">By Value</a></li>}
                                                      @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("PurchaseByValue", "Report")">By Value</a></li>}
+                                                     @*@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchases, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("PurchaseByDueDate", "Report")">By Payment Due Date</a></li>}*@
                                                 </ul>
                                             </li>

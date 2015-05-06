@@ -5,6 +5,7 @@ Local	String	255
 Sku	String	255	
 ItemDescription	String	255	
 Quantity	Number		
-QuantityShipped	Number		
-QuantityPending	Number	
+Currency	String	100	
 Uom	String	255
+UnitPrice	Number
+Disc	Number
