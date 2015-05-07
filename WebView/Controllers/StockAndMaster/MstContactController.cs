@@ -72,7 +72,7 @@ namespace WebView.Controllers
                              model.TaxCode,
                              model.IsTaxable,
                              model.ContactGroupId,
-                             ContactGroup = model.ContactGroup.Name,
+                             ContactGroup = model.ContactGroup != null ? model.ContactGroup.Name : "",
                              model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -148,7 +148,7 @@ namespace WebView.Controllers
                              model.Name,
                              model.NamaFakturPajak,
                              model.ContactGroupId,
-                             ContactGroup = model.ContactGroup.Name,
+                             ContactGroup = model.ContactGroup != null ? model.ContactGroup.Name : "",
                              model.ContactType,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -221,7 +221,7 @@ namespace WebView.Controllers
                              model.TaxCode,
                              model.IsTaxable,
                              model.ContactGroupId,
-                             ContactGroup = model.ContactGroup.Name,
+                             ContactGroup = model.ContactGroup != null ? model.ContactGroup.Name : "",
                              model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -308,7 +308,7 @@ namespace WebView.Controllers
                              model.TaxCode,
                              model.IsTaxable,
                              model.ContactGroupId,
-                             ContactGroup = model.ContactGroup.Name,
+                             ContactGroup = model.ContactGroup != null ? model.ContactGroup.Name : "",
                              model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -379,6 +379,8 @@ namespace WebView.Controllers
                  model.Errors.Add("Generic", "Error : " + ex);
              }
 
+             var contactgrp = _contactGroupService.GetObjectById(model.ContactGroupId.GetValueOrDefault());
+
              return Json(new
              {
                  model.Id,
@@ -396,7 +398,7 @@ namespace WebView.Controllers
                  model.TaxCode,
                  model.IsTaxable,
                  model.ContactGroupId,
-                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId.GetValueOrDefault()).Name,
+                 ContactGroup = contactgrp != null ? contactgrp.Name : "",
                  model.ContactType,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);

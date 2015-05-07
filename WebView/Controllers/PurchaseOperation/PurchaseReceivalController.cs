@@ -257,6 +257,8 @@ namespace WebView.Controllers
                              model.Quantity,
                              model.PurchaseOrderDetail.PendingReceivalQuantity,
                              Price = model.PurchaseOrderDetail.Price,
+                             UoM = model.Item.UoM.Name,
+                             Currency = model.PurchaseOrderDetail.PurchaseOrder.Currency.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -298,6 +300,8 @@ namespace WebView.Controllers
                             model.Quantity,
                             model.PendingReceivalQuantity,
                             model.Price,
+                            model.UoM,
+                            model.Currency,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -357,6 +361,8 @@ namespace WebView.Controllers
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
                 Price = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Price,
+                //UoM = _itemService.GetObjectById(model.ItemId).UoM.Name,
+                //Currency = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).PurchaseOrder.Currency.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

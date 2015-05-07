@@ -20,7 +20,7 @@
     };
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstContact/GetListCustomer', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContact/GetListCustomer', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -71,7 +71,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
