@@ -3726,7 +3726,7 @@ namespace WebView.Controllers
                             Code = det.Account.Code,
                             Amount = Amount,
                             AmountIDR = Math.Round(Amount * obj.BankAdministration.ExchangeRateAmount, 2),
-                            Name = det.Account.Name,
+                            Name = ((det.Description??"") != "") ? det.Description : det.Account.Name,
                             Status = det.Status == Constant.GeneralLedgerStatus.Credit ? "K" : "D" , //det.Account.Group == Constant.AccountGroup.Expense ? "D" : "K",
                             ContactName = "",
                         });
@@ -3828,7 +3828,7 @@ namespace WebView.Controllers
                     {
                         Currency = (m.Currency.Name == "Rupiah") ? "IDR" : (m.Currency.Name == "Euro") ? "EUR" : m.Currency.Name ?? "",
                         Name = m.Name,
-                        Desc = m.Description,
+                        Desc = m.Description??"",
                     }).ToList();
 
                 if (!obj.BankAdministration.CashBank.IsBank)
@@ -3858,7 +3858,7 @@ namespace WebView.Controllers
                 var currency = (obj.BankAdministration.CashBank.Currency.Name == "Rupiah") ? "IDR" :
                                     (obj.BankAdministration.CashBank.Currency.Name == "Euro") ? "EUR" : obj.BankAdministration.CashBank.Currency.Name;
                 rd.SetParameterValue("No", obj.BankAdministration.NoBukti ?? "");
-                rd.SetParameterValue("Tgl", obj.ConfirmationDate.GetValueOrDefault());
+                rd.SetParameterValue("Tgl", obj.BankAdministration.ConfirmationDate.GetValueOrDefault());
                 rd.SetParameterValue("CurSym", (currency == "USD" || currency == "SGD") ? "$" : (currency == "EUR") ? "€" : (currency == "GBP") ? "£" : (currency == "JPY") ? "¥" : (currency == "IDR") ? "Rp" : currency);
                 rd.SetParameterValue("Rate", obj.BankAdministration.ExchangeRateAmount);
                 rd.SetParameterValue("IsBank", obj.BankAdministration.CashBank.IsBank);

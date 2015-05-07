@@ -82,7 +82,7 @@ namespace WebView.Controllers
                              Contact = model.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseOrderId,
-                             PurchaseOrderCode = model.PurchaseOrder.Code,
+                             PurchaseOrderCode = model.PurchaseOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
                              model.ReceivalDate,
@@ -257,6 +257,8 @@ namespace WebView.Controllers
                              model.Quantity,
                              model.PurchaseOrderDetail.PendingReceivalQuantity,
                              Price = model.PurchaseOrderDetail.Price,
+                             UoM = model.Item.UoM.Name,
+                             Currency = model.PurchaseOrderDetail.PurchaseOrder.Currency.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -298,6 +300,8 @@ namespace WebView.Controllers
                             model.Quantity,
                             model.PendingReceivalQuantity,
                             model.Price,
+                            model.UoM,
+                            model.Currency,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -323,7 +327,7 @@ namespace WebView.Controllers
                 Contact = _contactService.GetObjectById(_purchaseOrderService.GetObjectById(model.PurchaseOrderId).ContactId).Name,
                 model.NomorSurat,
                 model.PurchaseOrderId,
-                PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
+                PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).NomorSurat,
                 model.ReceivalDate, 
                 model.WarehouseId, 
                 Warehouse =_warehouseService.GetObjectById(model.WarehouseId).Name,
@@ -357,6 +361,8 @@ namespace WebView.Controllers
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
                 Price = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Price,
+                //UoM = _itemService.GetObjectById(model.ItemId).UoM.Name,
+                //Currency = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).PurchaseOrder.Currency.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PurchaseInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PurchaseInvoice/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -477,7 +477,7 @@
                   { name: 'purchasereceivaldetailcode', index: 'purchasereceivaldetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 255, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
         ],
@@ -734,17 +734,18 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Code', 'Purchase Order Detail Id', 'POD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price',
+        colNames: ['Id', 'Code', 'Purchase Order Detail Id', 'POD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Pending QTY', 'Price',
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 70, sortable: false, hidden: true },
-                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'code', index: 'code', width: 70 },
                   { name: 'purchaseorderdetailid', index: 'purchaseorderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 70, sortable: false },
-                  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
-                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 70 },
+                  { name: 'itemid', index: 'itemid', width: 80, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80 },
+                  { name: 'itemname', index: 'itemname', width: 255 },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceivalquantity', index: 'pendingreceivalquantity', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden:true },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',

@@ -20,7 +20,7 @@
     };
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstContact/GetListSupplier', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContact/GetListSupplier', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -56,7 +56,7 @@
                   { name: 'taxcode', index: 'taxcode', width: 50 },
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
     			  { name: 'contactgroupid', index: 'contactgroupid', width: 60, align: "center", hidden: true },
-				  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'contactgroup', index: 'contactgroup', width: 180, hidden:true },
 				  { name: 'contacttype', index: 'contacttype', width: 60, hidden: true },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -69,7 +69,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:

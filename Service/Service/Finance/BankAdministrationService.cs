@@ -141,6 +141,12 @@ namespace Service.Service
                 // cashBank.Amount += bankAdministration.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                 _generalLedgerJournalService.CreateConfirmationJournalForBankAdministration(bankAdministration, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService, _bankAdministrationDetailService);
+                var details = _bankAdministrationDetailService.GetObjectsByBankAdministrationId(bankAdministration.Id);
+                foreach (var detail in details)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    _bankAdministrationDetailService.ConfirmObject(detail, bankAdministration.ConfirmationDate.GetValueOrDefault(), this);
+                }
             }
             return bankAdministration;
         }
@@ -160,6 +166,12 @@ namespace Service.Service
                     _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForBankAdministration(bankAdministration, cashBank, _accountService,_currencyService,_gLNonBaseCurrencyService, _bankAdministrationDetailService);
+                var details = _bankAdministrationDetailService.GetObjectsByBankAdministrationId(bankAdministration.Id);
+                foreach (var detail in details)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    _bankAdministrationDetailService.UnconfirmObject(detail, this);
+                }
             }
             return bankAdministration;
         }

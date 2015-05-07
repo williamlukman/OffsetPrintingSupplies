@@ -441,7 +441,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Account Id', 'Account Code', 'Account', 'Status', 'Amount'
+        colNames: ['Code', 'Account Id', 'Account Code', 'Account', 'Status', 'Amount', 'Keterangan',
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 70 },
@@ -450,6 +450,7 @@
                   { name: 'account', index: 'account', width: 250 },
                   { name: 'status', index: 'status', width: 50 },
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'description', index: 'description', width: 200 },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -520,7 +521,7 @@
                             else if (result.Status == 2) {
                                 e.selectedIndex = 1;
                             }
-                            $('#Description').val(result.Description);
+                            $('#detDescription').val(result.Description);
                             $('#BankAdministrationDetailId').val(result.Id);
                             $('#item_div').dialog('open');
                         }
@@ -598,7 +599,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, BankAdministrationId: $("#id").val(), AccountId: $("#AccountId").val(), Status: status,
-                Amount: $("#Amount").numberbox('getValue'),
+                Amount: $("#Amount").numberbox('getValue'), Description: $("#detDescription").val(),
             }),
             async: false,
             cache: false,

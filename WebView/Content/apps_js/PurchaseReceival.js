@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PurchaseReceival/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PurchaseReceival/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PurchaseReceival/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PurchaseReceival/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -61,9 +61,9 @@
                   { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
-                  { name: 'purchaseorder', index: 'purchaseorder', width: 70 },
+                  { name: 'purchaseorder', index: 'purchaseordercode', width: 70 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
-                  { name: 'warehousename', index: 'warehousename', width: 130 },
+                  { name: 'warehouse', index: 'warehouse', width: 130 },
                   { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -448,7 +448,7 @@
                   { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true},
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 255, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingreceivalquantity', index: 'pendingreceivalquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
@@ -668,7 +668,7 @@
             var ret = jQuery("#lookup_table_purchaseorder").jqGrid('getRowData', id);
 
             $('#PurchaseOrderId').val(ret.id).data("kode", id);
-            $('#PurchaseOrder').val(ret.code);
+            $('#PurchaseOrder').val(ret.nomorsurat);
             $('#lookup_div_purchaseorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -695,13 +695,13 @@
         colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendRcvl QTY', 'Price',
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 50, sortable: false, hidden: true },
-                  { name: 'code', index: 'code', width: 65, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
-				  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'pendingreceivalquantity', index: 'pendingreceivalquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'id', index: 'id', width: 50, hidden: true },
+                  { name: 'code', index: 'code', width: 65 },
+				  { name: 'itemid', index: 'itemid', width: 100, hidden: true },
+				  { name: 'itemsku', index: 'itemsku', width: 70 },
+                  { name: 'itemname', index: 'itemname', width: 255 },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceivalquantity', index: 'pendingreceivalquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
         ],
         page: '1',
