@@ -373,6 +373,7 @@
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
+    <Content Include="Content\apps_js\ReportInventoryInOut.js" />
     <Content Include="Content\apps_js\ReportDispatch.js" />
     <Content Include="Content\apps_js\ReportPurchaseByDueDate.js" />
     <Content Include="Content\apps_js\ReportPurchaseByValue.js" />
@@ -1591,6 +1592,7 @@
     <Content Include="Views\Report\PurchaseByValue.cshtml" />
     <Content Include="Views\Report\PurchaseByDueDate.cshtml" />
     <Content Include="Views\Report\Dispatch.cshtml" />
+    <Content Include="Views\Report\InventoryInOut.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

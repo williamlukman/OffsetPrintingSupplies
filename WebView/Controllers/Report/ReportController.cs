@@ -4166,5 +4166,71 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region InventoryInOut
+        public ActionResult InventoryInOut()
+        {
+            return View();
+        }
+
+        public ActionResult ReportInventoryInOut(DateTime startDate, DateTime endDate)
+        { 
+            DateTime endDay = endDate.AddDays(1);
+            string user = AuthenticationModel.GetUserName();
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = db.Companies.FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.StockMutations.Where(x => x.MutationDate >= startDate && x.MutationDate < endDay);
+
+                var query = q.GroupBy(m => new
+                {
+                    Sku = m.Item.Sku,
+                    Name = m.Item.Name,
+                    Date = m.MutationDate,
+                    Uom = m.Item.UoM.Name,
+                    ItemId = m.ItemId,
+                }).Select(g => new
+                {
+                    Date = g.Key.Date,
+                    Sku = g.Key.Sku,
+                    Name = g.Key.Name,
+                    Uom = g.Key.Uom,
+                    In = g.Where(x => x.Status == Constant.MutationStatus.Addition).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Out = g.Where(x => x.Status == Constant.MutationStatus.Deduction).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    OpeningBalance = db.StockMutations.Where(x => x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity))?? 0,
+                    EndingBalance = (db.StockMutations.Where(x => x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity)) ?? 0)
+                                     + (g.Where(x => x.Status == Constant.MutationStatus.Addition).Sum(x => (Decimal?)x.Quantity) ?? 0)
+                                     - (g.Where(x => x.Status == Constant.MutationStatus.Deduction).Sum(x => (Decimal?)x.Quantity) ?? 0),
+                }).OrderBy(x => x.Date).ThenBy(x => x.Sku).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/InventoryInOut.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDate);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+
+        #endregion
+
     }
 }

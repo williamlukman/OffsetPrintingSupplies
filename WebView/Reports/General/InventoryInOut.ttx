@@ -1,0 +1,8 @@
+Date	DateTime		
+Sku	String	255	
+Name	String	255	
+Uom	String	255	
+In	Currency		
+Out	Currency		
+OpeningBalance	Currency		
+EndingBalance	Currency		
