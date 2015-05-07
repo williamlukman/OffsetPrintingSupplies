@@ -298,6 +298,7 @@ namespace WebView.Controllers
                              Account = model.Account.Name,
                              model.Status,
                              model.Amount,
+                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -335,7 +336,8 @@ namespace WebView.Controllers
                             model.AccountCode,
                             model.Account,
                             model.Status,
-                            model.Amount
+                            model.Amount,
+                            model.Description,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -363,6 +365,7 @@ namespace WebView.Controllers
                 Account = model.Account.Name,
                 model.Status,
                 model.Amount,
+                model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -400,6 +403,7 @@ namespace WebView.Controllers
                 data.AccountId = model.AccountId;
                 data.Status = model.Status;
                 data.Amount = model.Amount;
+                data.Description = model.Description;
                 model = _bankAdministrationDetailService.UpdateObject(data, _bankAdministrationService, _accountService);
                 totalAmount = _bankAdministrationService.GetObjectById(model.BankAdministrationId).Amount;
             }
