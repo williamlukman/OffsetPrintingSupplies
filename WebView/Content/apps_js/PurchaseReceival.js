@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PurchaseReceival/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PurchaseReceival/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PurchaseReceival/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PurchaseReceival/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -668,7 +668,7 @@
             var ret = jQuery("#lookup_table_purchaseorder").jqGrid('getRowData', id);
 
             $('#PurchaseOrderId').val(ret.id).data("kode", id);
-            $('#PurchaseOrder').val(ret.code);
+            $('#PurchaseOrder').val(ret.nomorsurat);
             $('#lookup_div_purchaseorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
