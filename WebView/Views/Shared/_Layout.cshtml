@@ -526,14 +526,17 @@
                                                     {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SerahTerima", "Report")">Form Serah Terima</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("Dispatch", "Report")">Dispatch</a></li>}
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Manufacturing Report</a>
+                                            <li><a href="#">Manufacturing/Logistic Report</a>
                                                 <ul>
 													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Manufacturing, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("MonthlyBlanketUsage", "Report")">Monthly Blanket Usage</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Manufacturing, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">Monthly Roller Compound Usage</a></li>}
+                                                    
 
                                                 </ul>
                                             </li>

@@ -1,0 +1,6 @@
+DeliveryDate	Datetime			
+DeliveryNo	String	255	
+Customer	String	255	
+DeliveryAddress	String	255	
+Driver	String	255	
+Vehicle	String	255	

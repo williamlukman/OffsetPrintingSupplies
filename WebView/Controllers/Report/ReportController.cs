@@ -4117,5 +4117,54 @@ namespace WebView.Controllers
 
         #endregion
 
+        #region Dispatch
+        public ActionResult Dispatch()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDispatch(DateTime? AsOfDate)
+        {
+            DateTime date = AsOfDate ?? DateTime.Today;
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _deliveryOrderDetailService.GetQueryable().Include("DeliveryOrder")
+                                              .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => EntityFunctions.TruncateTime(x.DeliveryOrder.DeliveryDate) == date && !x.IsDeleted);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             DeliveryNo = model.DeliveryOrder.NomorSurat ?? model.DeliveryOrder.Code,
+                             DeliveryDate = model.DeliveryOrder.DeliveryDate,
+                             Customer = model.DeliveryOrder.SalesOrder.Contact.Name,
+                             DeliveryAddress = model.DeliveryOrder.SalesOrder.Contact.DeliveryAddress??"",
+                             Driver = "",
+                             Vehicle = "",
+                         }).OrderBy(x => x.DeliveryNo).ThenBy(x => x.Customer).ThenBy(x => x.DeliveryDate).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/Dispatch.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", AsOfDate??DateTime.Today);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
     }
 }
