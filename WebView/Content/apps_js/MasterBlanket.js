@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstBlanket/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstBlanket/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -18,6 +18,14 @@
 
         ClearErrorMessage();
     }
+
+    $("#CroppingType").change(function (e) {
+        if ($("#CroppingType").val() == "NO") {
+            $("#LeftOverAC").numberbox('setValue', 0);
+            $("#LeftOverAR").numberbox('setValue', 0);
+            $("#Special").numberbox('setValue', 0);
+        }
+    });
 
     $("#form_div").dialog('close');
     $("#lookup_div_machine").dialog('close');
@@ -86,7 +94,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -428,10 +436,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Name', 'KodeUoM', 'Description'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 200 },
+                  { name: 'kodeuom', index: 'kodeuom', width: 60 },
+                  { name: 'description', index: 'description', width: 150 },
+        ],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,

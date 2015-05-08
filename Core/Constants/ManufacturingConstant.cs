@@ -37,6 +37,7 @@ namespace Core.Constants
         {
             public static string Special = "Special";
             public static string Normal = "Normal";
+            public static string NO = "NO";
         }
         public class RepairRequestCase
         {

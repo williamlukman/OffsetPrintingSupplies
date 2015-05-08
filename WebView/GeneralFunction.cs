@@ -1082,12 +1082,12 @@ namespace WebView
                         else
                             filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
 
-                        int value = 0;
+                        decimal value = 0; //int
                         DateTime date = DateTime.Now;
                         bool boolValue = false;
 
                         // FieldValue as Numeric
-                        if (int.TryParse(filterValue, out value))
+                        if (decimal.TryParse(filterValue, out value)) //int
                         {
                             //filterValues.Add(value);
                             filter += temp[0].Trim() + " " + temp[1].Trim() + value.ToString() + "";

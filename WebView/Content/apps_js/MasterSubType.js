@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstSubType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstSubType/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -44,7 +44,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -260,11 +260,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name', 'Description'],
+        colNames: ['Id', 'Name', 'Kode UoM', 'Description'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 },
-                  { name: 'description', index: 'description', width: 200 }],
+                  { name: 'name', index: 'name', width: 100 },
+                  { name: 'kodeuom', index: 'kodeuom', width: 60 },
+                  { name: 'description', index: 'description', width: 200 }
+        ],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,

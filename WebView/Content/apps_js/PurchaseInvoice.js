@@ -186,7 +186,7 @@
                             $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
                             $('#ExchangeRateAmount').attr('disabled', true);
                             $("#Discount").attr('disabled', true);
-                            $('#AmountPayable').val(result.AmountPayable);
+                            $('#AmountPayable').numberbox('setValue', result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -245,7 +245,7 @@
                             $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
                             $('#ExchangeRateAmount').removeAttr('disabled');
                             $("#Discount").removeAttr('disabled');
-                            $('#AmountPayable').val(result.AmountPayable);
+                            $('#AmountPayable').numberbox('setValue', result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -489,7 +489,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
@@ -570,7 +570,7 @@
                                 }
                             }
                             else {
-                                $('#AmountPayable').val(result.AmountPayable);
+                                $('#AmountPayable').numberbox('setValue', result.AmountPayable);
                                 ReloadGridDetail();
                                 $("#delete_confirm_div").dialog('close');
                             }
@@ -627,7 +627,7 @@
                     }
                 }
                 else {
-                    $('#AmountPayable').val(result.AmountPayable);
+                    $('#AmountPayable').numberbox('setValue', result.AmountPayable);
                     ReloadGridDetail();
                     ReloadGrid();
                     $("#item_div").dialog('close')

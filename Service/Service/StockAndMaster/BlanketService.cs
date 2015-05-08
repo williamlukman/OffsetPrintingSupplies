@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Service.Service
 {
@@ -106,6 +107,12 @@ namespace Service.Service
             blanket.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(blanket, _blanketService, _uomService, _itemService, _itemTypeService, _contactService, _machineService))
             {
+                if (blanket.CroppingType == Constant.CroppingType.NO)
+                {
+                    blanket.LeftOverAC = 0;
+                    blanket.LeftOverAR = 0;
+                    blanket.Special = 0;
+                }
                 blanket = _repository.CreateObject(blanket);
                 PriceMutation priceMutation = _priceMutationService.CreateObject(blanket, blanket.CreatedAt);
                 blanket.PriceMutationId = priceMutation.Id;
@@ -128,6 +135,12 @@ namespace Service.Service
                     PriceMutation priceMutation = _priceMutationService.CreateObject(oldblanket, priceMutationTimeStamp);
                     blanket.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
+                }
+                if (blanket.CroppingType == Constant.CroppingType.NO)
+                {
+                    blanket.LeftOverAC = 0;
+                    blanket.LeftOverAR = 0;
+                    blanket.Special = 0;
                 }
                 _repository.UpdateObject(blanket);
             }

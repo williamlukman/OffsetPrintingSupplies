@@ -53,6 +53,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.KodeUoM,
                              model.Description,
                              model.AccountId,
                              AccountCode = model.Account.ParseCode,
@@ -92,6 +93,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.KodeUoM,
                             model.Description,
                             model.AccountId,
                             model.AccountCode,
@@ -119,6 +121,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.KodeUoM,
                              model.Description,
                              model.AccountId,
                              AccountCode = model.Account.ParseCode,
@@ -158,6 +161,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.KodeUoM,
                             model.Description,
                             model.AccountId,
                             model.AccountCode,
@@ -186,6 +190,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
+                model.KodeUoM,
                 model.Description,
                 model.AccountId,
                 AccountCode = model.Account.Code,
@@ -205,34 +210,34 @@ namespace WebView.Controllers
                 if (model.Name == "Roller")
                 {
                     SkuCount = _rollerBuilderService.GetQueryable().Count() + 1;
-                    String NewSku = model.Description + SkuCount.ToString();
+                    String NewSku = model.KodeUoM + SkuCount.ToString();
                     while (_rollerBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
-                        NewSku = model.Description + SkuCount.ToString();
+                        NewSku = model.KodeUoM + SkuCount.ToString();
                     }
                 }
                 else if (model.Name == "Core")
                 {
                     SkuCount = _coreBuilderService.GetQueryable().Count() + 1;
-                    String NewSku = model.Description + SkuCount.ToString();
+                    String NewSku = model.KodeUoM + SkuCount.ToString();
                     while (_coreBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
-                        NewSku = model.Description + SkuCount.ToString();
+                        NewSku = model.KodeUoM + SkuCount.ToString();
                     }
                 }
                 else
                 {
                     SkuCount = _itemService.GetQueryable().Where(x => x.ItemTypeId == model.Id).Count() + 1;
-                    String NewSku = model.Description + SkuCount.ToString();
+                    String NewSku = model.KodeUoM + SkuCount.ToString();
                     while (_itemService.GetObjectBySku(NewSku) != null)
                     {
                         SkuCount++;
-                        NewSku = model.Description + SkuCount.ToString();
+                        NewSku = model.KodeUoM + SkuCount.ToString();
                     }
                 }
-                SKU = model.Description + SkuCount;
+                SKU = model.KodeUoM + SkuCount;
             }
             catch (Exception ex)
             {
@@ -244,6 +249,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
+                model.KodeUoM,
                 model.Description,
                 SKU,
                 model.AccountId,
@@ -279,6 +285,7 @@ namespace WebView.Controllers
             {
                 var data = _itemTypeService.GetObjectById(model.Id);
                 data.Name = model.Name;
+                data.KodeUoM = model.KodeUoM;
                 data.Description = model.Description;
                 data.AccountId = model.AccountId;
                 model = _itemTypeService.UpdateObject(data, _accountService);

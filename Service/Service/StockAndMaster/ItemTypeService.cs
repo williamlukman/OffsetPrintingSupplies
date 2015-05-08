@@ -44,33 +44,36 @@ namespace Service.Service
             return _repository.GetObjectByName(name);
         }
 
-        public ItemType CreateObject(string Name, string Description, IAccountService _accountService)
+        public ItemType CreateObject(string Name, string KodeUoM, string Description, IAccountService _accountService)
         {
             ItemType itemType = new ItemType
             {
                 Name = Name,
+                KodeUoM = KodeUoM,
                 Description = Description,
                 IsLegacy = false
             };
             return this.CreateObject(itemType, _accountService);
         }
 
-        public ItemType CreateObject(string Name, string Description, bool IsLegacy, IAccountService _accountService)
+        public ItemType CreateObject(string Name, string KodeUoM, string Description, bool IsLegacy, IAccountService _accountService)
         {
             ItemType itemType = new ItemType
             {
                 Name = Name,
+                KodeUoM = KodeUoM,
                 Description = Description,
                 IsLegacy = IsLegacy
             };
             return this.CreateObject(itemType, _accountService);
         }
 
-        public ItemType CreateObject(string Name, string Description, bool IsLegacy, Account account, IAccountService _accountService)
+        public ItemType CreateObject(string Name, string KodeUoM, string Description, bool IsLegacy, Account account, IAccountService _accountService)
         {
             ItemType itemType = new ItemType
             {
                 Name = Name,
+                KodeUoM = KodeUoM,
                 Description = Description,
                 IsLegacy = IsLegacy,
                 AccountId = account.Id

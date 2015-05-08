@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -29,11 +29,12 @@
     $("#list").jqGrid({
         url: base_url + 'MstItemType/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Kode UoM', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Kode UoM', 'Description', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
-                  { name: 'description', index: 'description', width: 60 },
+                  { name: 'kodeuom', index: 'kodeuom', width: 60 },
+                  { name: 'description', index: 'description', width: 150 },
                   { name: 'accountid', index: 'accountid', width: 80, align: "center", hidden: true },
 				  { name: 'accountcode', index: 'accountcode', width: 80 },
 				  { name: 'accountname', index: 'accountname', width: 200 },
@@ -48,7 +49,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -112,6 +113,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
+                            $('#KodeUoM').val(result.KodeUoM);
                             $('#Description').val(result.Description);
                             $('#AccountId').val(result.AccountId);
                             $('#AccountCode').val(result.AccountCode);
@@ -206,7 +208,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val()
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val(),
+                KodeUoM: $('#KodeUoM').val(),
             }),
             async: false,
             cache: false,
