@@ -19,6 +19,7 @@ using System.Data.Objects;
 using Data.Context;
 using System.Globalization;
 using System.Text;
+using System.Dynamic;
 
 namespace WebView.Controllers
 {
@@ -4180,7 +4181,7 @@ namespace WebView.Controllers
             {
                 var company = db.Companies.FirstOrDefault();
                 //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
-                var q = db.StockMutations.Where(x => x.MutationDate >= startDate && x.MutationDate < endDay);
+                var q = db.StockMutations.Where(x => !x.IsDeleted && x.MutationDate >= startDate && x.MutationDate < endDay);
 
                 var query = q.GroupBy(m => new
                 {
@@ -4197,8 +4198,8 @@ namespace WebView.Controllers
                     Uom = g.Key.Uom,
                     In = g.Where(x => x.Status == Constant.MutationStatus.Addition).Sum(x => (Decimal?)x.Quantity) ?? 0,
                     Out = g.Where(x => x.Status == Constant.MutationStatus.Deduction).Sum(x => (Decimal?)x.Quantity) ?? 0,
-                    OpeningBalance = db.StockMutations.Where(x => x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity))?? 0,
-                    EndingBalance = (db.StockMutations.Where(x => x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity)) ?? 0)
+                    OpeningBalance = db.StockMutations.Where(x => !x.IsDeleted && x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity)) ?? 0,
+                    EndingBalance = (db.StockMutations.Where(x => !x.IsDeleted && x.MutationDate < g.Key.Date && x.ItemId == g.Key.ItemId).Sum(x => (Decimal?)(x.Status == Constant.MutationStatus.Addition ? x.Quantity : -x.Quantity)) ?? 0)
                                      + (g.Where(x => x.Status == Constant.MutationStatus.Addition).Sum(x => (Decimal?)x.Quantity) ?? 0)
                                      - (g.Where(x => x.Status == Constant.MutationStatus.Deduction).Sum(x => (Decimal?)x.Quantity) ?? 0),
                 }).OrderBy(x => x.Date).ThenBy(x => x.Sku).ToList();
@@ -4212,6 +4213,144 @@ namespace WebView.Controllers
 
                 //Loading Report
                 rd.Load(Server.MapPath("~/") + "Reports/General/InventoryInOut.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDate);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+
+        #endregion
+
+        #region InventoryLedger
+        public ActionResult InventoryLedger()
+        {
+            return View();
+        }
+
+        public ActionResult ReportInventoryLedger(DateTime startDate, DateTime endDate)
+        {
+            DateTime endDay = endDate.AddDays(1);
+            string user = AuthenticationModel.GetUserName();
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = db.Companies.FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var openq = db.StockMutations.Where(x => !x.IsDeleted && x.MutationDate < startDate && x.ItemCase == Constant.ItemCase.Ready);
+                var q = db.StockMutations.Where(x => !x.IsDeleted && x.MutationDate >= startDate && x.MutationDate < endDay && x.SourceDocumentType == Constant.SourceDocumentType.PurchaseOrder);
+
+                var q2 = q.GroupBy(m => new
+                {
+                    ItemID = m.ItemId,
+                    Name = m.Item.Name,
+                    Sku = m.Item.Sku,
+                    UoM = m.Item.UoM.Name,
+                    Date = m.MutationDate,
+                    m.SourceDocumentType,
+                    m.SourceDocumentId,
+                    m.SourceDocumentDetailType,
+                    m.SourceDocumentDetailId,
+                }).Select(g => new
+                {
+                    g.Key.ItemID,
+                    g.Key.Name,
+                    g.Key.Sku,
+                    g.Key.UoM,
+                    g.Key.Date,
+                    g.Key.SourceDocumentId,
+                    RefNumber = db.PurchaseOrders.FirstOrDefault(x => x.Id == g.Key.SourceDocumentId).NomorSurat ?? db.PurchaseOrders.FirstOrDefault(x => x.Id == g.Key.SourceDocumentId).Code,
+                    RefCode = "PJ",
+                    In = g.Sum(x => (decimal?)x.Quantity) ?? 0,
+                    InPrice = db.PurchaseOrderDetails.FirstOrDefault(x => x.Id == g.Key.SourceDocumentDetailId).Price,
+                    Out = 0m,
+                    OutPrice = 0m,
+                    Balance = 0m,
+                    BalancePrice = 0m,
+                }).OrderBy(x => x.Name).ThenBy(x => x.ItemID).ThenBy(x => x.Date).ThenBy(x => x.RefNumber).ToList();
+
+                var query = new List<dynamic>();
+
+                int lastItemID = 0;
+                decimal lastBalance = 0m;
+                decimal lastBalancePrice = 0m; 
+                foreach (var a in q2)
+                {
+                    decimal openQty = 0m;
+                    decimal openAvgPrice = 0m;
+                    foreach (var m in openq.Where(x => x.ItemId == a.ItemID && x.MutationDate == a.Date && x.SourceDocumentId == a.SourceDocumentId).ToList())
+                    {
+                        var price = m.SourceDocumentDetailType == Constant.SourceDocumentDetailType.PurchaseReceivalDetail ? db.PurchaseReceivalDetails.FirstOrDefault(x => x.Id == m.SourceDocumentDetailId).PurchaseOrderDetail.Price :
+                            m.SourceDocumentDetailType == Constant.SourceDocumentDetailType.StockAdjustmentDetail ? db.StockAdjustmentDetails.FirstOrDefault(x => x.Id == m.SourceDocumentDetailId).Price :
+                            m.SourceDocumentDetailType == Constant.SourceDocumentDetailType.RecoveryOrderDetail ? db.RecoveryOrderDetails.FirstOrDefault(x => x.Id == m.SourceDocumentDetailId).TotalCost : 0;
+                        var qty = m.Quantity * (m.Status == Constant.MutationStatus.Deduction ? -1 : 1);
+                        openAvgPrice = (openAvgPrice * openQty + price * qty) / (openQty + qty);
+                    }
+
+                    if (lastItemID != a.ItemID)
+                    {
+                        dynamic ob = new
+                        {
+                            ItemID = a.ItemID,
+                            Name = a.Name,
+                            Sku = a.Sku,
+                            UoM = a.UoM,
+                            Date = startDate,
+                            RefNumber = "Opening Balance",
+                            RefCode = "O/B",
+                            In = 0m,
+                            InPrice = 0m,
+                            Out = 0m,
+                            OutPrice = 0m,
+                            Balance = openQty,
+                            BalancePrice = openAvgPrice,
+                        };
+                        query.Add(ob);
+                        lastItemID = a.ItemID;
+                        lastBalance = ob.Balance;
+                        lastBalancePrice = ob.BalancePrice;
+                    }
+
+                    dynamic obj = new
+                    {
+                        ItemID = a.ItemID,
+                        Name = a.Name,
+                        Sku = a.Sku,
+                        UoM = a.UoM,
+                        Date = a.Date,
+                        RefNumber = a.RefNumber,
+                        RefCode = a.RefCode,
+                        In = a.In,
+                        InPrice = a.InPrice,
+                        Out = a.Out,
+                        OutPrice = a.OutPrice,
+                        Balance = lastBalance + a.In - a.Out,
+                        BalancePrice = (lastBalancePrice * lastBalance + a.In * a.InPrice - a.Out * a.OutPrice) / (lastBalance + a.In - a.Out),
+                    };
+                    query.Add(obj);
+                    lastBalance = obj.Balance;
+                    lastBalancePrice = obj.BalancePrice;
+                }
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/InventoryLedger.rpt");
 
                 // Setting report data source
                 rd.SetDataSource(query);

@@ -1,0 +1,13 @@
+Date	DateTime
+ItemID	Number		
+Sku	String	255	
+Name	String	255
+RefCode	String	100
+RefNumber	String	255
+UoM	String	100
+In	Number		
+InPrice	Number
+Out	Number
+OutPrice	Number
+Balance	Number
+BalancePrice	Number	

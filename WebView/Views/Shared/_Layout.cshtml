@@ -538,7 +538,8 @@
                                                     {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">Monthly Roller Compound Usage</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Stock, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("InventoryInOut", "Report")">Inventory In Out</a></li>}
-
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Stock, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("InventoryLedger", "Report")">Inventory Ledger</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Purchase Report</a>

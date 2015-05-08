@@ -373,6 +373,7 @@
     <Content Include="Content\apps_js\BalanceSheetDetail.js" />
     <Content Include="Content\apps_js\BankAdministration.js" />
     <Content Include="Content\apps_js\BlanketWarehouseMutation.js" />
+    <Content Include="Content\apps_js\ReportInventoryLedger.js" />
     <Content Include="Content\apps_js\ReportInventoryInOut.js" />
     <Content Include="Content\apps_js\ReportDispatch.js" />
     <Content Include="Content\apps_js\ReportPurchaseByDueDate.js" />
@@ -1593,6 +1594,7 @@
     <Content Include="Views\Report\PurchaseByDueDate.cshtml" />
     <Content Include="Views\Report\Dispatch.cshtml" />
     <Content Include="Views\Report\InventoryInOut.cshtml" />
+    <Content Include="Views\Report\InventoryLedger.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1643,7 +1645,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1958</DevelopmentServerPort>
+          <DevelopmentServerPort>3461</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61688/</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
